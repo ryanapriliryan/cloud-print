@@ -73,9 +73,10 @@ function RiwayatContent() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setPayError(data.error || "Gagal mengunggah foto bukti pembayaran.");
+        setUploadError(data.error || "Gagal mengunggah foto bukti transfer.");
       } else {
-        setProofUrl(data.url);
+        const uploadedUrl = data.url || data.fileUrl;
+        setProofUrl(uploadedUrl);
       }
     } catch {
       setPayError("Kesalahan koneksi saat mengunggah gambar.");

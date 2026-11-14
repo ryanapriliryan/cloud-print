@@ -83,9 +83,12 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      fileName: file.name,
+      url: publicUrl,
       fileUrl: publicUrl,
+      name: file.name,
+      fileName: file.name,
       size: file.size,
+      fileSize: file.size,
       type: file.type,
     });
   } catch (error) {
