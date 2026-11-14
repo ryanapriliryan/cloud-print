@@ -73,15 +73,20 @@ function RiwayatContent() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setUploadError(data.error || "Gagal mengunggah foto bukti transfer.");
+        setPayError(data.error || "Gagal mengunggah foto bukti transfer.");
       } else {
         const uploadedUrl = data.url || data.fileUrl;
+        if (!uploadedUrl) {
+          setPayError("URL foto dari server kosong. Periksa pengaturan Supabase Storage.");
+          return;
+        }
         setProofUrl(uploadedUrl);
       }
     } catch {
       setPayError("Kesalahan koneksi saat mengunggah gambar.");
     } finally {
       setUploadingProof(false);
+      e.target.value = "";
     }
   }
 
