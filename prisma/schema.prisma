@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PELANGGAN
+  ADMIN
+}
+
+enum OrderStatus {
+  MENUNGGU_PEMBAYARAN
+  MENUNGGU_VERIFIKASI
+  DIPROSES
+  SIAP_DIAMBIL
+  SELESAI
+  DITOLAK
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  phone         String?
+  password      String
+  role          Role           @default(PELANGGAN)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  orders        Order[]
+  notifications Notification[]
+}
+
+model PrintOption {
+  id          String      @id @default(cuid())
+  category    String
+  name        String
+  unit        String      @default("lembar")
+  price       Int
+  description String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+}
+
+model Finishing {
+  id          String      @id @default(cuid())
+  category    String      @default("SEMUA")
+  name        String
+  unit        String      @default("per dokumen")
+  price       Int
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderCode       String      @unique
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status          OrderStatus @default(MENUNGGU_PEMBAYARAN)
+  rejectionReason String?
+  totalAmount     Int
+  paymentProofUrl String?
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id             String       @id @default(cuid())
+  orderId        String
+  order          Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  printOptionId  String?
+  printOption    PrintOption? @relation(fields: [printOptionId], references: [id], onDelete: SetNull)
+  finishingId    String?
+  finishing      Finishing?   @relation(fields: [finishingId], references: [id], onDelete: SetNull)
+  itemTitle      String
+  finishingTitle String?
+  unitLabel      String
+  fileName       String
+  fileUrl        String
+  fileSize       String?
+  quantity       Int          @default(1)
+  copies         Int          @default(1)
+  width          Float?
+  height         Float?
+  unitPrice      Int
+  finishingPrice Int          @default(0)
+  subtotal       Int
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model StoreSetting {
+  id            String   @id @default("default")
+  storeName     String   @default("Cloud Print")
+  storeAddress  String   @default("")
+  storePhone    String   @default("")
+  bankName      String   @default("")
+  accountNumber String   @default("")
+  accountHolder String   @default("")
+  paymentNote   String   @default("Silakan transfer sesuai total tagihan dan unggah bukti pembayaran.")
+  updatedAt     DateTime @updatedAt
+}
