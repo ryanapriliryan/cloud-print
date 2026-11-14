@@ -13,6 +13,13 @@ import {
 } from "lucide-react";
 import { formatRupiah, PRINT_CATEGORIES } from "@/lib/format";
 
+function formatBytes(bytes) {
+  if (!bytes || isNaN(bytes)) return "-";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
 export default function BuatPesananPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -141,7 +148,17 @@ export default function BuatPesananPage() {
       if (!res.ok) {
         setUploadError(data.error || "Gagal mengunggah dokumen.");
       } else {
-        setUploadedFile(data);
+        const resolvedUrl = data.url || data.fileUrl;
+        if (!resolvedUrl) {
+          setUploadError("URL file dari server kosong. Periksa konfigurasi Supabase Storage.");
+          return;
+        }
+        const rawSize = data.fileSize || data.size || file.size;
+        setUploadedFile({
+          fileName: data.fileName || data.name || file.name,
+          url: resolvedUrl,
+          fileSize: typeof rawSize === "number" ? formatBytes(rawSize) : rawSize,
+        });
       }
     } catch {
       setUploadError("Terjadi kesalahan saat mengunggah file.");
@@ -155,7 +172,7 @@ export default function BuatPesananPage() {
       setUploadError("Silakan pilih jenis layanan cetak terlebih dahulu.");
       return;
     }
-    if (!uploadedFile) {
+    if (!uploadedFile || !uploadedFile.url) {
       setUploadError("Silakan unggah dokumen atau file desain cetak terlebih dahulu.");
       return;
     }
@@ -269,7 +286,9 @@ export default function BuatPesananPage() {
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
             <div>
-              <h2 className="text-base font-bold text-slate-900 mb-3">1. Pilih Kategori Layanan Cetak</h2>
+              <h2 className="text-base font-bold text-slate-900 mb-3">
+                Pilih Kategori Layanan Cetak
+              </h2>
               <div className="flex flex-wrap gap-2">
                 {PRINT_CATEGORIES.map((cat) => {
                   const hasItems = printOptions.some((o) => o.category === cat);
@@ -416,7 +435,7 @@ export default function BuatPesananPage() {
                     : "Klik untuk memilih file PDF / Gambar Desain"}
                 </span>
                 <span className="text-xs text-slate-500 mt-1">
-                  Format disarankan: PDF, PNG, JPG (Maksimal 25 MB)
+                  Format disarankan: PDF, PNG, JPG (Maksimal 4,5 MB)
                 </span>
                 <input
                   type="file"
@@ -542,7 +561,7 @@ export default function BuatPesananPage() {
               <a
                 href={uploadedFile?.url}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-xs font-semibold text-blue-600 hover:underline shrink-0"
               >
                 Pratinjau File
