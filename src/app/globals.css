@@ -146,16 +146,39 @@ body {
 }
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
+
   .no-print {
     display: none !important;
   }
+
+  .print-only {
+    display: block !important;
+  }
+
   body {
     background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
   .clay-card,
   .clay-card-soft {
     box-shadow: none !important;
-    border: 1px solid #e2e8f0 !important;
+    backdrop-filter: none !important;
     background: #ffffff !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
   }
 }
