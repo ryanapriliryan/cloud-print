@@ -87,10 +87,10 @@ export default function AdminKelolaPesananPage() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-7">
+      <div className="clay-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-lg font-bold text-slate-900">Kelola Pesanan & Verifikasi</h1>
+          <h1 className="text-lg font-extrabold text-slate-900">Kelola Pesanan & Verifikasi</h1>
           <p className="text-sm text-slate-500 mt-0.5">
             Verifikasi bukti transfer via Lightbox dan perbarui progres produksi cetak pelanggan.
           </p>
@@ -98,20 +98,20 @@ export default function AdminKelolaPesananPage() {
 
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-indigo-500 absolute left-3.5 top-3" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari kode / pelanggan..."
-              className="pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="clay-input pl-10 pr-4 py-2.5 text-sm font-medium text-slate-800"
             />
           </div>
 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 text-sm border border-slate-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="clay-input px-4 py-2.5 text-sm font-semibold text-slate-800"
           >
             <option value="ALL">Semua Status</option>
             {Object.entries(ORDER_STATUS_META).map(([key, val]) => (
@@ -124,27 +124,27 @@ export default function AdminKelolaPesananPage() {
       </div>
 
       {loading ? (
-        <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center text-sm text-slate-500">
+        <div className="clay-card p-10 text-center text-sm font-medium text-slate-500">
           Memuat daftar pesanan...
         </div>
       ) : filteredOrders.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center text-sm text-slate-500">
+        <div className="clay-card p-10 text-center text-sm font-medium text-slate-500">
           Tidak ada pesanan yang sesuai dengan filter.
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="clay-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <thead className="bg-indigo-50/70 text-slate-600 text-xs font-extrabold uppercase tracking-wider border-b border-indigo-100">
                 <tr>
-                  <th className="px-5 py-3.5">Order & Pelanggan</th>
-                  <th className="px-5 py-3.5">Detail Cetak & File</th>
-                  <th className="px-5 py-3.5">Tagihan & Bukti</th>
-                  <th className="px-5 py-3.5">Status Operasional</th>
-                  <th className="px-5 py-3.5 text-right">Aksi Penolakan</th>
+                  <th className="px-5 py-4">Order & Pelanggan</th>
+                  <th className="px-5 py-4">Detail Cetak & File</th>
+                  <th className="px-5 py-4">Tagihan & Bukti</th>
+                  <th className="px-5 py-4">Status Operasional</th>
+                  <th className="px-5 py-4 text-right">Aksi Penolakan</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-indigo-100/60">
                 {filteredOrders.map((order) => {
                   const item = order.items?.[0];
                   const meta = ORDER_STATUS_META[order.status] || {
@@ -153,10 +153,10 @@ export default function AdminKelolaPesananPage() {
                   };
 
                   return (
-                    <tr key={order.id} className="hover:bg-slate-50/80 align-top">
+                    <tr key={order.id} className="hover:bg-indigo-50/40 transition-colors align-top">
                       <td className="px-5 py-4">
-                        <p className="font-bold text-slate-900">{order.orderCode}</p>
-                        <p className="text-xs font-medium text-slate-700 mt-0.5">
+                        <p className="font-extrabold text-slate-900">{order.orderCode}</p>
+                        <p className="text-xs font-bold text-slate-700 mt-0.5">
                           {order.user?.name}
                         </p>
                         <p className="text-[11px] text-slate-400 mt-0.5">
@@ -164,8 +164,8 @@ export default function AdminKelolaPesananPage() {
                         </p>
                       </td>
 
-                      <td className="px-5 py-4 space-y-1">
-                        <p className="font-semibold text-slate-900">{item?.itemTitle}</p>
+                      <td className="px-5 py-4 space-y-1.5">
+                        <p className="font-bold text-slate-900">{item?.itemTitle}</p>
                         <p className="text-xs text-slate-500">
                           {item?.unitLabel === "meter"
                             ? `${item.width}m x ${item.height}m (${item.copies} pcs)`
@@ -173,25 +173,27 @@ export default function AdminKelolaPesananPage() {
                           {item?.finishingTitle ? ` • ${item.finishingTitle}` : ""}
                         </p>
                         {order.notes && (
-                          <p className="text-xs text-amber-700 bg-amber-50 px-2 py-1 rounded">
+                          <p className="text-xs font-medium text-amber-800 bg-amber-100/80 px-2.5 py-1 rounded-xl inline-block">
                             Catatan: {order.notes}
                           </p>
                         )}
                         {item?.fileUrl && (
-                          <a
-                            href={item.fileUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline pt-1"
-                          >
-                            <FileText className="w-3.5 h-3.5" />
-                            Unduh / Lihat File ({item.fileName})
-                          </a>
+                          <div className="pt-1">
+                            <a
+                              href={item.fileUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="clay-pill inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-indigo-600"
+                            >
+                              <FileText className="w-3.5 h-3.5" />
+                              Unduh / Lihat File ({item.fileName})
+                            </a>
+                          </div>
                         )}
                       </td>
 
-                      <td className="px-5 py-4 space-y-2">
-                        <p className="font-bold text-slate-900">
+                      <td className="px-5 py-4 space-y-2.5">
+                        <p className="font-extrabold text-indigo-600">
                           {formatRupiah(order.totalAmount)}
                         </p>
                         {order.paymentProofUrl ? (
@@ -204,7 +206,7 @@ export default function AdminKelolaPesananPage() {
                                 customer: order.user?.name,
                               })
                             }
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-lg border border-blue-200 transition"
+                            className="clay-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-indigo-600"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             Lihat Bukti (Lightbox)
@@ -216,13 +218,12 @@ export default function AdminKelolaPesananPage() {
                         )}
                       </td>
 
-                      <td className="px-5 py-4 space-y-2">
+                      <td className="px-5 py-4 space-y-2.5">
                         <span
-                          className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${meta.badge}`}
+                          className={`inline-block px-3 py-1 rounded-full text-xs font-bold shadow-xs ${meta.badge}`}
                         >
                           {meta.label}
                         </span>
-                        {/* Clean operational dropdown without duplicate DITOLAK option */}
                         <select
                           disabled={updatingId === order.id}
                           value={
@@ -231,7 +232,7 @@ export default function AdminKelolaPesananPage() {
                               : order.status
                           }
                           onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                          className="block w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="clay-input block w-full px-3 py-2 text-xs font-semibold text-slate-800"
                         >
                           <option value="MENUNGGU_PEMBAYARAN">Menunggu Pembayaran</option>
                           <option value="MENUNGGU_VERIFIKASI">Menunggu Verifikasi</option>
@@ -249,7 +250,7 @@ export default function AdminKelolaPesananPage() {
                               setRejectOrder(order);
                               setRejectionReason("");
                             }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg shadow-sm transition"
+                            className="clay-btn-danger inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold"
                           >
                             <XCircle className="w-3.5 h-3.5" />
                             Tolak Pesanan
@@ -268,43 +269,43 @@ export default function AdminKelolaPesananPage() {
       {/* Lightbox Modal for Transfer Proof */}
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setLightboxImage(null)}
         >
           <div
-            className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl"
+            className="clay-card max-w-lg w-full overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
+            <div className="px-6 py-4 border-b border-indigo-100 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-extrabold text-slate-900">
                   Bukti Pembayaran — {lightboxImage.code}
                 </h3>
-                <p className="text-xs text-slate-500">Pelanggan: {lightboxImage.customer}</p>
+                <p className="text-xs font-medium text-slate-500">Pelanggan: {lightboxImage.customer}</p>
               </div>
               <div className="flex items-center gap-2">
                 <a
                   href={lightboxImage.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-1.5 text-slate-500 hover:text-blue-600"
+                  className="clay-pill p-2 text-indigo-600"
                   title="Buka ukuran penuh"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </a>
                 <button
                   onClick={() => setLightboxImage(null)}
-                  className="p-1.5 text-slate-500 hover:text-slate-800"
+                  className="clay-pill p-2 text-slate-600"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
-            <div className="p-4 bg-slate-100 flex items-center justify-center max-h-[75vh] overflow-auto">
+            <div className="p-5 bg-indigo-50/50 flex items-center justify-center max-h-[75vh] overflow-auto">
               <img
                 src={lightboxImage.url}
                 alt="Bukti Pembayaran"
-                className="max-h-[65vh] w-auto rounded-lg shadow"
+                className="max-h-[65vh] w-auto rounded-2xl shadow-lg border-2 border-white"
               />
             </div>
           </div>
@@ -313,24 +314,24 @@ export default function AdminKelolaPesananPage() {
 
       {/* Reject Order Modal with Reason */}
       {rejectOrder && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={handleConfirmReject}
-            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4"
+            className="clay-card max-w-md w-full p-7 space-y-5"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-slate-900">
+              <h3 className="text-base font-extrabold text-slate-900">
                 Tolak Pesanan ({rejectOrder.orderCode})
               </h3>
               <button
                 type="button"
                 onClick={() => setRejectOrder(null)}
-                className="text-slate-400 hover:text-slate-700"
+                className="clay-pill p-2 text-slate-500 hover:text-slate-800"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-xs text-slate-600">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Tuliskan alasan penolakan (misal: nominal transfer kurang atau bukti buram). Pesan ini akan dikirim ke notifikasi pelanggan.
             </p>
             <textarea
@@ -339,20 +340,20 @@ export default function AdminKelolaPesananPage() {
               value={rejectionReason}
               onChange={(e) => setRejectionReason(e.target.value)}
               placeholder="Masukkan alasan penolakan..."
-              className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="clay-input w-full px-4 py-3 text-sm"
             />
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex justify-end gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={() => setRejectOrder(null)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                className="clay-pill px-4 py-2.5 text-xs font-bold text-slate-600"
               >
                 Batal
               </button>
               <button
                 type="submit"
                 disabled={updatingId === rejectOrder.id}
-                className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-sm"
+                className="px-5 py-2.5 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white text-xs font-bold shadow-[6px_8px_18px_rgba(225,29,72,0.35),inset_3px_3px_6px_rgba(255,255,255,0.4)] hover:brightness-105 transition"
               >
                 Konfirmasi Tolak
               </button>

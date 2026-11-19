@@ -2,11 +2,160 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================
+   CLAYMORPHISM UI/UX DESIGN SYSTEM - CLOUD PRINT
+   ========================================================= */
+
+body {
+  background: linear-gradient(135deg, #e8eeff 0%, #f3e8ff 50%, #e0f2fe 100%);
+  background-attachment: fixed;
+  color: #1e293b;
+}
+
+/* Kartu Utama Clay (Mengembang 3D) */
+.clay-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    12px 14px 28px rgba(148, 163, 184, 0.28),
+    inset 6px 6px 14px rgba(255, 255, 255, 0.95),
+    inset -6px -6px 14px rgba(199, 210, 254, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Sub-Kartu / Kotak Info Clay */
+.clay-card-soft {
+  background: #f4f7ff;
+  border-radius: 22px;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    8px 8px 18px rgba(148, 163, 184, 0.22),
+    inset 4px 4px 10px rgba(255, 255, 255, 0.95),
+    inset -4px -4px 10px rgba(199, 210, 254, 0.4);
+}
+
+/* Input & Select Cekung ke Dalam (Recessed Clay) */
+.clay-input {
+  background: #eef2ff;
+  border-radius: 18px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    inset 4px 4px 9px rgba(148, 163, 184, 0.32),
+    inset -4px -4px 9px rgba(255, 255, 255, 0.95);
+  transition: all 0.2s ease;
+}
+
+.clay-input:focus {
+  background: #ffffff;
+  outline: none;
+  border-color: #6366f1;
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.18),
+    inset 2px 2px 6px rgba(148, 163, 184, 0.2);
+}
+
+/* Area Dropzone Upload Clay */
+.clay-dropzone {
+  background: linear-gradient(145deg, #f5f8ff, #eaefff);
+  border-radius: 24px;
+  border: 2.5px dashed #93c5fd;
+  box-shadow:
+    inset 5px 5px 12px rgba(148, 163, 184, 0.24),
+    inset -5px -5px 12px rgba(255, 255, 255, 0.95);
+  transition: all 0.2s ease;
+}
+
+.clay-dropzone:hover {
+  border-color: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow:
+    8px 10px 20px rgba(99, 102, 241, 0.15),
+    inset 4px 4px 10px rgba(255, 255, 255, 0.95);
+}
+
+/* Tombol Utama Clay (Biru-Indigo Mengembang) */
+.clay-btn-primary {
+  background: linear-gradient(145deg, #4f46e5, #2563eb);
+  color: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow:
+    8px 10px 20px rgba(37, 99, 235, 0.35),
+    inset 4px 4px 8px rgba(255, 255, 255, 0.4),
+    inset -4px -4px 8px rgba(30, 58, 138, 0.4);
+  transition: all 0.18s ease;
+}
+
+.clay-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    10px 14px 24px rgba(37, 99, 235, 0.42),
+    inset 4px 4px 10px rgba(255, 255, 255, 0.5),
+    inset -4px -4px 8px rgba(30, 58, 138, 0.45);
+}
+
+.clay-btn-primary:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Tombol Sekunder / Pill Non-Aktif Clay */
+.clay-pill {
+  background: #f8fafc;
+  color: #334155;
+  border-radius: 18px;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    5px 6px 12px rgba(148, 163, 184, 0.24),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+    inset -3px -3px 6px rgba(203, 213, 225, 0.45);
+  transition: all 0.18s ease;
+}
+
+.clay-pill:hover {
+  transform: translateY(-1px);
+  background: #ffffff;
+}
+
+/* Tombol Bahaya / Batal Clay */
+.clay-btn-danger {
+  background: linear-gradient(145deg, #ffe4e6, #fecdd3);
+  color: #be123c;
+  border-radius: 18px;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    5px 6px 14px rgba(244, 63, 94, 0.18),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.9),
+    inset -3px -3px 6px rgba(251, 113, 133, 0.3);
+  transition: all 0.18s ease;
+}
+
+.clay-btn-danger:hover {
+  transform: translateY(-1px);
+}
+
+/* Badge / Ikon Bulat 3D Clay */
+.clay-icon-box {
+  background: linear-gradient(145deg, #dbeafe, #e0e7ff);
+  border-radius: 18px;
+  box-shadow:
+    5px 5px 12px rgba(148, 163, 184, 0.25),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+    inset -3px -3px 6px rgba(165, 180, 252, 0.45);
+}
+
 @media print {
   .no-print {
     display: none !important;
   }
   body {
+    background: #ffffff !important;
+  }
+  .clay-card,
+  .clay-card-soft {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
     background: #ffffff !important;
   }
 }

@@ -58,87 +58,102 @@ export default function PelangganProfilPage() {
   }
 
   if (loading) {
-    return <div className="p-8 text-center text-sm text-slate-500">Memuat data profil...</div>;
+    return (
+      <div className="clay-card max-w-2xl p-10 text-center text-sm font-medium text-slate-500">
+        Memuat data profil...
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-2xl bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
-      <div>
-        <h1 className="text-lg font-bold text-slate-900">Profil Pengguna</h1>
-        <p className="text-sm text-slate-500 mt-0.5">
-          Perbarui informasi kontak atau kata sandi akun pelanggan Anda.
-        </p>
+    <div className="clay-card max-w-2xl p-7 sm:p-9 space-y-6">
+      <div className="flex items-center gap-3.5">
+        <div className="clay-icon-box w-12 h-12 text-indigo-600 flex items-center justify-center shrink-0">
+          <User className="w-6 h-6" />
+        </div>
+        <div>
+          <h1 className="text-lg font-extrabold text-slate-900">Profil Pengguna</h1>
+          <p className="text-sm text-slate-500 mt-0.5">
+            Perbarui informasi kontak atau kata sandi akun pelanggan Anda.
+          </p>
+        </div>
       </div>
 
       {success && (
-        <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
+        <div className="p-4 rounded-2xl bg-emerald-100/85 border border-white text-emerald-800 text-sm font-bold flex items-center gap-2.5 shadow-xs">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
           <span>{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
+        <div className="clay-btn-danger p-4 text-sm font-bold flex items-center gap-2.5">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
           <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+          <label className="block text-sm font-bold text-slate-700 mb-2">
+            Nama Lengkap
+          </label>
           <div className="relative">
-            <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <User className="w-4 h-4 text-indigo-500 absolute left-4 top-3.5" />
             <input
               type="text"
               required
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="clay-input w-full pl-11 pr-4 py-3 text-sm font-medium text-slate-800"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Alamat Email</label>
+          <label className="block text-sm font-bold text-slate-700 mb-2">
+            Alamat Email
+          </label>
           <div className="relative">
-            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Mail className="w-4 h-4 text-indigo-500 absolute left-4 top-3.5" />
             <input
               type="email"
               required
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="clay-input w-full pl-11 pr-4 py-3 text-sm font-medium text-slate-800"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Nomor WhatsApp / HP</label>
+          <label className="block text-sm font-bold text-slate-700 mb-2">
+            Nomor WhatsApp / HP
+          </label>
           <div className="relative">
-            <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Phone className="w-4 h-4 text-indigo-500 absolute left-4 top-3.5" />
             <input
               type="tel"
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="clay-input w-full pl-11 pr-4 py-3 text-sm font-medium text-slate-800"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
+          <label className="block text-sm font-bold text-slate-700 mb-2">
             Kata Sandi Baru (Kosongkan jika tidak ingin mengganti)
           </label>
           <div className="relative">
-            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Lock className="w-4 h-4 text-indigo-500 absolute left-4 top-3.5" />
             <input
               type="password"
               minLength={6}
               value={form.newPassword}
               onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
               placeholder="Minimal 6 karakter"
-              className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="clay-input w-full pl-11 pr-4 py-3 text-sm font-medium text-slate-800"
             />
           </div>
         </div>
@@ -147,7 +162,7 @@ export default function PelangganProfilPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold text-sm rounded-xl shadow-sm transition"
+            className="clay-btn-primary px-6 py-3 font-bold text-sm"
           >
             {saving ? "Menyimpan..." : "Simpan Perubahan"}
           </button>

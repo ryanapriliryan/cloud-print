@@ -2,96 +2,107 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Printer, Mail, Lock, CheckCircle2, AlertCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Printer, Mail, Lock, AlertCircle, X, ArrowRight } from "lucide-react";
 
-export default function ForgotPasswordPage() {
+export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [errorModalMessage, setErrorModalMessage] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError("");
-    setSuccess("");
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/forgot-password", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, newPassword }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Gagal memulihkan kata sandi.");
-      } else {
-        setSuccess(data.message);
-        setEmail("");
-        setNewPassword("");
+        setErrorModalMessage(data.error || "Kredensial email atau kata sandi salah.");
+        setLoading(false);
+        return;
       }
+      router.push(data.redirectUrl);
+      router.refresh();
     } catch {
-      setError("Terjadi kesalahan koneksi.");
-    } finally {
+      setErrorModalMessage("Tidak dapat terhubung ke server. Periksa koneksi internet Anda.");
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
-        <div className="flex flex-col items-center text-center mb-6">
-          <Link href="/" className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center mb-3">
-            <Printer className="w-6 h-6" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Dekorasi Elemen 3D Clay Lembut di Latar Belakang */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed -top-20 -left-20 w-72 h-72 rounded-full bg-indigo-200/45 blur-2xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed -bottom-24 -right-20 w-80 h-80 rounded-full bg-sky-200/50 blur-2xl"
+      />
+
+      {/* Kartu Login Utama Claymorphism */}
+      <div className="clay-card w-full max-w-md p-8 sm:p-9 relative z-10">
+        <div className="flex flex-col items-center text-center mb-7">
+          <Link
+            href="/"
+            className="clay-btn-primary w-14 h-14 flex items-center justify-center mb-4"
+          >
+            <Printer className="w-7 h-7" />
           </Link>
-          <h1 className="text-2xl font-bold text-slate-900">Pemulihan Kata Sandi</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Masukkan email akun terdaftar dan atur ulang kata sandi baru Anda
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            Masuk ke Cloud Print
+          </h1>
+          <p className="text-sm text-slate-500 mt-1.5">
+            Satu pintu masuk terpadu untuk Pelanggan dan Admin
           </p>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {success && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm flex items-start gap-2">
-            <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" />
-            <span>{success}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Email Terdaftar</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">
+              Alamat Email
+            </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Mail className="w-4 h-4 text-indigo-500 absolute left-4 top-3.5" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="nama@email.com"
-                className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="clay-input w-full pl-11 pr-4 py-3 text-sm font-medium text-slate-800"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Kata Sandi Baru</label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-bold text-slate-700">
+                Kata Sandi
+              </label>
+              <Link
+                href="/forgot-password"
+                className="text-xs font-bold text-indigo-600 hover:text-indigo-700"
+              >
+                Lupa kata sandi?
+              </Link>
+            </div>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Lock className="w-4 h-4 text-indigo-500 absolute left-4 top-3.5" />
               <input
                 type="password"
                 required
-                minLength={6}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Minimal 6 karakter"
-                className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Masukkan kata sandi"
+                className="clay-input w-full pl-11 pr-4 py-3 text-sm font-medium text-slate-800"
               />
             </div>
           </div>
@@ -99,19 +110,45 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold text-sm rounded-xl shadow-sm transition"
+            className="clay-btn-primary w-full py-3.5 px-4 font-bold text-sm flex items-center justify-center gap-2 mt-2"
           >
-            {loading ? "Memproses..." : "Simpan Kata Sandi Baru"}
+            {loading ? "Memverifikasi..." : "Masuk Sekarang"}
+            {!loading && <ArrowRight className="w-4 h-4" />}
           </button>
         </form>
 
-        <div className="mt-6 pt-5 border-t border-slate-100 text-center text-sm text-slate-600">
-          Kembali ke halaman{" "}
-          <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-700">
-            Login
+        <div className="clay-card-soft mt-7 p-4 text-center text-sm text-slate-600">
+          Belum memiliki akun pelanggan?{" "}
+          <Link href="/register" className="font-extrabold text-indigo-600 hover:text-indigo-700">
+            Daftar di sini
           </Link>
         </div>
       </div>
+
+      {/* Modal Error Peringatan Claymorphism (Sesuai Spesifikasi Bab 2.1) */}
+      {errorModalMessage && (
+        <div className="fixed inset-0 z-50 bg-slate-900/45 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="clay-card max-w-sm w-full p-7 text-center space-y-5">
+            <div className="clay-btn-danger w-14 h-14 flex items-center justify-center mx-auto">
+              <AlertCircle className="w-7 h-7 text-rose-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-extrabold text-slate-900">Akses Ditolak</h3>
+              <p className="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                {errorModalMessage}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setErrorModalMessage("")}
+              className="w-full py-3 px-4 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white font-bold text-sm shadow-[6px_8px_18px_rgba(225,29,72,0.35),inset_3px_3px_6px_rgba(255,255,255,0.4)] hover:brightness-105 active:scale-97 transition flex items-center justify-center gap-1.5"
+            >
+              <X className="w-4 h-4" />
+              Tutup & Coba Lagi
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
