@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { formatRupiah, PRINT_CATEGORIES } from "@/lib/format";
+import ClaySelect from "@/components/ClaySelect";
 
 function formatBytes(bytes) {
   if (!bytes || isNaN(bytes)) return "-";
@@ -27,6 +28,7 @@ export default function BuatPesananPage() {
   const [finishings, setFinishings] = useState([]);
   const [loadingMaster, setLoadingMaster] = useState(true);
 
+  // Step 1 form state
   const [selectedCategory, setSelectedCategory] = useState(PRINT_CATEGORIES[0]);
   const [selectedPrintId, setSelectedPrintId] = useState("");
   const [selectedFinishingId, setSelectedFinishingId] = useState("");
@@ -36,10 +38,12 @@ export default function BuatPesananPage() {
   const [height, setHeight] = useState(1);
   const [notes, setNotes] = useState("");
 
+  // File upload state
   const [uploadedFile, setUploadedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
 
+  // Step 2 checkout state
   const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -147,7 +151,7 @@ export default function BuatPesananPage() {
       } else {
         const resolvedUrl = data.url || data.fileUrl;
         if (!resolvedUrl) {
-          setUploadError("URL file dari server kosong.");
+          setUploadError("URL file dari server kosong. Periksa konfigurasi Supabase Storage.");
           return;
         }
         const rawSize = data.fileSize || data.size || file.size;
@@ -226,11 +230,13 @@ export default function BuatPesananPage() {
 
   if (printOptions.length === 0) {
     return (
-      <div className="clay-card p-10 text-center space-y-2">
-        <AlertCircle className="w-9 h-9 text-amber-500 mx-auto" />
+      <div className="clay-card p-10 text-center space-y-3">
+        <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto shadow-inner">
+          <AlertCircle className="w-6 h-6" />
+        </div>
         <h2 className="text-lg font-extrabold text-slate-900">Katalog Layanan Belum Tersedia</h2>
         <p className="text-sm text-slate-600 max-w-md mx-auto">
-          Admin percetakan belum menambahkan daftar jenis dan harga cetak pada Master Data.
+          Admin percetakan belum menambahkan daftar jenis dan harga cetak pada Master Data. Silakan hubungi operator atau coba kembali nanti.
         </p>
       </div>
     );
@@ -238,39 +244,37 @@ export default function BuatPesananPage() {
 
   return (
     <div className="space-y-7">
-      {/* Clay 2-Step Wizard Header */}
-      <div className="clay-card p-5">
+      {/* 2-Step Wizard Header */}
+      <div className="clay-card p-6">
         <div className="flex items-center justify-between max-w-xl mx-auto">
           <div className="flex items-center gap-3.5">
             <div
-              className={`w-11 h-11 rounded-2xl font-extrabold text-sm flex items-center justify-center shadow-md ${
+              className={`w-10 h-10 rounded-2xl font-extrabold text-sm flex items-center justify-center shadow-md ${
                 step === 1
                   ? "clay-btn-primary"
-                  : "bg-emerald-500 text-white"
+                  : "bg-gradient-to-br from-emerald-500 to-teal-600 text-white"
               }`}
             >
               {step > 1 ? <CheckCircle2 className="w-5 h-5" /> : "1"}
             </div>
             <div>
-              <p className="text-xs text-indigo-500 font-bold uppercase tracking-wider">Langkah 1</p>
+              <p className="text-xs text-indigo-500 font-bold">Langkah 1</p>
               <p className="text-sm font-extrabold text-slate-900">Spesifikasi & Upload File</p>
             </div>
           </div>
 
-          <div className="h-1.5 flex-1 bg-indigo-100 rounded-full mx-4 shadow-inner" />
+          <div className="h-1 flex-1 rounded-full bg-indigo-100 mx-4 shadow-inner" />
 
           <div className="flex items-center gap-3.5">
             <div
-              className={`w-11 h-11 rounded-2xl font-extrabold text-sm flex items-center justify-center ${
-                step === 2
-                  ? "clay-btn-primary"
-                  : "clay-pill text-slate-400"
+              className={`w-10 h-10 rounded-2xl font-extrabold text-sm flex items-center justify-center ${
+                step === 2 ? "clay-btn-primary" : "clay-pill text-slate-400"
               }`}
             >
               2
             </div>
             <div>
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">Langkah 2</p>
+              <p className="text-xs text-indigo-500 font-bold">Langkah 2</p>
               <p className="text-sm font-extrabold text-slate-900">Ringkasan & Checkout</p>
             </div>
           </div>
@@ -289,15 +293,17 @@ export default function BuatPesananPage() {
                 {PRINT_CATEGORIES.map((cat) => {
                   const hasItems = printOptions.some((o) => o.category === cat);
                   if (!hasItems) return null;
-                  const active = selectedCategory === cat;
+                  const isActive = selectedCategory === cat;
                   return (
                     <button
                       key={cat}
                       type="button"
                       onClick={() => handleCategoryChange(cat)}
-                      className={`px-4 py-2.5 text-xs font-bold ${
-                        active ? "clay-btn-primary" : "clay-pill"
-                      }`}
+                      className={
+                        isActive
+                          ? "clay-btn-primary px-4 py-2.5 text-xs font-bold"
+                          : "clay-pill px-4 py-2.5 text-xs font-bold text-slate-700"
+                      }
                     >
                       {cat}
                     </button>
@@ -311,19 +317,17 @@ export default function BuatPesananPage() {
                 <label className="block text-sm font-bold text-slate-700 mb-2">
                   Jenis Bahan / Ukuran Cetak
                 </label>
-                <select
+                <ClaySelect
                   value={selectedPrintId}
-                  onChange={(e) => setSelectedPrintId(e.target.value)}
-                  className="clay-input w-full px-4 py-3 text-sm font-medium text-slate-800"
-                >
-                  {filteredPrintOptions.map((opt) => (
-                    <option key={opt.id} value={opt.id}>
-                      {opt.name} — {formatRupiah(opt.price)} / {opt.unit}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => setSelectedPrintId(val)}
+                  options={filteredPrintOptions.map((opt) => ({
+                    value: opt.id,
+                    label: `${opt.name} — ${formatRupiah(opt.price)} / ${opt.unit}`,
+                  }))}
+                  className="text-sm font-semibold"
+                />
                 {activePrintOption?.description && (
-                  <p className="text-xs text-slate-500 mt-1.5 pl-1">{activePrintOption.description}</p>
+                  <p className="text-xs text-slate-500 mt-1.5">{activePrintOption.description}</p>
                 )}
               </div>
 
@@ -331,21 +335,22 @@ export default function BuatPesananPage() {
                 <label className="block text-sm font-bold text-slate-700 mb-2">
                   Opsi Finishing (Opsional)
                 </label>
-                <select
+                <ClaySelect
                   value={selectedFinishingId}
-                  onChange={(e) => setSelectedFinishingId(e.target.value)}
-                  className="clay-input w-full px-4 py-3 text-sm font-medium text-slate-800"
-                >
-                  <option value="">Tanpa Finishing Tambahan</option>
-                  {filteredFinishings.map((fin) => (
-                    <option key={fin.id} value={fin.id}>
-                      {fin.name} (+{formatRupiah(fin.price)} {fin.unit})
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => setSelectedFinishingId(val)}
+                  options={[
+                    { value: "", label: "Tanpa Finishing Tambahan" },
+                    ...filteredFinishings.map((fin) => ({
+                      value: fin.id,
+                      label: `${fin.name} (+${formatRupiah(fin.price)} ${fin.unit})`,
+                    })),
+                  ]}
+                  className="text-sm font-semibold"
+                />
               </div>
             </div>
 
+            {/* Dynamic Dimension / Page Inputs */}
             {activePrintOption?.unit === "meter" ? (
               <div className="grid sm:grid-cols-3 gap-4">
                 <div>
@@ -358,7 +363,7 @@ export default function BuatPesananPage() {
                     min="0.1"
                     value={width}
                     onChange={(e) => setWidth(e.target.value)}
-                    className="clay-input w-full px-4 py-3 text-sm font-semibold"
+                    className="clay-input w-full px-4 py-3 text-sm font-semibold text-slate-800"
                   />
                 </div>
                 <div>
@@ -371,7 +376,7 @@ export default function BuatPesananPage() {
                     min="0.1"
                     value={height}
                     onChange={(e) => setHeight(e.target.value)}
-                    className="clay-input w-full px-4 py-3 text-sm font-semibold"
+                    className="clay-input w-full px-4 py-3 text-sm font-semibold text-slate-800"
                   />
                 </div>
                 <div>
@@ -383,7 +388,7 @@ export default function BuatPesananPage() {
                     min="1"
                     value={copies}
                     onChange={(e) => setCopies(e.target.value)}
-                    className="clay-input w-full px-4 py-3 text-sm font-semibold"
+                    className="clay-input w-full px-4 py-3 text-sm font-semibold text-slate-800"
                   />
                 </div>
               </div>
@@ -398,7 +403,7 @@ export default function BuatPesananPage() {
                     min="1"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
-                    className="clay-input w-full px-4 py-3 text-sm font-semibold"
+                    className="clay-input w-full px-4 py-3 text-sm font-semibold text-slate-800"
                   />
                 </div>
                 <div>
@@ -410,13 +415,13 @@ export default function BuatPesananPage() {
                     min="1"
                     value={copies}
                     onChange={(e) => setCopies(e.target.value)}
-                    className="clay-input w-full px-4 py-3 text-sm font-semibold"
+                    className="clay-input w-full px-4 py-3 text-sm font-semibold text-slate-800"
                   />
                 </div>
               </div>
             )}
 
-            {/* Clay Dropzone */}
+            {/* File Dropzone */}
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">
                 Unggah Dokumen / Desain Siap Cetak
@@ -477,21 +482,21 @@ export default function BuatPesananPage() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Contoh: Cetak bolak-balik, halaman 1-5 berwarna, sisanya hitam putih..."
-                className="clay-input w-full px-4 py-3 text-sm"
+                className="clay-input w-full px-4 py-3 text-sm text-slate-800"
               />
             </div>
           </div>
 
-          {/* Clay Live Estimation Card */}
+          {/* Live Estimation Card */}
           <div className="clay-card p-7 h-fit space-y-5 sticky top-24">
             <div className="flex items-center gap-2.5 text-indigo-600 font-extrabold text-sm">
-              <div className="clay-icon-box p-2">
-                <Sparkles className="w-4 h-4" />
+              <div className="clay-icon-box w-9 h-9 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-indigo-600" />
               </div>
               <span>Estimasi Biaya Otomatis</span>
             </div>
 
-            <div className="clay-card-soft p-4 space-y-2.5 text-sm">
+            <div className="clay-card-soft p-4 space-y-3 text-sm">
               <div className="flex justify-between text-slate-600">
                 <span>Biaya Cetak Dasar</span>
                 <span className="font-bold text-slate-900">
@@ -506,7 +511,7 @@ export default function BuatPesananPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between px-1">
+            <div className="flex items-center justify-between pt-1">
               <span className="text-sm font-extrabold text-slate-800">Total Estimasi</span>
               <span className="text-2xl font-black text-indigo-600">
                 {formatRupiah(pricing.total)}
@@ -516,7 +521,7 @@ export default function BuatPesananPage() {
             <button
               type="button"
               onClick={handleNextToStep2}
-              className="clay-btn-primary w-full py-3.5 px-5 font-bold text-sm flex items-center justify-center gap-2"
+              className="clay-btn-primary w-full py-3.5 px-4 font-bold text-sm flex items-center justify-center gap-2"
             >
               Lanjut ke Ringkasan Pesanan
               <ArrowRight className="w-4 h-4" />
@@ -529,7 +534,7 @@ export default function BuatPesananPage() {
       {step === 2 && (
         <div className="grid lg:grid-cols-3 gap-7">
           <div className="lg:col-span-2 clay-card p-7 space-y-6">
-            <div className="flex items-center justify-between border-b border-indigo-100 pb-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-indigo-100 pb-4">
               <div>
                 <h2 className="text-lg font-extrabold text-slate-900">Ringkasan Dokumen & Spesifikasi</h2>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -545,10 +550,10 @@ export default function BuatPesananPage() {
               </button>
             </div>
 
-            <div className="clay-card-soft p-4 flex items-center justify-between">
+            <div className="clay-card-soft p-4 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3.5 min-w-0">
-                <div className="clay-icon-box w-11 h-11 flex items-center justify-center shrink-0">
-                  <FileText className="w-5 h-5 text-indigo-600" />
+                <div className="clay-icon-box w-11 h-11 text-indigo-600 flex items-center justify-center shrink-0">
+                  <FileText className="w-5 h-5" />
                 </div>
                 <div className="truncate">
                   <p className="text-sm font-extrabold text-slate-900 truncate">
@@ -569,19 +574,19 @@ export default function BuatPesananPage() {
 
             <div className="grid sm:grid-cols-2 gap-4 text-sm">
               <div className="clay-card-soft p-4">
-                <p className="text-xs font-semibold text-slate-500">Kategori & Jenis Cetak</p>
+                <p className="text-xs text-slate-500 font-semibold">Kategori & Jenis Cetak</p>
                 <p className="font-extrabold text-slate-900 mt-1">
                   {activePrintOption?.category} — {activePrintOption?.name}
                 </p>
               </div>
               <div className="clay-card-soft p-4">
-                <p className="text-xs font-semibold text-slate-500">Opsi Finishing</p>
+                <p className="text-xs text-slate-500 font-semibold">Opsi Finishing</p>
                 <p className="font-extrabold text-slate-900 mt-1">
                   {activeFinishing ? activeFinishing.name : "Tanpa Finishing Tambahan"}
                 </p>
               </div>
               <div className="clay-card-soft p-4">
-                <p className="text-xs font-semibold text-slate-500">Volume / Dimensi</p>
+                <p className="text-xs text-slate-500 font-semibold">Volume / Dimensi</p>
                 <p className="font-extrabold text-slate-900 mt-1">
                   {activePrintOption?.unit === "meter"
                     ? `${width}m x ${height}m (${copies} pcs)`
@@ -589,7 +594,7 @@ export default function BuatPesananPage() {
                 </p>
               </div>
               <div className="clay-card-soft p-4">
-                <p className="text-xs font-semibold text-slate-500">Catatan Operator</p>
+                <p className="text-xs text-slate-500 font-semibold">Catatan Operator</p>
                 <p className="font-semibold text-slate-800 mt-1">
                   {notes.trim() || "Tidak ada catatan khusus"}
                 </p>
@@ -619,21 +624,21 @@ export default function BuatPesananPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between px-1">
+            <div className="flex items-center justify-between">
               <span className="text-sm font-extrabold text-slate-900">Total Pembayaran</span>
               <span className="text-2xl font-black text-indigo-600">
                 {formatRupiah(pricing.total)}
               </span>
             </div>
 
-            <label className="clay-card-soft flex items-start gap-3 text-xs text-slate-600 cursor-pointer p-3.5">
+            <label className="clay-card-soft flex items-start gap-2.5 text-xs text-slate-700 cursor-pointer p-3.5">
               <input
                 type="checkbox"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
                 className="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500"
               />
-              <span className="font-medium">
+              <span className="font-medium leading-relaxed">
                 Saya memastikan file yang diunggah sudah benar dan menyetujui total tagihan pesanan ini.
               </span>
             </label>
@@ -649,7 +654,7 @@ export default function BuatPesananPage() {
               type="button"
               disabled={submitting}
               onClick={handleCreateOrder}
-              className="clay-btn-primary w-full py-3.5 px-5 font-bold text-sm"
+              className="clay-btn-primary w-full py-3.5 px-4 font-bold text-sm"
             >
               {submitting ? "Menyimpan Pesanan..." : "Konfirmasi & Buat Pesanan"}
             </button>

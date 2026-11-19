@@ -10,6 +10,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { formatRupiah, formatDate, ORDER_STATUS_META } from "@/lib/format";
+import ClaySelect from "@/components/ClaySelect";
 
 export default function AdminKelolaPesananPage() {
   const [orders, setOrders] = useState([]);
@@ -108,18 +109,20 @@ export default function AdminKelolaPesananPage() {
             />
           </div>
 
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="clay-input px-4 py-2.5 text-sm font-semibold text-slate-800"
-          >
-            <option value="ALL">Semua Status</option>
-            {Object.entries(ORDER_STATUS_META).map(([key, val]) => (
-              <option key={key} value={key}>
-                {val.label}
-              </option>
-            ))}
-          </select>
+          <div className="w-52">
+            <ClaySelect
+              value={statusFilter}
+              onChange={(val) => setStatusFilter(val)}
+              options={[
+                { value: "ALL", label: "Semua Status" },
+                ...Object.entries(ORDER_STATUS_META).map(([key, val]) => ({
+                  value: key,
+                  label: val.label,
+                })),
+              ]}
+              className="text-sm font-semibold"
+            />
+          </div>
         </div>
       </div>
 
@@ -218,28 +221,29 @@ export default function AdminKelolaPesananPage() {
                         )}
                       </td>
 
-                      <td className="px-5 py-4 space-y-2.5">
+                      <td className="px-5 py-4 space-y-2.5 min-w-[210px]">
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-xs font-bold shadow-xs ${meta.badge}`}
                         >
                           {meta.label}
                         </span>
-                        <select
+                        <ClaySelect
                           disabled={updatingId === order.id}
                           value={
                             order.status === "DITOLAK"
                               ? "MENUNGGU_VERIFIKASI"
                               : order.status
                           }
-                          onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                          className="clay-input block w-full px-3 py-2 text-xs font-semibold text-slate-800"
-                        >
-                          <option value="MENUNGGU_PEMBAYARAN">Menunggu Pembayaran</option>
-                          <option value="MENUNGGU_VERIFIKASI">Menunggu Verifikasi</option>
-                          <option value="DIPROSES">Sedang Dicetak</option>
-                          <option value="SIAP_DIAMBIL">Siap Diambil</option>
-                          <option value="SELESAI">Selesai</option>
-                        </select>
+                          onChange={(val) => handleStatusChange(order.id, val)}
+                          options={[
+                            { value: "MENUNGGU_PEMBAYARAN", label: "Menunggu Pembayaran" },
+                            { value: "MENUNGGU_VERIFIKASI", label: "Menunggu Verifikasi" },
+                            { value: "DIPROSES", label: "Sedang Dicetak" },
+                            { value: "SIAP_DIAMBIL", label: "Siap Diambil" },
+                            { value: "SELESAI", label: "Selesai" },
+                          ]}
+                          className="text-xs font-semibold"
+                        />
                       </td>
 
                       <td className="px-5 py-4 text-right">

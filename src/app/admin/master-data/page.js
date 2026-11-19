@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, CheckCircle2, Store, Tag, Layers } from "lucide-react";
 import { formatRupiah, PRINT_CATEGORIES, UNIT_OPTIONS } from "@/lib/format";
+import ClaySelect from "@/components/ClaySelect";
 
 export default function AdminMasterDataPage() {
   const [printOptions, setPrintOptions] = useState([]);
@@ -69,7 +70,6 @@ export default function AdminMasterDataPage() {
     loadMasterData();
   }, []);
 
-  // Print Option Handlers
   async function handleSavePrintOption(e) {
     e.preventDefault();
     const url = editingPrintId
@@ -100,7 +100,7 @@ export default function AdminMasterDataPage() {
   async function handleDeletePrintOption(id) {
     if (!confirm("Hapus jenis cetak ini dari master data?")) return;
     const res = await fetch(`/api/admin/master-data/print-options/${id}`, {
-      method: "DELETE",
+      method,
     });
     if (res.ok) {
       await loadMasterData();
@@ -108,7 +108,6 @@ export default function AdminMasterDataPage() {
     }
   }
 
-  // Finishing Handlers
   async function handleSaveFinishing(e) {
     e.preventDefault();
     const url = editingFinId
@@ -138,7 +137,7 @@ export default function AdminMasterDataPage() {
   async function handleDeleteFinishing(id) {
     if (!confirm("Hapus opsi finishing ini?")) return;
     const res = await fetch(`/api/admin/master-data/finishings/${id}`, {
-      method: "DELETE",
+      method,
     });
     if (res.ok) {
       await loadMasterData();
@@ -146,7 +145,6 @@ export default function AdminMasterDataPage() {
     }
   }
 
-  // Store & Payment Setting Handler
   async function handleSaveStoreSetting(e) {
     e.preventDefault();
     const res = await fetch("/api/admin/store-setting", {
@@ -191,15 +189,12 @@ export default function AdminMasterDataPage() {
         </div>
 
         <form onSubmit={handleSavePrintOption} className="clay-card-soft grid sm:grid-cols-5 gap-3.5 p-5">
-          <select
+          <ClaySelect
             value={printForm.category}
-            onChange={(e) => setPrintForm({ ...printForm, category: e.target.value })}
-            className="clay-input px-3.5 py-2.5 text-xs font-semibold text-slate-800"
-          >
-            {PRINT_CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+            onChange={(val) => setPrintForm({ ...printForm, category: val })}
+            options={PRINT_CATEGORIES.map((c) => ({ value: c, label: c }))}
+            className="text-xs font-semibold"
+          />
 
           <input
             type="text"
@@ -210,15 +205,12 @@ export default function AdminMasterDataPage() {
             className="clay-input px-3.5 py-2.5 text-xs font-medium text-slate-800"
           />
 
-          <select
+          <ClaySelect
             value={printForm.unit}
-            onChange={(e) => setPrintForm({ ...printForm, unit: e.target.value })}
-            className="clay-input px-3.5 py-2.5 text-xs font-semibold text-slate-800"
-          >
-            {UNIT_OPTIONS.map((u) => (
-              <option key={u.value} value={u.value}>{u.label}</option>
-            ))}
-          </select>
+            onChange={(val) => setPrintForm({ ...printForm, unit: val })}
+            options={UNIT_OPTIONS}
+            className="text-xs font-semibold"
+          />
 
           <input
             type="number"
@@ -338,16 +330,15 @@ export default function AdminMasterDataPage() {
         </div>
 
         <form onSubmit={handleSaveFinishing} className="clay-card-soft grid sm:grid-cols-5 gap-3.5 p-5">
-          <select
+          <ClaySelect
             value={finForm.category}
-            onChange={(e) => setFinForm({ ...finForm, category: e.target.value })}
-            className="clay-input px-3.5 py-2.5 text-xs font-semibold text-slate-800"
-          >
-            <option value="SEMUA">Semua Kategori</option>
-            {PRINT_CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+            onChange={(val) => setFinForm({ ...finForm, category: val })}
+            options={[
+              { value: "SEMUA", label: "Semua Kategori" },
+              ...PRINT_CATEGORIES.map((c) => ({ value: c, label: c })),
+            ]}
+            className="text-xs font-semibold"
+          />
 
           <input
             type="text"
@@ -358,15 +349,16 @@ export default function AdminMasterDataPage() {
             className="clay-input px-3.5 py-2.5 text-xs font-medium text-slate-800"
           />
 
-          <select
+          <ClaySelect
             value={finForm.unit}
-            onChange={(e) => setFinForm({ ...finForm, unit: e.target.value })}
-            className="clay-input px-3.5 py-2.5 text-xs font-semibold text-slate-800"
-          >
-            <option value="per dokumen">Per Dokumen / Paket</option>
-            <option value="per lembar">Per Lembar</option>
-            <option value="per meter">Per Meter Persegi</option>
-          </select>
+            onChange={(val) => setFinForm({ ...finForm, unit: val })}
+            options={[
+              { value: "per dokumen", label: "Per Dokumen / Paket" },
+              { value: "per lembar", label: "Per Lembar" },
+              { value: "per meter", label: "Per Meter Persegi" },
+            ]}
+            className="text-xs font-semibold"
+          />
 
           <input
             type="number"
