@@ -1,22 +1,18 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  /* Palet Dasar Claymorphism Cloud Print */
   --clay-bg-start: #e8eeff;
   --clay-bg-end: #f5f7ff;
   --clay-surface: rgba(255, 255, 255, 0.94);
   --clay-surface-nested: #eef2ff;
   --clay-input-bg: #f3f6ff;
 
-  /* Warna Aksen Utama & Semantik */
   --clay-primary-start: #4f46e5;
   --clay-primary-end: #2563eb;
   --clay-text-main: #0f172a;
   --clay-text-muted: #475569;
-
-  /* Penajaman Kontras Teks Keterangan Kecil */
-  --color-slate-400: #64748b;
-  --color-slate-500: #475569;
 }
 
 @layer base {
@@ -33,7 +29,6 @@
 }
 
 @layer components {
-  /* Kartu Utama Claymorphism */
   .clay-card {
     background: var(--clay-surface);
     border-radius: 26px;
@@ -45,7 +40,6 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  /* Kartu Bersarang / Gelembung Chat Masuk (Kontras Lebih Tegas) */
   .clay-card-soft {
     background: var(--clay-surface-nested);
     border-radius: 20px;
@@ -56,7 +50,6 @@
       inset -2px -2px 6px rgba(165, 180, 252, 0.35);
   }
 
-  /* Tombol Utama Indigo-Royal Blue */
   .clay-btn-primary {
     background: linear-gradient(135deg, var(--clay-primary-start) 0%, var(--clay-primary-end) 100%);
     color: #ffffff;
@@ -72,17 +65,12 @@
   .clay-btn-primary:hover:not(:disabled) {
     filter: brightness(1.05);
     transform: translateY(-1px);
-    box-shadow:
-      8px 12px 24px rgba(79, 70, 229, 0.34),
-      inset 3px 3px 7px rgba(255, 255, 255, 0.42),
-      inset -3px -3px 7px rgba(30, 58, 138, 0.35);
   }
 
   .clay-btn-primary:active:not(:disabled) {
     transform: translateY(0);
   }
 
-  /* Tombol Aksi Berisiko / Hapus / Keluar */
   .clay-btn-danger {
     background: linear-gradient(145deg, #fff1f2 0%, #ffe4e6 100%);
     color: #be123c;
@@ -100,7 +88,6 @@
     transform: translateY(-1px);
   }
 
-  /* Tombol Pil / Tag Navigasi */
   .clay-pill {
     background: rgba(255, 255, 255, 0.92);
     border-radius: 9999px;
@@ -117,7 +104,6 @@
     transform: translateY(-1px);
   }
 
-  /* Kolom Input Cekung (Inset Clay) */
   .clay-input {
     background: var(--clay-input-bg);
     border-radius: 16px;
@@ -137,7 +123,6 @@
       inset 2px 2px 5px rgba(148, 163, 184, 0.15);
   }
 
-  /* Kotak Ikon 3D Lembut */
   .clay-icon-box {
     background: linear-gradient(145deg, #eef2ff 0%, #e0e7ff 100%);
     border-radius: 18px;
@@ -148,7 +133,6 @@
       inset -2px -2px 6px rgba(165, 180, 252, 0.4);
   }
 
-  /* 4 Standar Lencana Status Pesanan */
   .clay-badge-waiting {
     background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
     color: #b45309;
@@ -174,7 +158,6 @@
   }
 }
 
-/* Aturan Cetak Laporan Resmi / PDF Bersih */
 @media print {
   body {
     background: #ffffff !important;
