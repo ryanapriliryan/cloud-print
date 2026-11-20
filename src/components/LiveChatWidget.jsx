@@ -39,6 +39,7 @@ export default function LiveChatWidget() {
   const [pendingMessage, setPendingMessage] = useState(null);
   const [sendError, setSendError] = useState("");
   const [hasNewReply, setHasNewReply] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -116,7 +117,6 @@ export default function LiveChatWidget() {
     return () => clearInterval(interval);
   }, [token, open, fetchMessages]);
 
-  // Saat jendela chat dibuka, langsung arahkan ke pesan terbaru satu kali
   useEffect(() => {
     if (open) {
       setHasNewReply(false);
@@ -125,7 +125,6 @@ export default function LiveChatWidget() {
     }
   }, [open, scrollToBottom]);
 
-  // Saat pengguna mengirim pesan baru, gulir ke bawah
   useEffect(() => {
     if (open && pendingMessage) {
       isNearBottomRef.current = true;
@@ -184,11 +183,20 @@ export default function LiveChatWidget() {
       {/* Jendela Pop-Up Live Chat Claymorphism */}
       {open && (
         <div className="clay-card w-[calc(100vw-2.5rem)] sm:w-96 mb-4 overflow-hidden flex flex-col max-h-[82vh]">
-          {/* Header Chat */}
+          {/* Header Chat dengan Avatar Maskot */}
           <div className="clay-btn-primary rounded-none rounded-t-[26px] px-5 py-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center shadow-inner">
-                <MessageCircle className="w-5 h-5 text-white" />
+              <div className="w-11 h-11 rounded-2xl bg-white overflow-hidden flex items-center justify-center shadow-md border-2 border-white/80 shrink-0">
+                {!avatarError ? (
+                  <img
+                    src="/mascot.png"
+                    alt="Admin Cloud Print"
+                    onError={() => setAvatarError(true)}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <MessageCircle className="w-5 h-5 text-indigo-600" />
+                )}
               </div>
               <div>
                 <h3 className="text-sm font-extrabold leading-tight">
@@ -220,12 +228,21 @@ export default function LiveChatWidget() {
             className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[240px] max-h-[340px]"
           >
             {/* Sapaan Pembuka Otomatis */}
-            <div className="flex flex-col items-start">
-              <span className="text-[10px] font-extrabold text-indigo-600 mb-1 ml-1">
-                Admin Cloud Print
-              </span>
-              <div className="clay-card-soft px-4 py-3 text-xs text-slate-700 leading-relaxed max-w-[85%]">
-                Halo! Selamat datang di <strong>Cloud Print</strong>. Silakan tanyakan harga cetak, jenis bahan, atau estimasi pengerjaan langsung di kolom bawah ini.
+            <div className="flex items-start gap-2.5">
+              {!avatarError && (
+                <img
+                  src="/mascot.png"
+                  alt="Admin"
+                  className="w-7 h-7 rounded-xl object-cover border border-white shadow-xs mt-4 shrink-0"
+                />
+              )}
+              <div className="flex flex-col items-start">
+                <span className="text-[10px] font-extrabold text-indigo-600 mb-1 ml-1">
+                  Admin Cloud Print
+                </span>
+                <div className="clay-card-soft px-4 py-3 text-xs text-slate-700 leading-relaxed max-w-[92%]">
+                  Halo! Selamat datang di <strong>Cloud Print</strong>. Silakan tanyakan harga cetak, jenis bahan, atau estimasi pengerjaan langsung di kolom bawah ini.
+                </div>
               </div>
             </div>
 
@@ -234,22 +251,35 @@ export default function LiveChatWidget() {
               return (
                 <div
                   key={msg.id}
-                  className={`flex flex-col ${
-                    isVisitor ? "items-end" : "items-start"
+                  className={`flex ${
+                    isVisitor ? "justify-end" : "items-start gap-2.5"
                   }`}
                 >
-                  <span className="text-[10px] font-bold text-slate-400 mb-1 mx-1">
-                    {isVisitor ? visitorName || "Anda" : "Admin Cloud Print"} •{" "}
-                    {formatTime(msg.createdAt)}
-                  </span>
+                  {!isVisitor && !avatarError && (
+                    <img
+                      src="/mascot.png"
+                      alt="Admin"
+                      className="w-7 h-7 rounded-xl object-cover border border-white shadow-xs mt-4 shrink-0"
+                    />
+                  )}
                   <div
-                    className={
-                      isVisitor
-                        ? "clay-btn-primary px-4 py-2.5 text-xs font-medium leading-relaxed max-w-[85%] rounded-2xl rounded-br-sm"
-                        : "clay-card-soft px-4 py-2.5 text-xs font-medium text-slate-800 leading-relaxed max-w-[85%] rounded-2xl rounded-bl-sm"
-                    }
+                    className={`flex flex-col ${
+                      isVisitor ? "items-end" : "items-start"
+                    }`}
                   >
-                    {msg.content}
+                    <span className="text-[10px] font-bold text-slate-400 mb-1 mx-1">
+                      {isVisitor ? visitorName || "Anda" : "Admin Cloud Print"} •{" "}
+                      {formatTime(msg.createdAt)}
+                    </span>
+                    <div
+                      className={
+                        isVisitor
+                          ? "clay-btn-primary px-4 py-2.5 text-xs font-medium leading-relaxed max-w-[85%] rounded-2xl rounded-br-sm"
+                          : "clay-card-soft px-4 py-2.5 text-xs font-medium text-slate-800 leading-relaxed max-w-[90%] rounded-2xl rounded-bl-sm"
+                      }
+                    >
+                      {msg.content}
+                    </div>
                   </div>
                 </div>
               );
@@ -343,24 +373,29 @@ export default function LiveChatWidget() {
         </div>
       )}
 
-      {/* Tombol Mengambang Claymorphism di Pojok Kanan Bawah */}
+      {/* Tombol Mengambang Claymorphism dengan Mini Avatar Maskot */}
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="clay-btn-primary flex items-center gap-2.5 px-5 py-3.5 rounded-full font-extrabold text-xs sm:text-sm cursor-pointer"
+        className="clay-btn-primary flex items-center gap-2.5 pl-3 pr-5 py-2.5 rounded-full font-extrabold text-xs sm:text-sm cursor-pointer"
       >
-        <span className="relative flex items-center justify-center">
+        <span className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white overflow-hidden shadow-xs">
           {open ? (
-            <X className="w-5 h-5" />
-          ) : (
+            <X className="w-4 h-4 text-indigo-600" />
+          ) : !avatarError ? (
             <>
-              <MessageCircle className="w-5 h-5" />
-              {hasNewReply ? (
-                <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-rose-500 ring-2 ring-white animate-bounce" />
-              ) : (
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-300 ring-2 ring-indigo-600" />
+              <img
+                src="/mascot.png"
+                alt="Tanya Admin"
+                onError={() => setAvatarError(true)}
+                className="w-full h-full object-cover"
+              />
+              {hasNewReply && (
+                <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-white animate-bounce" />
               )}
             </>
+          ) : (
+            <MessageCircle className="w-4 h-4 text-indigo-600" />
           )}
         </span>
         <span>{open ? "Tutup Chat" : "Tanya Admin"}</span>
