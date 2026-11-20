@@ -9,6 +9,9 @@ import {
   User,
   ArrowLeft,
   Loader2,
+  AlertCircle,
+  CheckCircle2,
+  X,
 } from "lucide-react";
 import { formatDate } from "@/lib/format";
 
@@ -25,7 +28,18 @@ function LiveChatAdminContent() {
   const [sending, setSending] = useState(false);
   const [pendingReply, setPendingReply] = useState(null);
 
+  // State modal konfirmasi hapus & notifikasi
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const [toast, setToast] = useState("");
+
   const messagesEndRef = useRef(null);
+
+  function showToast(msg) {
+    setToast(msg);
+    setTimeout(() => setToast(""), 3000);
+  }
 
   const loadSessions = useCallback(async () => {
     try {
@@ -55,7 +69,7 @@ function LiveChatAdminContent() {
       setActiveSession(data.session || null);
       setMessages(data.messages || []);
     } catch {
-      // ignore transient network errors
+      // abaikan error jaringan sementara
     }
   }, [selectedId]);
 
@@ -105,21 +119,48 @@ function LiveChatAdminContent() {
     }
   }
 
-  async function handleDeleteSession(id) {
-    if (!confirm("Hapus riwayat percakapan pengunjung ini?")) return;
-    const res = await fetch(`/api/admin/chat/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      if (selectedId === id) {
+  async function handleConfirmDelete() {
+    if (!deleteTarget || deleting) return;
+    const targetId = deleteTarget.id;
+
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const res = await fetch(`/api/admin/chat/${targetId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setDeleteError(data.error || "Gagal menghapus percakapan.");
+        return;
+      }
+
+      setSessions((prev) => prev.filter((item) => item.id !== targetId));
+      if (selectedId === targetId) {
         setSelectedId("");
         setActiveSession(null);
         setMessages([]);
       }
+      setDeleteTarget(null);
+      showToast("Riwayat percakapan berhasil dihapus.");
       await loadSessions();
+    } catch {
+      setDeleteError("Koneksi terputus saat menghapus percakapan.");
+    } finally {
+      setDeleting(false);
     }
   }
 
   return (
     <div className="space-y-6">
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-5 py-3.5 shadow-[8px_10px_20px_rgba(16,185,129,0.35),inset_3px_3px_6px_rgba(255,255,255,0.4)] text-sm font-bold flex items-center gap-2.5">
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <span>{toast}</span>
+        </div>
+      )}
+
       <div className="clay-card p-6">
         <h1 className="text-lg font-extrabold text-slate-900">
           Live Chat Pengunjung Beranda
@@ -240,12 +281,18 @@ function LiveChatAdminContent() {
 
                 <button
                   type="button"
-                  onClick={() => handleDeleteSession(activeSession.id)}
-                  className="clay-btn-danger px-3 py-2 text-xs font-bold inline-flex items-center gap-1.5 shrink-0 cursor-pointer"
+                  onClick={() => {
+                    setDeleteError("");
+                    setDeleteTarget({
+                      id: activeSession.id,
+                      visitorName: activeSession.visitorName,
+                    });
+                  }}
+                  className="clay-btn-danger px-3.5 py-2 text-xs font-bold inline-flex items-center gap-1.5 shrink-0 cursor-pointer"
                   title="Hapus percakapan"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Hapus Chat</span>
+                  <span>Hapus Chat</span>
                 </button>
               </div>
 
@@ -328,6 +375,68 @@ function LiveChatAdminContent() {
           )}
         </div>
       </div>
+
+      {/* Modal Konfirmasi Hapus Percakapan Claymorphism */}
+      {deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => !deleting && setDeleteTarget(null)}
+        >
+          <div
+            className="clay-card max-w-sm w-full p-7 text-center space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-red-100 text-rose-600 flex items-center justify-center mx-auto shadow-[5px_5px_12px_rgba(244,63,94,0.2),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
+              <Trash2 className="w-7 h-7" />
+            </div>
+
+            <div>
+              <h3 className="text-lg font-extrabold text-slate-900">
+                Hapus Percakapan?
+              </h3>
+              <p className="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                Seluruh riwayat pesan dengan{" "}
+                <strong className="text-slate-900">
+                  {deleteTarget.visitorName}
+                </strong>{" "}
+                akan dihapus secara permanen.
+              </p>
+            </div>
+
+            {deleteError && (
+              <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center justify-center gap-1.5">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{deleteError}</span>
+              </div>
+            )}
+
+            <div className="flex items-center gap-3 pt-1">
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => setDeleteTarget(null)}
+                className="clay-pill flex-1 py-3 px-4 text-xs font-bold text-slate-700 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <X className="w-4 h-4" />
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={handleConfirmDelete}
+                className="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white font-bold text-xs shadow-[6px_8px_18px_rgba(225,29,72,0.35),inset_3px_3px_6px_rgba(255,255,255,0.4)] hover:brightness-105 disabled:opacity-60 transition cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                {deleting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
+                <span>{deleting ? "Menghapus..." : "Ya, Hapus"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

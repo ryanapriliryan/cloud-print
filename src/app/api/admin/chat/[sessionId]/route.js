@@ -82,16 +82,33 @@ export async function POST(request, context) {
 }
 
 export async function DELETE(request, context) {
-  const auth = await getSession();
-  if (!auth || auth.role !== "ADMIN") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const auth = await getSession();
+    if (!auth || auth.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { sessionId } = await context.params;
+    if (!sessionId) {
+      return NextResponse.json({ error: "ID sesi tidak valid." }, { status: 400 });
+    }
+
+    // Hapus seluruh pesan terlebih dahulu agar aman dari constraint foreign key
+    await prisma.$transaction([
+      prisma.chatMessage.deleteMany({
+        where: { sessionId },
+      }),
+      prisma.chatSession.deleteMany({
+        where: { id: sessionId },
+      }),
+    ]);
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Gagal menghapus sesi chat:", err);
+    return NextResponse.json(
+      { error: "Gagal menghapus percakapan dari database." },
+      { status: 500 }
+    );
   }
-
-  const { sessionId } = await context.params;
-
-  await prisma.chatSession.delete({
-    where: { id: sessionId },
-  });
-
-  return NextResponse.json({ success: true });
 }
