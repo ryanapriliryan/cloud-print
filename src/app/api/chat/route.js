@@ -56,7 +56,10 @@ export async function POST(request) {
       where: { visitorToken: token },
     });
 
-    const resolvedName = visitorName || existing?.visitorName || "Pengunjung";
+    const shortCode =
+      token.replace(/[^a-zA-Z0-9]/g, "").slice(-4).toUpperCase() || "TAMU";
+    const defaultLabel = `Pengunjung #${shortCode}`;
+    const resolvedName = visitorName || existing?.visitorName || defaultLabel;
 
     const chatSession = await prisma.chatSession.upsert({
       where: { visitorToken: token },

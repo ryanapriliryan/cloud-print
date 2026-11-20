@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { MessageCircle, Send, X, User, Loader2, AlertCircle } from "lucide-react";
+import { MessageCircle, Send, X, Loader2, AlertCircle } from "lucide-react";
 
 const QUICK_TOPICS = [
   "Tanya harga cetak",
@@ -31,8 +31,6 @@ function formatTime(dateStr) {
 export default function LiveChatWidget() {
   const [open, setOpen] = useState(false);
   const [token, setToken] = useState("");
-  const [visitorName, setVisitorName] = useState("");
-  const [nameLocked, setNameLocked] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -52,12 +50,6 @@ export default function LiveChatWidget() {
       localStorage.setItem("cloudprint_chat_token", savedToken);
     }
     setToken(savedToken);
-
-    const savedName = localStorage.getItem("cloudprint_chat_name");
-    if (savedName) {
-      setVisitorName(savedName);
-      setNameLocked(true);
-    }
   }, []);
 
   const handleScroll = useCallback(() => {
@@ -78,12 +70,6 @@ export default function LiveChatWidget() {
       if (!res.ok) return;
       const data = await res.json();
       const list = data.messages || [];
-
-      if (data.session?.visitorName) {
-        setVisitorName(data.session.visitorName);
-        setNameLocked(true);
-        localStorage.setItem("cloudprint_chat_name", data.session.visitorName);
-      }
 
       const hasNewMessages = list.length > lastCountRef.current;
       if (hasNewMessages) {
@@ -134,10 +120,8 @@ export default function LiveChatWidget() {
   async function handleSendMessage(e) {
     e.preventDefault();
     const trimmedContent = input.trim();
-    const trimmedName = visitorName.trim();
 
     if (!trimmedContent || !token || sending) return;
-    if (!nameLocked && !trimmedName) return;
 
     setSendError("");
     setSending(true);
@@ -145,18 +129,12 @@ export default function LiveChatWidget() {
     setInput("");
     isNearBottomRef.current = true;
 
-    if (!nameLocked && trimmedName) {
-      setNameLocked(true);
-      localStorage.setItem("cloudprint_chat_name", trimmedName);
-    }
-
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           token,
-          visitorName: trimmedName || "Pengunjung",
           content: trimmedContent,
         }),
       });
@@ -237,7 +215,7 @@ export default function LiveChatWidget() {
                   }`}
                 >
                   <span className="text-[10px] font-bold text-slate-400 mb-1 mx-1">
-                    {isVisitor ? visitorName || "Anda" : "Admin Cloud Print"} •{" "}
+                    {isVisitor ? "Anda" : "Admin Cloud Print"} •{" "}
                     {formatTime(msg.createdAt)}
                   </span>
                   <div
@@ -281,21 +259,6 @@ export default function LiveChatWidget() {
               </p>
             )}
 
-            {!nameLocked && (
-              <div className="relative">
-                <User className="w-3.5 h-3.5 text-indigo-500 absolute left-3.5 top-2.5" />
-                <input
-                  type="text"
-                  required
-                  disabled={sending}
-                  value={visitorName}
-                  onChange={(e) => setVisitorName(e.target.value)}
-                  placeholder="Masukkan nama Anda sebelum bertanya..."
-                  className="clay-input w-full pl-9 pr-3 py-2 text-xs font-semibold text-slate-800 disabled:opacity-60"
-                />
-              </div>
-            )}
-
             {messages.length === 0 && !pendingMessage && (
               <div className="flex flex-wrap gap-1.5">
                 {QUICK_TOPICS.map((topic) => (
@@ -321,12 +284,14 @@ export default function LiveChatWidget() {
                 disabled={sending}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={sending ? "Sedang mengirim pesan..." : "Ketik pesan ke Admin..."}
+                placeholder={
+                  sending ? "Sedang mengirim pesan..." : "Ketik pesan ke Admin..."
+                }
                 className="clay-input flex-1 px-3.5 py-2.5 text-xs font-medium text-slate-800 disabled:opacity-60"
               />
               <button
                 type="submit"
-                disabled={sending || (!nameLocked && !visitorName.trim()) || !input.trim()}
+                disabled={sending || !input.trim()}
                 aria-label="Kirim pesan"
                 className="clay-btn-primary p-2.5 disabled:opacity-60 disabled:cursor-not-allowed shrink-0 cursor-pointer flex items-center justify-center"
               >
