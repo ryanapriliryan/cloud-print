@@ -8,6 +8,7 @@ import {
   Trash2,
   User,
   ArrowLeft,
+  Loader2,
 } from "lucide-react";
 import { formatDate } from "@/lib/format";
 
@@ -22,6 +23,7 @@ function LiveChatAdminContent() {
   const [replyText, setReplyText] = useState("");
   const [loadingList, setLoadingList] = useState(true);
   const [sending, setSending] = useState(false);
+  const [pendingReply, setPendingReply] = useState(null);
 
   const messagesEndRef = useRef(null);
 
@@ -72,14 +74,15 @@ function LiveChatAdminContent() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, pendingReply]);
 
   async function handleSendReply(e) {
     e.preventDefault();
     const text = replyText.trim();
-    if (!text || !selectedId) return;
+    if (!text || !selectedId || sending) return;
 
     setSending(true);
+    setPendingReply(text);
     setReplyText("");
     try {
       const res = await fetch(`/api/admin/chat/${selectedId}`, {
@@ -89,7 +92,14 @@ function LiveChatAdminContent() {
       });
       if (res.ok) {
         await Promise.all([loadConversation(), loadSessions()]);
+        setPendingReply(null);
+      } else {
+        setPendingReply(null);
+        setReplyText(text);
       }
+    } catch {
+      setPendingReply(null);
+      setReplyText(text);
     } finally {
       setSending(false);
     }
@@ -266,6 +276,20 @@ function LiveChatAdminContent() {
                     </div>
                   );
                 })}
+
+                {/* Gelembung Loading Sementara Saat Admin Membalas */}
+                {pendingReply && (
+                  <div className="flex flex-col items-end animate-pulse">
+                    <span className="text-[10px] font-bold text-indigo-500 mb-1 mx-1 inline-flex items-center gap-1">
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      Mengirim balasan...
+                    </span>
+                    <div className="clay-btn-primary opacity-80 px-4 py-3 text-xs sm:text-sm font-medium leading-relaxed max-w-[80%] rounded-2xl rounded-br-sm">
+                      {pendingReply}
+                    </div>
+                  </div>
+                )}
+
                 <div ref={messagesEndRef} />
               </div>
 
@@ -277,17 +301,26 @@ function LiveChatAdminContent() {
                 <input
                   type="text"
                   required
+                  disabled={sending}
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  placeholder={`Balas pesan ke ${activeSession.visitorName}...`}
-                  className="clay-input flex-1 px-4 py-3 text-sm font-medium text-slate-800"
+                  placeholder={
+                    sending
+                      ? "Sedang mengirim balasan..."
+                      : `Balas pesan ke ${activeSession.visitorName}...`
+                  }
+                  className="clay-input flex-1 px-4 py-3 text-sm font-medium text-slate-800 disabled:opacity-60"
                 />
                 <button
                   type="submit"
                   disabled={sending || !replyText.trim()}
-                  className="clay-btn-primary px-5 py-3 text-xs sm:text-sm font-bold inline-flex items-center gap-2 disabled:opacity-50 cursor-pointer shrink-0"
+                  className="clay-btn-primary px-5 py-3 text-xs sm:text-sm font-bold inline-flex items-center gap-2 disabled:opacity-60 cursor-pointer shrink-0"
                 >
-                  <Send className="w-4 h-4" />
+                  {sending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
                   <span>{sending ? "Mengirim..." : "Kirim"}</span>
                 </button>
               </form>

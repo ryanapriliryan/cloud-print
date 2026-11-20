@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { MessageCircle, Send, X, User } from "lucide-react";
+import { MessageCircle, Send, X, User, Loader2, AlertCircle } from "lucide-react";
 
 const QUICK_TOPICS = [
   "Tanya harga cetak",
@@ -36,6 +36,8 @@ export default function LiveChatWidget() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState(null);
+  const [sendError, setSendError] = useState("");
   const [hasNewReply, setHasNewReply] = useState(false);
 
   const messagesEndRef = useRef(null);
@@ -96,17 +98,19 @@ export default function LiveChatWidget() {
       setHasNewReply(false);
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [open, messages]);
+  }, [open, messages, pendingMessage]);
 
   async function handleSendMessage(e) {
     e.preventDefault();
     const trimmedContent = input.trim();
     const trimmedName = visitorName.trim();
 
-    if (!trimmedContent || !token) return;
+    if (!trimmedContent || !token || sending) return;
     if (!nameLocked && !trimmedName) return;
 
+    setSendError("");
     setSending(true);
+    setPendingMessage(trimmedContent);
     setInput("");
 
     if (!nameLocked && trimmedName) {
@@ -126,7 +130,16 @@ export default function LiveChatWidget() {
       });
       if (res.ok) {
         await fetchMessages();
+        setPendingMessage(null);
+      } else {
+        setPendingMessage(null);
+        setInput(trimmedContent);
+        setSendError("Pesan gagal terkirim. Silakan coba lagi.");
       }
+    } catch {
+      setPendingMessage(null);
+      setInput(trimmedContent);
+      setSendError("Koneksi terputus. Periksa internet Anda.");
     } finally {
       setSending(false);
     }
@@ -203,6 +216,20 @@ export default function LiveChatWidget() {
                 </div>
               );
             })}
+
+            {/* Gelembung Loading Sementara Saat Pesan Sedang Dikirim */}
+            {pendingMessage && (
+              <div className="flex flex-col items-end animate-pulse">
+                <span className="text-[10px] font-bold text-indigo-500 mb-1 mx-1 inline-flex items-center gap-1">
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  Mengirim pesan...
+                </span>
+                <div className="clay-btn-primary opacity-80 px-4 py-2.5 text-xs font-medium leading-relaxed max-w-[85%] rounded-2xl rounded-br-sm">
+                  {pendingMessage}
+                </div>
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
 
@@ -211,30 +238,39 @@ export default function LiveChatWidget() {
             onSubmit={handleSendMessage}
             className="p-4 border-t border-indigo-100/80 bg-white/50 space-y-2.5 shrink-0"
           >
+            {sendError && (
+              <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <span>{sendError}</span>
+              </p>
+            )}
+
             {!nameLocked && (
               <div className="relative">
                 <User className="w-3.5 h-3.5 text-indigo-500 absolute left-3.5 top-2.5" />
                 <input
                   type="text"
                   required
+                  disabled={sending}
                   value={visitorName}
                   onChange={(e) => setVisitorName(e.target.value)}
                   placeholder="Masukkan nama Anda sebelum bertanya..."
-                  className="clay-input w-full pl-9 pr-3 py-2 text-xs font-semibold text-slate-800"
+                  className="clay-input w-full pl-9 pr-3 py-2 text-xs font-semibold text-slate-800 disabled:opacity-60"
                 />
               </div>
             )}
 
-            {messages.length === 0 && (
+            {messages.length === 0 && !pendingMessage && (
               <div className="flex flex-wrap gap-1.5">
                 {QUICK_TOPICS.map((topic) => (
                   <button
                     key={topic}
                     type="button"
+                    disabled={sending}
                     onClick={() =>
                       setInput(`Halo Admin, saya ingin ${topic.toLowerCase()}.`)
                     }
-                    className="clay-pill px-2.5 py-1 text-[10px] font-bold text-indigo-600 hover:text-indigo-800 cursor-pointer"
+                    className="clay-pill px-2.5 py-1 text-[10px] font-bold text-indigo-600 hover:text-indigo-800 cursor-pointer disabled:opacity-50"
                   >
                     + {topic}
                   </button>
@@ -246,18 +282,23 @@ export default function LiveChatWidget() {
               <input
                 type="text"
                 required
+                disabled={sending}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ketik pesan ke Admin..."
-                className="clay-input flex-1 px-3.5 py-2.5 text-xs font-medium text-slate-800"
+                placeholder={sending ? "Sedang mengirim pesan..." : "Ketik pesan ke Admin..."}
+                className="clay-input flex-1 px-3.5 py-2.5 text-xs font-medium text-slate-800 disabled:opacity-60"
               />
               <button
                 type="submit"
                 disabled={sending || (!nameLocked && !visitorName.trim()) || !input.trim()}
                 aria-label="Kirim pesan"
-                className="clay-btn-primary p-2.5 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 cursor-pointer"
+                className="clay-btn-primary p-2.5 disabled:opacity-60 disabled:cursor-not-allowed shrink-0 cursor-pointer flex items-center justify-center"
               >
-                <Send className="w-4 h-4" />
+                {sending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
               </button>
             </div>
           </form>
