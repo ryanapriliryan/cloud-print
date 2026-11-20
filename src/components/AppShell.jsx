@@ -12,6 +12,7 @@ import {
   ClipboardList,
   Database,
   FileBarChart2,
+  MessageSquare,
   Bell,
   LogOut,
   Menu,
@@ -25,6 +26,7 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
   const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const [notifOpen, setNotifOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -35,6 +37,7 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
           { href: "/admin/kelola-pesanan", label: "Kelola Pesanan", icon: ClipboardList },
           { href: "/admin/master-data", label: "Master Data Harga", icon: Database },
           { href: "/admin/laporan", label: "Laporan Transaksi", icon: FileBarChart2 },
+          { href: "/admin/live-chat", label: "Live Chat Pengunjung", icon: MessageSquare },
         ]
       : [
           { href: "/pelanggan/dashboard", label: "Dasbor Pelanggan", icon: LayoutDashboard },
@@ -45,10 +48,13 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
 
   const loadHeaderData = useCallback(async () => {
     try {
-      const [meRes, notifRes] = await Promise.all([
-        fetch("/api/auth/me"),
-        fetch("/api/notifications"),
-      ]);
+      const requests = [fetch("/api/auth/me"), fetch("/api/notifications")];
+      if (role === "ADMIN") {
+        requests.push(fetch("/api/admin/chat"));
+      }
+
+      const [meRes, notifRes, chatRes] = await Promise.all(requests);
+
       if (meRes.ok) {
         const meData = await meRes.json();
         setUser(meData.user);
@@ -58,14 +64,18 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
         setNotifications(notifData.notifications || []);
         setUnreadCount(notifData.unreadCount || 0);
       }
+      if (chatRes && chatRes.ok) {
+        const chatData = await chatRes.json();
+        setUnreadChatCount(chatData.unreadTotal || 0);
+      }
     } catch {
       // ignore transient network errors
     }
-  }, []);
+  }, [role]);
 
   useEffect(() => {
     loadHeaderData();
-    const interval = setInterval(loadHeaderData, 20000);
+    const interval = setInterval(loadHeaderData, 15000);
     return () => clearInterval(interval);
   }, [loadHeaderData]);
 
@@ -108,18 +118,32 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = pathname === item.href;
+              const isChatMenu = item.href === "/admin/live-chat";
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={
                     active
-                      ? "clay-btn-primary flex items-center gap-3.5 px-4 py-3 text-sm font-bold"
-                      : "flex items-center gap-3.5 px-4 py-3 rounded-[18px] text-sm font-bold text-slate-600 hover:bg-white/80 hover:text-indigo-600 transition"
+                      ? "clay-btn-primary flex items-center justify-between gap-2 px-4 py-3 text-sm font-bold"
+                      : "flex items-center justify-between gap-2 px-4 py-3 rounded-[18px] text-sm font-bold text-slate-600 hover:bg-white/80 hover:text-indigo-600 transition"
                   }
                 >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span>{item.label}</span>
+                  <span className="flex items-center gap-3.5 min-w-0">
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span className="truncate">{item.label}</span>
+                  </span>
+                  {isChatMenu && unreadChatCount > 0 && (
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+                        active
+                          ? "bg-white text-indigo-700"
+                          : "bg-rose-500 text-white"
+                      }`}
+                    >
+                      {unreadChatCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -163,6 +187,7 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = pathname === item.href;
+                const isChatMenu = item.href === "/admin/live-chat";
                 return (
                   <Link
                     key={item.href}
@@ -170,12 +195,25 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
                     onClick={() => setMobileMenuOpen(false)}
                     className={
                       active
-                        ? "clay-btn-primary flex items-center gap-3 px-4 py-3 text-sm font-bold"
-                        : "flex items-center gap-3 px-4 py-3 rounded-[18px] text-sm font-bold text-slate-600 hover:bg-white/80"
+                        ? "clay-btn-primary flex items-center justify-between gap-2 px-4 py-3 text-sm font-bold"
+                        : "flex items-center justify-between gap-2 px-4 py-3 rounded-[18px] text-sm font-bold text-slate-600 hover:bg-white/80"
                     }
                   >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
+                    <span className="flex items-center gap-3 min-w-0">
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <span className="truncate">{item.label}</span>
+                    </span>
+                    {isChatMenu && unreadChatCount > 0 && (
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+                          active
+                            ? "bg-white text-indigo-700"
+                            : "bg-rose-500 text-white"
+                        }`}
+                      >
+                        {unreadChatCount}
+                      </span>
+                    )}
                   </Link>
                 );
               })}
