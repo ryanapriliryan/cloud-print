@@ -1,184 +1,197 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* =========================================================
-   CLAYMORPHISM UI/UX DESIGN SYSTEM - CLOUD PRINT
-   ========================================================= */
+:root {
+  /* Palet Dasar Claymorphism Cloud Print */
+  --clay-bg-start: #e8eeff;
+  --clay-bg-end: #f5f7ff;
+  --clay-surface: rgba(255, 255, 255, 0.94);
+  --clay-surface-nested: #eef2ff;
+  --clay-input-bg: #f3f6ff;
 
-body {
-  background: linear-gradient(135deg, #e8eeff 0%, #f3e8ff 50%, #e0f2fe 100%);
-  background-attachment: fixed;
-  color: #1e293b;
+  /* Warna Aksen Utama & Semantik */
+  --clay-primary-start: #4f46e5;
+  --clay-primary-end: #2563eb;
+  --clay-text-main: #0f172a;
+  --clay-text-muted: #475569;
+
+  /* Penajaman Kontras Teks Keterangan Kecil */
+  --color-slate-400: #64748b;
+  --color-slate-500: #475569;
 }
 
-/* Kartu Utama Clay (Mengembang 3D) */
-.clay-card {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(12px);
-  border-radius: 28px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    12px 14px 28px rgba(148, 163, 184, 0.28),
-    inset 6px 6px 14px rgba(255, 255, 255, 0.95),
-    inset -6px -6px 14px rgba(199, 210, 254, 0.45);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    color: var(--clay-text-main);
+    background: linear-gradient(145deg, var(--clay-bg-start) 0%, var(--clay-bg-end) 100%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
-/* Sub-Kartu / Kotak Info Clay */
-.clay-card-soft {
-  background: #f4f7ff;
-  border-radius: 22px;
-  border: 1.5px solid rgba(255, 255, 255, 0.95);
-  box-shadow:
-    8px 8px 18px rgba(148, 163, 184, 0.22),
-    inset 4px 4px 10px rgba(255, 255, 255, 0.95),
-    inset -4px -4px 10px rgba(199, 210, 254, 0.4);
+@layer components {
+  /* Kartu Utama Claymorphism */
+  .clay-card {
+    background: var(--clay-surface);
+    border-radius: 26px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow:
+      10px 14px 28px rgba(79, 70, 229, 0.11),
+      inset 4px 4px 10px rgba(255, 255, 255, 0.98),
+      inset -4px -4px 10px rgba(199, 210, 254, 0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Kartu Bersarang / Gelembung Chat Masuk (Kontras Lebih Tegas) */
+  .clay-card-soft {
+    background: var(--clay-surface-nested);
+    border-radius: 20px;
+    border: 1px solid rgba(199, 210, 254, 0.75);
+    box-shadow:
+      4px 6px 14px rgba(79, 70, 229, 0.09),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+      inset -2px -2px 6px rgba(165, 180, 252, 0.35);
+  }
+
+  /* Tombol Utama Indigo-Royal Blue */
+  .clay-btn-primary {
+    background: linear-gradient(135deg, var(--clay-primary-start) 0%, var(--clay-primary-end) 100%);
+    color: #ffffff;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+      6px 10px 20px rgba(79, 70, 229, 0.28),
+      inset 3px 3px 7px rgba(255, 255, 255, 0.38),
+      inset -3px -3px 7px rgba(30, 58, 138, 0.35);
+    transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .clay-btn-primary:hover:not(:disabled) {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    box-shadow:
+      8px 12px 24px rgba(79, 70, 229, 0.34),
+      inset 3px 3px 7px rgba(255, 255, 255, 0.42),
+      inset -3px -3px 7px rgba(30, 58, 138, 0.35);
+  }
+
+  .clay-btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  /* Tombol Aksi Berisiko / Hapus / Keluar */
+  .clay-btn-danger {
+    background: linear-gradient(145deg, #fff1f2 0%, #ffe4e6 100%);
+    color: #be123c;
+    border-radius: 16px;
+    border: 1px solid rgba(254, 205, 211, 0.9);
+    box-shadow:
+      4px 6px 14px rgba(225, 29, 72, 0.13),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+      inset -2px -2px 6px rgba(253, 164, 175, 0.35);
+    transition: transform 0.18s ease, filter 0.18s ease;
+  }
+
+  .clay-btn-danger:hover:not(:disabled) {
+    filter: brightness(0.98);
+    transform: translateY(-1px);
+  }
+
+  /* Tombol Pil / Tag Navigasi */
+  .clay-pill {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 9999px;
+    border: 1px solid rgba(224, 231, 255, 0.95);
+    box-shadow:
+      4px 6px 12px rgba(79, 70, 229, 0.08),
+      inset 2px 2px 5px rgba(255, 255, 255, 0.98),
+      inset -2px -2px 5px rgba(199, 210, 254, 0.35);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+
+  .clay-pill:hover:not(:disabled) {
+    background: #ffffff;
+    transform: translateY(-1px);
+  }
+
+  /* Kolom Input Cekung (Inset Clay) */
+  .clay-input {
+    background: var(--clay-input-bg);
+    border-radius: 16px;
+    border: 1px solid rgba(199, 210, 254, 0.85);
+    box-shadow:
+      inset 3px 3px 7px rgba(148, 163, 184, 0.22),
+      inset -3px -3px 7px rgba(255, 255, 255, 0.95);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  }
+
+  .clay-input:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #6366f1;
+    box-shadow:
+      0 0 0 3px rgba(99, 102, 241, 0.18),
+      inset 2px 2px 5px rgba(148, 163, 184, 0.15);
+  }
+
+  /* Kotak Ikon 3D Lembut */
+  .clay-icon-box {
+    background: linear-gradient(145deg, #eef2ff 0%, #e0e7ff 100%);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow:
+      5px 6px 14px rgba(79, 70, 229, 0.14),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+      inset -2px -2px 6px rgba(165, 180, 252, 0.4);
+  }
+
+  /* 4 Standar Lencana Status Pesanan */
+  .clay-badge-waiting {
+    background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
+    color: #b45309;
+    border: 1px solid #fde68a;
+  }
+
+  .clay-badge-process {
+    background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 100%);
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+  }
+
+  .clay-badge-done {
+    background: linear-gradient(145deg, #ecfdf5 0%, #d1fae5 100%);
+    color: #047857;
+    border: 1px solid #a7f3d0;
+  }
+
+  .clay-badge-rejected {
+    background: linear-gradient(145deg, #fff1f2 0%, #ffe4e6 100%);
+    color: #be123c;
+    border: 1px solid #fecdd3;
+  }
 }
 
-/* Input & Select Cekung ke Dalam (Recessed Clay) */
-.clay-input {
-  background: #eef2ff;
-  border-radius: 18px;
-  border: 1.5px solid rgba(255, 255, 255, 0.8);
-  box-shadow:
-    inset 4px 4px 9px rgba(148, 163, 184, 0.32),
-    inset -4px -4px 9px rgba(255, 255, 255, 0.95);
-  transition: all 0.2s ease;
-}
-
-.clay-input:focus {
-  background: #ffffff;
-  outline: none;
-  border-color: #6366f1;
-  box-shadow:
-    0 0 0 4px rgba(99, 102, 241, 0.18),
-    inset 2px 2px 6px rgba(148, 163, 184, 0.2);
-}
-
-/* Area Dropzone Upload Clay */
-.clay-dropzone {
-  background: linear-gradient(145deg, #f5f8ff, #eaefff);
-  border-radius: 24px;
-  border: 2.5px dashed #93c5fd;
-  box-shadow:
-    inset 5px 5px 12px rgba(148, 163, 184, 0.24),
-    inset -5px -5px 12px rgba(255, 255, 255, 0.95);
-  transition: all 0.2s ease;
-}
-
-.clay-dropzone:hover {
-  border-color: #4f46e5;
-  transform: translateY(-2px);
-  box-shadow:
-    8px 10px 20px rgba(99, 102, 241, 0.15),
-    inset 4px 4px 10px rgba(255, 255, 255, 0.95);
-}
-
-/* Tombol Utama Clay (Biru-Indigo Mengembang) */
-.clay-btn-primary {
-  background: linear-gradient(145deg, #4f46e5, #2563eb);
-  color: #ffffff;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow:
-    8px 10px 20px rgba(37, 99, 235, 0.35),
-    inset 4px 4px 8px rgba(255, 255, 255, 0.4),
-    inset -4px -4px 8px rgba(30, 58, 138, 0.4);
-  transition: all 0.18s ease;
-}
-
-.clay-btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow:
-    10px 14px 24px rgba(37, 99, 235, 0.42),
-    inset 4px 4px 10px rgba(255, 255, 255, 0.5),
-    inset -4px -4px 8px rgba(30, 58, 138, 0.45);
-}
-
-.clay-btn-primary:active:not(:disabled) {
-  transform: scale(0.97);
-}
-
-/* Tombol Sekunder / Pill Non-Aktif Clay */
-.clay-pill {
-  background: #f8fafc;
-  color: #334155;
-  border-radius: 18px;
-  border: 1.5px solid rgba(255, 255, 255, 0.95);
-  box-shadow:
-    5px 6px 12px rgba(148, 163, 184, 0.24),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.95),
-    inset -3px -3px 6px rgba(203, 213, 225, 0.45);
-  transition: all 0.18s ease;
-}
-
-.clay-pill:hover {
-  transform: translateY(-1px);
-  background: #ffffff;
-}
-
-/* Tombol Bahaya / Batal Clay */
-.clay-btn-danger {
-  background: linear-gradient(145deg, #ffe4e6, #fecdd3);
-  color: #be123c;
-  border-radius: 18px;
-  border: 1.5px solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    5px 6px 14px rgba(244, 63, 94, 0.18),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.9),
-    inset -3px -3px 6px rgba(251, 113, 133, 0.3);
-  transition: all 0.18s ease;
-}
-
-.clay-btn-danger:hover {
-  transform: translateY(-1px);
-}
-
-/* Badge / Ikon Bulat 3D Clay */
-.clay-icon-box {
-  background: linear-gradient(145deg, #dbeafe, #e0e7ff);
-  border-radius: 18px;
-  box-shadow:
-    5px 5px 12px rgba(148, 163, 184, 0.25),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.95),
-    inset -3px -3px 6px rgba(165, 180, 252, 0.45);
-}
-
+/* Aturan Cetak Laporan Resmi / PDF Bersih */
 @media print {
-  @page {
-    size: A4 portrait;
-    margin: 15mm;
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
   }
 
   .no-print {
     display: none !important;
   }
 
-  .print-only {
-    display: block !important;
-  }
-
-  body {
-    background: #ffffff !important;
-    color: #000000 !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  main {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-  }
-
   .clay-card,
-  .clay-card-soft {
-    box-shadow: none !important;
-    backdrop-filter: none !important;
+  .clay-card-soft,
+  .clay-pill,
+  .clay-icon-box {
     background: #ffffff !important;
-    border: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
   }
 }
