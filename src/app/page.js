@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { Printer, ShieldCheck, Calculator, FileCheck2, ArrowRight, Sparkles } from "lucide-react";
+import WhatsAppChatWidget from "@/components/WhatsAppChatWidget";
 
 export default async function HomePage() {
   const session = await getSession();
@@ -134,6 +135,9 @@ export default async function HomePage() {
           &copy; {new Date().getFullYear()} Cloud Print — Sistem Layanan Percetakan Online.
         </div>
       </footer>
+
+      {/* Widget Chat WhatsApp Claymorphism */}
+      <WhatsAppChatWidget />
     </div>
   );
 }
