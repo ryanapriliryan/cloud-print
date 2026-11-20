@@ -40,10 +40,11 @@ export default function LiveChatWidget() {
   const [sendError, setSendError] = useState("");
   const [hasNewReply, setHasNewReply] = useState(false);
 
+  const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
   const lastCountRef = useRef(0);
+  const isNearBottomRef = useRef(true);
 
-  // Inisialisasi token & nama pengunjung dari localStorage
   useEffect(() => {
     let savedToken = localStorage.getItem("cloudprint_chat_token");
     if (!savedToken) {
@@ -57,6 +58,17 @@ export default function LiveChatWidget() {
       setVisitorName(savedName);
       setNameLocked(true);
     }
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    const el = chatContainerRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    isNearBottomRef.current = distanceFromBottom < 90;
+  }, []);
+
+  const scrollToBottom = useCallback((behavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
   }, []);
 
   const fetchMessages = useCallback(async () => {
@@ -73,18 +85,29 @@ export default function LiveChatWidget() {
         localStorage.setItem("cloudprint_chat_name", data.session.visitorName);
       }
 
-      if (list.length > lastCountRef.current) {
+      const hasNewMessages = list.length > lastCountRef.current;
+      if (hasNewMessages) {
         const newest = list[list.length - 1];
         if (!open && newest?.sender === "ADMIN" && lastCountRef.current > 0) {
           setHasNewReply(true);
         }
         lastCountRef.current = list.length;
       }
-      setMessages(list);
+
+      setMessages((prev) => {
+        const isSame =
+          prev.length === list.length &&
+          prev[prev.length - 1]?.id === list[list.length - 1]?.id;
+        return isSame ? prev : list;
+      });
+
+      if (hasNewMessages && open && isNearBottomRef.current) {
+        requestAnimationFrame(() => scrollToBottom("smooth"));
+      }
     } catch {
       // abaikan error jaringan sementara
     }
-  }, [token, open]);
+  }, [token, open, scrollToBottom]);
 
   useEffect(() => {
     if (!token) return;
@@ -93,12 +116,22 @@ export default function LiveChatWidget() {
     return () => clearInterval(interval);
   }, [token, open, fetchMessages]);
 
+  // Saat jendela chat dibuka, langsung arahkan ke pesan terbaru satu kali
   useEffect(() => {
     if (open) {
       setHasNewReply(false);
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      isNearBottomRef.current = true;
+      requestAnimationFrame(() => scrollToBottom("auto"));
     }
-  }, [open, messages, pendingMessage]);
+  }, [open, scrollToBottom]);
+
+  // Saat pengguna mengirim pesan baru, gulir ke bawah
+  useEffect(() => {
+    if (open && pendingMessage) {
+      isNearBottomRef.current = true;
+      requestAnimationFrame(() => scrollToBottom("smooth"));
+    }
+  }, [open, pendingMessage, scrollToBottom]);
 
   async function handleSendMessage(e) {
     e.preventDefault();
@@ -112,6 +145,7 @@ export default function LiveChatWidget() {
     setSending(true);
     setPendingMessage(trimmedContent);
     setInput("");
+    isNearBottomRef.current = true;
 
     if (!nameLocked && trimmedName) {
       setNameLocked(true);
@@ -180,7 +214,11 @@ export default function LiveChatWidget() {
           </div>
 
           {/* Area Riwayat Pesan */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[240px] max-h-[340px]">
+          <div
+            ref={chatContainerRef}
+            onScroll={handleScroll}
+            className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[240px] max-h-[340px]"
+          >
             {/* Sapaan Pembuka Otomatis */}
             <div className="flex flex-col items-start">
               <span className="text-[10px] font-extrabold text-indigo-600 mb-1 ml-1">

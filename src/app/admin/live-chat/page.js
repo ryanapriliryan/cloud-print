@@ -28,18 +28,31 @@ function LiveChatAdminContent() {
   const [sending, setSending] = useState(false);
   const [pendingReply, setPendingReply] = useState(null);
 
-  // State modal konfirmasi hapus & notifikasi
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
   const [toast, setToast] = useState("");
 
+  const chatContainerRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const isNearBottomRef = useRef(true);
+  const prevMsgCountRef = useRef(0);
 
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(""), 3000);
   }
+
+  const handleScroll = useCallback(() => {
+    const el = chatContainerRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    isNearBottomRef.current = distanceFromBottom < 90;
+  }, []);
+
+  const scrollToBottom = useCallback((behavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
+  }, []);
 
   const loadSessions = useCallback(async () => {
     try {
@@ -60,18 +73,36 @@ function LiveChatAdminContent() {
     if (!selectedId) {
       setActiveSession(null);
       setMessages([]);
+      prevMsgCountRef.current = 0;
       return;
     }
     try {
       const res = await fetch(`/api/admin/chat/${selectedId}`);
       if (!res.ok) return;
       const data = await res.json();
+      const list = data.messages || [];
+      const isInitialLoad = prevMsgCountRef.current === 0 && list.length > 0;
+      const hasNewMessages = list.length > prevMsgCountRef.current;
+
+      prevMsgCountRef.current = list.length;
       setActiveSession(data.session || null);
-      setMessages(data.messages || []);
+      setMessages((prev) => {
+        const isSame =
+          prev.length === list.length &&
+          prev[prev.length - 1]?.id === list[list.length - 1]?.id;
+        return isSame ? prev : list;
+      });
+
+      if (isInitialLoad) {
+        isNearBottomRef.current = true;
+        requestAnimationFrame(() => scrollToBottom("auto"));
+      } else if (hasNewMessages && isNearBottomRef.current) {
+        requestAnimationFrame(() => scrollToBottom("smooth"));
+      }
     } catch {
       // abaikan error jaringan sementara
     }
-  }, [selectedId]);
+  }, [selectedId, scrollToBottom]);
 
   useEffect(() => {
     loadSessions();
@@ -80,6 +111,8 @@ function LiveChatAdminContent() {
   }, [loadSessions]);
 
   useEffect(() => {
+    prevMsgCountRef.current = 0;
+    isNearBottomRef.current = true;
     if (!selectedId) return;
     loadConversation();
     const interval = setInterval(loadConversation, 3500);
@@ -87,8 +120,11 @@ function LiveChatAdminContent() {
   }, [selectedId, loadConversation]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, pendingReply]);
+    if (pendingReply) {
+      isNearBottomRef.current = true;
+      requestAnimationFrame(() => scrollToBottom("smooth"));
+    }
+  }, [pendingReply, scrollToBottom]);
 
   async function handleSendReply(e) {
     e.preventDefault();
@@ -98,6 +134,7 @@ function LiveChatAdminContent() {
     setSending(true);
     setPendingReply(text);
     setReplyText("");
+    isNearBottomRef.current = true;
     try {
       const res = await fetch(`/api/admin/chat/${selectedId}`, {
         method: "POST",
@@ -297,7 +334,11 @@ function LiveChatAdminContent() {
               </div>
 
               {/* Isi Pesan */}
-              <div className="flex-1 p-5 overflow-y-auto space-y-3.5 max-h-[420px]">
+              <div
+                ref={chatContainerRef}
+                onScroll={handleScroll}
+                className="flex-1 p-5 overflow-y-auto space-y-3.5 max-h-[420px]"
+              >
                 {messages.map((msg) => {
                   const isAdmin = msg.sender === "ADMIN";
                   return (
