@@ -88,68 +88,42 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* Showcase Maskot 3D & Kartu Fitur Claymorphism */}
+          {/* 3 Kartu Fitur Claymorphism */}
           <div className="grid sm:grid-cols-2 gap-5">
-            {/* Kartu Maskot Asisten Cetak */}
-            <div className="clay-card p-6 sm:col-span-2 flex flex-col sm:flex-row items-center gap-5 bg-gradient-to-br from-white/95 to-indigo-50/80">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-[26px] overflow-hidden shrink-0 shadow-[6px_8px_18px_rgba(79,70,229,0.18),inset_3px_3px_6px_rgba(255,255,255,0.9)] border-2 border-white bg-indigo-50">
-                <img
-                  src="/mascot.png"
-                  alt="Asisten Digital Cloud Print"
-                  className="w-full h-full object-cover"
-                />
+            <div className="clay-card p-6 sm:p-7 space-y-3.5 hover:-translate-y-1">
+              <div className="clay-icon-box w-12 h-12 text-indigo-600 flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6" />
               </div>
-              <div className="text-center sm:text-left space-y-1.5">
-                <span className="clay-pill inline-block px-3 py-1 text-[11px] font-extrabold text-indigo-600">
-                  Asisten Cetak 24/7
-                </span>
-                <h2 className="font-extrabold text-slate-900 text-base sm:text-lg">
-                  Siap Membantu Kebutuhan Cetak Anda
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Kirim file dari rumah atau kampus, pantau status pengerjaan secara langsung, dan konsultasi lewat Live Chat kapan saja.
-                </p>
-              </div>
-            </div>
-
-            <div className="clay-card p-6 space-y-3 hover:-translate-y-1">
-              <div className="clay-icon-box w-11 h-11 text-indigo-600 flex items-center justify-center">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">
+              <h3 className="font-extrabold text-slate-900 text-base">
                 Bebas Flashdisk & Malware
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Pertukaran dokumen sepenuhnya berbasis cloud sehingga aman dari risiko penyebaran virus komputer.
               </p>
             </div>
 
-            <div className="clay-card p-6 space-y-3 hover:-translate-y-1">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600 flex items-center justify-center shadow-[5px_5px_12px_rgba(16,185,129,0.18),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
-                <Calculator className="w-5 h-5" />
+            <div className="clay-card p-6 sm:p-7 space-y-3.5 hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600 flex items-center justify-center shadow-[5px_5px_12px_rgba(16,185,129,0.18),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
+                <Calculator className="w-6 h-6" />
               </div>
-              <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">
+              <h3 className="font-extrabold text-slate-900 text-base">
                 Kalkulasi Harga Otomatis
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Rincian biaya dokumen, banner, stiker, kartu nama, dan finishing dihitung otomatis sesuai harga master.
               </p>
             </div>
 
-            <div className="clay-card p-6 space-y-3 sm:col-span-2 hover:-translate-y-1">
-              <div className="flex items-start gap-4">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 text-amber-600 flex items-center justify-center shadow-[5px_5px_12px_rgba(245,158,11,0.18),inset_3px_3px_6px_rgba(255,255,255,0.95)] shrink-0">
-                  <FileCheck2 className="w-5 h-5" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">
-                    Verifikasi Pembayaran & Notifikasi Real-Time
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Unggah bukti transfer langsung di menu riwayat pesanan dan terima notifikasi instan saat cetakan selesai dikerjakan.
-                  </p>
-                </div>
+            <div className="clay-card p-6 sm:p-7 space-y-3.5 sm:col-span-2 hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 text-amber-600 flex items-center justify-center shadow-[5px_5px_12px_rgba(245,158,11,0.18),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
+                <FileCheck2 className="w-6 h-6" />
               </div>
+              <h3 className="font-extrabold text-slate-900 text-base">
+                Verifikasi Pembayaran & Notifikasi Real-Time
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Unggah bukti transfer langsung di menu riwayat pesanan dan terima notifikasi instan saat cetakan selesai dikerjakan.
+              </p>
             </div>
           </div>
         </div>
