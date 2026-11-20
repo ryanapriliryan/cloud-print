@@ -50,7 +50,17 @@ export async function DELETE(request, { params }) {
     }
 
     const { id } = await params;
-    await prisma.printOption.delete({ where: { id } });
+
+    await prisma.$transaction([
+      prisma.orderItem.updateMany({
+        where: { printOptionId: id },
+        data: { printOptionId: null },
+      }),
+      prisma.printOption.deleteMany({
+        where: { id },
+      }),
+    ]);
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Delete print option error:", error);

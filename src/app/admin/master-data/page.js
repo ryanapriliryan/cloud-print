@@ -1,7 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, CheckCircle2, Store, Tag, Layers } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  CheckCircle2,
+  Store,
+  Tag,
+  Layers,
+  AlertCircle,
+  Loader2,
+  X,
+} from "lucide-react";
 import { formatRupiah, PRINT_CATEGORIES, UNIT_OPTIONS } from "@/lib/format";
 import ClaySelect from "@/components/ClaySelect";
 
@@ -19,6 +30,11 @@ export default function AdminMasterDataPage() {
   });
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
+
+  // State modal konfirmasi hapus
+  const [deleteTarget, setDeleteTarget] = useState(null); // { type: "print" | "finishing", id, name }
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   // Print Option Form state
   const [editingPrintId, setEditingPrintId] = useState(null);
@@ -97,17 +113,6 @@ export default function AdminMasterDataPage() {
     }
   }
 
-  async function handleDeletePrintOption(id) {
-    if (!confirm("Hapus jenis cetak ini dari master data?")) return;
-    const res = await fetch(`/api/admin/master-data/print-options/${id}`, {
-      method,
-    });
-    if (res.ok) {
-      await loadMasterData();
-      showToast("Jenis cetak berhasil dihapus.");
-    }
-  }
-
   async function handleSaveFinishing(e) {
     e.preventDefault();
     const url = editingFinId
@@ -134,14 +139,59 @@ export default function AdminMasterDataPage() {
     }
   }
 
-  async function handleDeleteFinishing(id) {
-    if (!confirm("Hapus opsi finishing ini?")) return;
-    const res = await fetch(`/api/admin/master-data/finishings/${id}`, {
-      method,
-    });
-    if (res.ok) {
+  async function handleConfirmDelete() {
+    if (!deleteTarget || deleting) return;
+    const { type, id } = deleteTarget;
+
+    const endpoint =
+      type === "print"
+        ? `/api/admin/master-data/print-options/${id}`
+        : `/api/admin/master-data/finishings/${id}`;
+
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const res = await fetch(endpoint, {
+        method: "DELETE",
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setDeleteError(data.error || "Gagal menghapus item dari master data.");
+        return;
+      }
+
+      if (type === "print" && editingPrintId === id) {
+        setEditingPrintId(null);
+        setPrintForm({
+          category: PRINT_CATEGORIES[0],
+          name: "",
+          unit: "lembar",
+          price: "",
+          description: "",
+        });
+      }
+      if (type === "finishing" && editingFinId === id) {
+        setEditingFinId(null);
+        setFinForm({
+          category: "SEMUA",
+          name: "",
+          unit: "per dokumen",
+          price: "",
+        });
+      }
+
+      setDeleteTarget(null);
       await loadMasterData();
-      showToast("Opsi finishing berhasil dihapus.");
+      showToast(
+        type === "print"
+          ? "Jenis cetak berhasil dihapus."
+          : "Opsi finishing berhasil dihapus."
+      );
+    } catch {
+      setDeleteError("Koneksi terputus saat menghapus data.");
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -225,7 +275,7 @@ export default function AdminMasterDataPage() {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="clay-btn-primary flex-1 px-3.5 py-2.5 text-xs font-bold inline-flex items-center justify-center gap-1.5"
+              className="clay-btn-primary flex-1 px-3.5 py-2.5 text-xs font-bold inline-flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               {editingPrintId ? "Update" : "Tambah"}
@@ -243,7 +293,7 @@ export default function AdminMasterDataPage() {
                     description: "",
                   });
                 }}
-                className="clay-pill px-3 py-2.5 text-xs font-bold text-slate-600"
+                className="clay-pill px-3 py-2.5 text-xs font-bold text-slate-600 cursor-pointer"
               >
                 Batal
               </button>
@@ -293,15 +343,22 @@ export default function AdminMasterDataPage() {
                             description: item.description || "",
                           });
                         }}
-                        className="clay-pill p-2 text-indigo-600 inline-flex items-center justify-center"
+                        className="clay-pill p-2 text-indigo-600 inline-flex items-center justify-center cursor-pointer"
                         title="Edit"
                       >
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDeletePrintOption(item.id)}
-                        className="clay-btn-danger p-2 inline-flex items-center justify-center"
+                        onClick={() => {
+                          setDeleteError("");
+                          setDeleteTarget({
+                            type: "print",
+                            id: item.id,
+                            name: item.name,
+                          });
+                        }}
+                        className="clay-btn-danger p-2 inline-flex items-center justify-center cursor-pointer"
                         title="Hapus"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -373,7 +430,7 @@ export default function AdminMasterDataPage() {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="clay-btn-primary flex-1 px-3.5 py-2.5 text-xs font-bold inline-flex items-center justify-center gap-1.5"
+              className="clay-btn-primary flex-1 px-3.5 py-2.5 text-xs font-bold inline-flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               {editingFinId ? "Update" : "Tambah"}
@@ -390,7 +447,7 @@ export default function AdminMasterDataPage() {
                     price: "",
                   });
                 }}
-                className="clay-pill px-3 py-2.5 text-xs font-bold text-slate-600"
+                className="clay-pill px-3 py-2.5 text-xs font-bold text-slate-600 cursor-pointer"
               >
                 Batal
               </button>
@@ -439,15 +496,22 @@ export default function AdminMasterDataPage() {
                             price: String(fin.price),
                           });
                         }}
-                        className="clay-pill p-2 text-indigo-600 inline-flex items-center justify-center"
+                        className="clay-pill p-2 text-indigo-600 inline-flex items-center justify-center cursor-pointer"
                         title="Edit"
                       >
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDeleteFinishing(fin.id)}
-                        className="clay-btn-danger p-2 inline-flex items-center justify-center"
+                        onClick={() => {
+                          setDeleteError("");
+                          setDeleteTarget({
+                            type: "finishing",
+                            id: fin.id,
+                            name: fin.name,
+                          });
+                        }}
+                        className="clay-btn-danger p-2 inline-flex items-center justify-center cursor-pointer"
                         title="Hapus"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -538,13 +602,75 @@ export default function AdminMasterDataPage() {
           <div className="sm:col-span-3 flex justify-end pt-1">
             <button
               type="submit"
-              className="clay-btn-primary px-6 py-3 text-xs font-bold"
+              className="clay-btn-primary px-6 py-3 text-xs font-bold cursor-pointer"
             >
               Simpan Pengaturan Toko & Rekening
             </button>
           </div>
         </form>
       </div>
+
+      {/* Modal Konfirmasi Hapus Master Data */}
+      {deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => !deleting && setDeleteTarget(null)}
+        >
+          <div
+            className="clay-card max-w-sm w-full p-7 text-center space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-red-100 text-rose-600 flex items-center justify-center mx-auto shadow-[5px_5px_12px_rgba(244,63,94,0.2),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
+              <Trash2 className="w-7 h-7" />
+            </div>
+
+            <div>
+              <h3 className="text-lg font-extrabold text-slate-900">
+                {deleteTarget.type === "print"
+                  ? "Hapus Jenis Cetak?"
+                  : "Hapus Opsi Finishing?"}
+              </h3>
+              <p className="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                Item{" "}
+                <strong className="text-slate-900">{deleteTarget.name}</strong>{" "}
+                akan dihapus dari daftar master data.
+              </p>
+            </div>
+
+            {deleteError && (
+              <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center justify-center gap-1.5">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{deleteError}</span>
+              </div>
+            )}
+
+            <div className="flex items-center gap-3 pt-1">
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={() => setDeleteTarget(null)}
+                className="clay-pill flex-1 py-3 px-4 text-xs font-bold text-slate-700 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <X className="w-4 h-4" />
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={handleConfirmDelete}
+                className="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white font-bold text-xs shadow-[6px_8px_18px_rgba(225,29,72,0.35),inset_3px_3px_6px_rgba(255,255,255,0.4)] hover:brightness-105 disabled:opacity-60 transition cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                {deleting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
+                <span>{deleting ? "Menghapus..." : "Ya, Hapus"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

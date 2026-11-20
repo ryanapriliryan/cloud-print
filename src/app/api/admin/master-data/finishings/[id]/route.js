@@ -48,7 +48,17 @@ export async function DELETE(request, { params }) {
     }
 
     const { id } = await params;
-    await prisma.finishing.delete({ where: { id } });
+
+    await prisma.$transaction([
+      prisma.orderItem.updateMany({
+        where: { finishingId: id },
+        data: { finishingId: null },
+      }),
+      prisma.finishing.deleteMany({
+        where: { id },
+      }),
+    ]);
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Delete finishing error:", error);
