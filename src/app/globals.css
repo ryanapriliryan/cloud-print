@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  /* Palet Olive Sage & Moss (Organik, Teduh & Bebas Silau) */
-  --clay-bg-start: #c1ccb6;
-  --clay-bg-end: #cfd9c5;
-  --clay-surface: rgba(232, 237, 226, 0.95);
-  --clay-surface-nested: #d6e0cc;
-  --clay-input-bg: #dce5d3;
+  /* Palet Steel Slate & Ocean (Profesional, Teduh & Bebas Silau) */
+  --clay-bg-start: #bccad6;
+  --clay-bg-end: #ccd8e2;
+  --clay-surface: rgba(228, 236, 242, 0.95);
+  --clay-surface-nested: #d2dfe9;
+  --clay-input-bg: #dae5ee;
 
-  --clay-primary-start: #3f6212;
-  --clay-primary-end: #15803d;
-  --clay-text-main: #141c10;
-  --clay-text-muted: #374331;
+  --clay-primary-start: #0369a1;
+  --clay-primary-end: #1d4ed8;
+  --clay-text-main: #0f172a;
+  --clay-text-muted: #334155;
 }
 
 @layer base {
@@ -30,15 +30,15 @@
 }
 
 @layer components {
-  /* Kartu Utama Olive-Linen Redup */
+  /* Kartu Utama Ice-Slate Redup */
   .clay-card {
     background: var(--clay-surface);
     border-radius: 26px;
-    border: 1px solid rgba(255, 255, 255, 0.56);
+    border: 1px solid rgba(255, 255, 255, 0.62);
     box-shadow:
-      10px 14px 28px rgba(43, 64, 24, 0.16),
-      inset 4px 4px 10px rgba(255, 255, 255, 0.68),
-      inset -4px -4px 10px rgba(154, 174, 136, 0.48);
+      10px 14px 28px rgba(15, 41, 66, 0.16),
+      inset 4px 4px 10px rgba(255, 255, 255, 0.72),
+      inset -4px -4px 10px rgba(148, 175, 198, 0.48);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
@@ -46,23 +46,23 @@
   .clay-card-soft {
     background: var(--clay-surface-nested);
     border-radius: 20px;
-    border: 1px solid rgba(154, 174, 136, 0.85);
+    border: 1px solid rgba(148, 175, 198, 0.85);
     box-shadow:
-      4px 6px 14px rgba(43, 64, 24, 0.13),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.62),
-      inset -2px -2px 6px rgba(128, 150, 108, 0.42);
+      4px 6px 14px rgba(15, 41, 66, 0.13),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.65),
+      inset -2px -2px 6px rgba(120, 151, 178, 0.42);
   }
 
-  /* Tombol Utama Olive-Moss Green */
+  /* Tombol Utama Ocean Blue */
   .clay-btn-primary {
     background: linear-gradient(135deg, var(--clay-primary-start) 0%, var(--clay-primary-end) 100%);
     color: #ffffff;
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.24);
     box-shadow:
-      6px 10px 20px rgba(43, 64, 24, 0.3),
-      inset 3px 3px 7px rgba(255, 255, 255, 0.28),
-      inset -3px -3px 7px rgba(20, 40, 10, 0.42);
+      6px 10px 20px rgba(3, 105, 161, 0.3),
+      inset 3px 3px 7px rgba(255, 255, 255, 0.32),
+      inset -3px -3px 7px rgba(12, 45, 90, 0.42);
     transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
   }
 
@@ -70,9 +70,9 @@
     filter: brightness(1.06);
     transform: translateY(-1px);
     box-shadow:
-      8px 12px 24px rgba(43, 64, 24, 0.36),
-      inset 3px 3px 7px rgba(255, 255, 255, 0.34),
-      inset -3px -3px 7px rgba(20, 40, 10, 0.42);
+      8px 12px 24px rgba(3, 105, 161, 0.36),
+      inset 3px 3px 7px rgba(255, 255, 255, 0.36),
+      inset -3px -3px 7px rgba(12, 45, 90, 0.42);
   }
 
   .clay-btn-primary:active:not(:disabled) {
@@ -99,18 +99,18 @@
 
   /* Tombol Pil / Tag Navigasi */
   .clay-pill {
-    background: #dfe7d6;
+    background: #dbe6ef;
     border-radius: 9999px;
-    border: 1px solid rgba(163, 182, 145, 0.9);
+    border: 1px solid rgba(158, 182, 203, 0.9);
     box-shadow:
-      4px 6px 12px rgba(43, 64, 24, 0.12),
-      inset 2px 2px 5px rgba(255, 255, 255, 0.7),
-      inset -2px -2px 5px rgba(154, 174, 136, 0.42);
+      4px 6px 12px rgba(15, 41, 66, 0.12),
+      inset 2px 2px 5px rgba(255, 255, 255, 0.72),
+      inset -2px -2px 5px rgba(148, 175, 198, 0.42);
     transition: transform 0.15s ease, background-color 0.15s ease;
   }
 
   .clay-pill:hover:not(:disabled) {
-    background: #e9efe2;
+    background: #e7eff6;
     transform: translateY(-1px);
   }
 
@@ -118,31 +118,31 @@
   .clay-input {
     background: var(--clay-input-bg);
     border-radius: 16px;
-    border: 1px solid rgba(154, 174, 136, 0.95);
+    border: 1px solid rgba(148, 175, 198, 0.95);
     box-shadow:
-      inset 3px 3px 7px rgba(43, 64, 24, 0.15),
-      inset -3px -3px 7px rgba(255, 255, 255, 0.7);
+      inset 3px 3px 7px rgba(15, 41, 66, 0.15),
+      inset -3px -3px 7px rgba(255, 255, 255, 0.72);
     transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
   }
 
   .clay-input:focus {
     outline: none;
-    background: #ecf1e6;
-    border-color: #3f6212;
+    background: #e9f0f6;
+    border-color: #0369a1;
     box-shadow:
-      0 0 0 3px rgba(63, 98, 18, 0.22),
-      inset 2px 2px 5px rgba(43, 64, 24, 0.12);
+      0 0 0 3px rgba(3, 105, 161, 0.22),
+      inset 2px 2px 5px rgba(15, 41, 66, 0.12);
   }
 
   /* Kotak Ikon 3D Lembut */
   .clay-icon-box {
-    background: linear-gradient(145deg, #d7e1cd 0%, #c5d3b7 100%);
+    background: linear-gradient(145deg, #d3e1ec 0%, #bfd3e3 100%);
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.65);
     box-shadow:
-      5px 6px 14px rgba(43, 64, 24, 0.16),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.72),
-      inset -2px -2px 6px rgba(128, 150, 108, 0.45);
+      5px 6px 14px rgba(15, 41, 66, 0.16),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.75),
+      inset -2px -2px 6px rgba(120, 151, 178, 0.45);
   }
 
   /* 4 Standar Lencana Status */
@@ -153,9 +153,9 @@
   }
 
   .clay-badge-process {
-    background: linear-gradient(145deg, #dbead2 0%, #c3dcba 100%);
-    color: #2f4f12;
-    border: 1px solid #84cc16;
+    background: linear-gradient(145deg, #cce4f6 0%, #add3f0 100%);
+    color: #0c4a6e;
+    border: 1px solid #38bdf8;
   }
 
   .clay-badge-done {
@@ -174,18 +174,18 @@
 /* Redupkan elemen bg-white bawaan agar bebas silau */
 .bg-white,
 .bg-white\/95 {
-  background-color: rgba(232, 237, 226, 0.95) !important;
+  background-color: rgba(228, 236, 242, 0.95) !important;
 }
 
 .bg-white\/50 {
-  background-color: rgba(220, 229, 211, 0.72) !important;
+  background-color: rgba(218, 229, 238, 0.72) !important;
 }
 
 .bg-slate-50 {
-  background-color: rgba(214, 224, 204, 0.75) !important;
+  background-color: rgba(210, 223, 233, 0.75) !important;
 }
 
-/* Penyelarasan Otomatis Semua Aksen Indigo, Blue & Teal Menjadi Olive-Moss */
+/* Penyelarasan Otomatis Semua Aksen Indigo, Teal & Blue Menjadi Ocean Blue */
 .text-indigo-500,
 .text-indigo-600,
 .text-indigo-700,
@@ -195,13 +195,13 @@
 .text-blue-700,
 .text-teal-600,
 .text-teal-700 {
-  color: #3f6212 !important;
+  color: #0369a1 !important;
 }
 
 .text-indigo-100,
 .text-indigo-200,
 .text-teal-100 {
-  color: #ecfccb !important;
+  color: #e0f2fe !important;
 }
 
 .hover\:text-indigo-600:hover,
@@ -210,7 +210,7 @@
 .hover\:text-blue-600:hover,
 .hover\:text-teal-700:hover,
 .hover\:text-teal-900:hover {
-  color: #1a2e05 !important;
+  color: #0c4a6e !important;
 }
 
 .bg-indigo-50,
@@ -219,7 +219,7 @@
 .bg-teal-50,
 .bg-teal-50\/40,
 .bg-teal-50\/70 {
-  background-color: rgba(203, 216, 190, 0.65) !important;
+  background-color: rgba(196, 214, 229, 0.65) !important;
 }
 
 .bg-indigo-100,
@@ -227,18 +227,18 @@
 .bg-indigo-100\/75,
 .bg-teal-100\/70,
 .bg-teal-100\/75 {
-  background-color: rgba(183, 201, 166, 0.72) !important;
+  background-color: rgba(173, 198, 219, 0.72) !important;
 }
 
 .bg-indigo-600,
 .bg-teal-600 {
-  background-color: #3f6212 !important;
+  background-color: #0369a1 !important;
 }
 
 .hover\:bg-indigo-50:hover,
 .hover\:bg-indigo-50\/40:hover,
 .hover\:bg-teal-50\/40:hover {
-  background-color: rgba(203, 216, 190, 0.5) !important;
+  background-color: rgba(196, 214, 229, 0.5) !important;
 }
 
 .border-indigo-100,
@@ -248,30 +248,30 @@
 .border-indigo-200,
 .border-teal-100,
 .border-teal-100\/80 {
-  border-color: rgba(154, 174, 136, 0.85) !important;
+  border-color: rgba(148, 175, 198, 0.85) !important;
 }
 
 .divide-indigo-100 > :not([hidden]) ~ :not([hidden]),
 .divide-indigo-100\/60 > :not([hidden]) ~ :not([hidden]),
 .divide-teal-100\/60 > :not([hidden]) ~ :not([hidden]) {
-  border-color: rgba(154, 174, 136, 0.7) !important;
+  border-color: rgba(148, 175, 198, 0.7) !important;
 }
 
 .from-indigo-600,
 .from-teal-600 {
-  --tw-gradient-from: #3f6212 var(--tw-gradient-from-position) !important;
-  --tw-gradient-to: rgb(63 98 18 / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-from: #0369a1 var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(3 105 161 / 0) var(--tw-gradient-to-position) !important;
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
 }
 
 .to-blue-600,
 .to-emerald-600 {
-  --tw-gradient-to: #15803d var(--tw-gradient-to-position) !important;
+  --tw-gradient-to: #1d4ed8 var(--tw-gradient-to-position) !important;
 }
 
 .ring-teal-600,
 .ring-indigo-600 {
-  --tw-ring-color: #3f6212 !important;
+  --tw-ring-color: #0369a1 !important;
 }
 
 /* Aturan Cetak Laporan Resmi Tetap Bersih & Hemat Tinta */
