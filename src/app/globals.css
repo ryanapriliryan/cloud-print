@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  /* Palet Opsi 2: Teal & Emerald Mint */
-  --clay-bg-start: #e6f7f5;
-  --clay-bg-end: #f2fbf9;
-  --clay-surface: rgba(255, 255, 255, 0.94);
-  --clay-surface-nested: #e6f7f2;
-  --clay-input-bg: #f0fdf9;
+  /* Nuansa Mint-Sage Teduh (Mengurangi Silau Putih) */
+  --clay-bg-start: #cde9e2;
+  --clay-bg-end: #dcefe9;
+  --clay-surface: rgba(241, 250, 247, 0.94);
+  --clay-surface-nested: #d7ede7;
+  --clay-input-bg: #e3f3ef;
 
   --clay-primary-start: #0d9488;
   --clay-primary-end: #059669;
   --clay-text-main: #0f172a;
-  --clay-text-muted: #475569;
+  --clay-text-muted: #334155;
 }
 
 @layer base {
@@ -30,27 +30,30 @@
 }
 
 @layer components {
+  /* Kartu Utama Mint-Porcelain Teduh */
   .clay-card {
     background: var(--clay-surface);
     border-radius: 26px;
-    border: 1px solid rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.72);
     box-shadow:
-      10px 14px 28px rgba(13, 148, 136, 0.11),
-      inset 4px 4px 10px rgba(255, 255, 255, 0.98),
-      inset -4px -4px 10px rgba(153, 246, 228, 0.45);
+      10px 14px 28px rgba(15, 118, 110, 0.13),
+      inset 4px 4px 10px rgba(255, 255, 255, 0.82),
+      inset -4px -4px 10px rgba(153, 226, 210, 0.45);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
+  /* Kartu Bersarang / Gelembung Chat Masuk */
   .clay-card-soft {
     background: var(--clay-surface-nested);
     border-radius: 20px;
-    border: 1px solid rgba(153, 246, 228, 0.8);
+    border: 1px solid rgba(153, 226, 210, 0.85);
     box-shadow:
-      4px 6px 14px rgba(13, 148, 136, 0.09),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.95),
-      inset -2px -2px 6px rgba(94, 234, 212, 0.35);
+      4px 6px 14px rgba(15, 118, 110, 0.1),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.78),
+      inset -2px -2px 6px rgba(94, 212, 188, 0.35);
   }
 
+  /* Tombol Utama Teal-Emerald */
   .clay-btn-primary {
     background: linear-gradient(135deg, var(--clay-primary-start) 0%, var(--clay-primary-end) 100%);
     color: #ffffff;
@@ -58,7 +61,7 @@
     border: 1px solid rgba(255, 255, 255, 0.25);
     box-shadow:
       6px 10px 20px rgba(13, 148, 136, 0.28),
-      inset 3px 3px 7px rgba(255, 255, 255, 0.38),
+      inset 3px 3px 7px rgba(255, 255, 255, 0.35),
       inset -3px -3px 7px rgba(6, 78, 59, 0.35);
     transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
   }
@@ -68,7 +71,7 @@
     transform: translateY(-1px);
     box-shadow:
       8px 12px 24px rgba(13, 148, 136, 0.34),
-      inset 3px 3px 7px rgba(255, 255, 255, 0.42),
+      inset 3px 3px 7px rgba(255, 255, 255, 0.4),
       inset -3px -3px 7px rgba(6, 78, 59, 0.35);
   }
 
@@ -76,14 +79,15 @@
     transform: translateY(0);
   }
 
+  /* Tombol Hapus / Keluar */
   .clay-btn-danger {
-    background: linear-gradient(145deg, #fff1f2 0%, #ffe4e6 100%);
+    background: linear-gradient(145deg, #ffeef0 0%, #ffdde2 100%);
     color: #be123c;
     border-radius: 16px;
-    border: 1px solid rgba(254, 205, 211, 0.9);
+    border: 1px solid rgba(253, 186, 196, 0.9);
     box-shadow:
       4px 6px 14px rgba(225, 29, 72, 0.13),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.85),
       inset -2px -2px 6px rgba(253, 164, 175, 0.35);
     transition: transform 0.18s ease, filter 0.18s ease;
   }
@@ -93,74 +97,145 @@
     transform: translateY(-1px);
   }
 
+  /* Tombol Pil / Tag Navigasi */
   .clay-pill {
-    background: rgba(255, 255, 255, 0.92);
+    background: #e8f6f2;
     border-radius: 9999px;
-    border: 1px solid rgba(204, 251, 241, 0.95);
+    border: 1px solid rgba(167, 232, 218, 0.9);
     box-shadow:
-      4px 6px 12px rgba(13, 148, 136, 0.08),
-      inset 2px 2px 5px rgba(255, 255, 255, 0.98),
-      inset -2px -2px 5px rgba(153, 246, 228, 0.35);
+      4px 6px 12px rgba(15, 118, 110, 0.09),
+      inset 2px 2px 5px rgba(255, 255, 255, 0.85),
+      inset -2px -2px 5px rgba(153, 226, 210, 0.35);
     transition: transform 0.15s ease, background-color 0.15s ease;
   }
 
   .clay-pill:hover:not(:disabled) {
-    background: #ffffff;
+    background: #f2faf8;
     transform: translateY(-1px);
   }
 
+  /* Kolom Input Cekung */
   .clay-input {
     background: var(--clay-input-bg);
     border-radius: 16px;
-    border: 1px solid rgba(153, 246, 228, 0.9);
+    border: 1px solid rgba(153, 226, 210, 0.95);
     box-shadow:
-      inset 3px 3px 7px rgba(148, 163, 184, 0.2),
-      inset -3px -3px 7px rgba(255, 255, 255, 0.95);
+      inset 3px 3px 7px rgba(15, 118, 110, 0.13),
+      inset -3px -3px 7px rgba(255, 255, 255, 0.85);
     transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
   }
 
   .clay-input:focus {
     outline: none;
-    background: #ffffff;
+    background: #f5fbf9;
     border-color: #0d9488;
     box-shadow:
-      0 0 0 3px rgba(13, 148, 136, 0.18),
-      inset 2px 2px 5px rgba(148, 163, 184, 0.14);
+      0 0 0 3px rgba(13, 148, 136, 0.2),
+      inset 2px 2px 5px rgba(15, 118, 110, 0.1);
   }
 
+  /* Kotak Ikon 3D Lembut */
   .clay-icon-box {
-    background: linear-gradient(145deg, #f0fdfa 0%, #ccfbf1 100%);
+    background: linear-gradient(145deg, #dff3ee 0%, #c6ebe2 100%);
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.75);
     box-shadow:
-      5px 6px 14px rgba(13, 148, 136, 0.14),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.95),
-      inset -2px -2px 6px rgba(94, 234, 212, 0.4);
+      5px 6px 14px rgba(15, 118, 110, 0.14),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.85),
+      inset -2px -2px 6px rgba(94, 212, 188, 0.4);
   }
 
+  /* 4 Standar Lencana Status */
   .clay-badge-waiting {
-    background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
-    color: #b45309;
-    border: 1px solid #fde68a;
+    background: linear-gradient(145deg, #fef7dc 0%, #fdeba8 100%);
+    color: #92400e;
+    border: 1px solid #fcd34d;
   }
 
   .clay-badge-process {
-    background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 100%);
-    color: #0369a1;
-    border: 1px solid #bae6fd;
+    background: linear-gradient(145deg, #e0f5f2 0%, #bfeae2 100%);
+    color: #0f766e;
+    border: 1px solid #5eead4;
   }
 
   .clay-badge-done {
-    background: linear-gradient(145deg, #ecfdf5 0%, #d1fae5 100%);
-    color: #047857;
-    border: 1px solid #a7f3d0;
+    background: linear-gradient(145deg, #dcfce7 0%, #bbf7d0 100%);
+    color: #166534;
+    border: 1px solid #86efac;
   }
 
   .clay-badge-rejected {
-    background: linear-gradient(145deg, #fff1f2 0%, #ffe4e6 100%);
+    background: linear-gradient(145deg, #ffeef0 0%, #ffdde2 100%);
     color: #be123c;
-    border: 1px solid #fecdd3;
+    border: 1px solid #fda4af;
   }
+}
+
+/* Penyelarasan Otomatis Semua Tulisan & Aksen Biru/Indigo Menjadi Teal */
+.text-indigo-500,
+.text-indigo-600,
+.text-indigo-700,
+.text-indigo-800,
+.text-indigo-900,
+.text-blue-600,
+.text-blue-700 {
+  color: #0f766e !important;
+}
+
+.text-indigo-100,
+.text-indigo-200 {
+  color: #ccfbf1 !important;
+}
+
+.hover\:text-indigo-600:hover,
+.hover\:text-indigo-700:hover,
+.hover\:text-indigo-800:hover,
+.hover\:text-blue-600:hover {
+  color: #115e59 !important;
+}
+
+.bg-indigo-50,
+.bg-indigo-50\/40,
+.bg-indigo-50\/70 {
+  background-color: rgba(204, 251, 241, 0.55) !important;
+}
+
+.bg-indigo-100,
+.bg-indigo-100\/70,
+.bg-indigo-100\/75 {
+  background-color: rgba(153, 246, 228, 0.6) !important;
+}
+
+.bg-indigo-600 {
+  background-color: #0d9488 !important;
+}
+
+.hover\:bg-indigo-50:hover,
+.hover\:bg-indigo-50\/40:hover {
+  background-color: rgba(204, 251, 241, 0.45) !important;
+}
+
+.border-indigo-100,
+.border-indigo-100\/60,
+.border-indigo-100\/70,
+.border-indigo-100\/80,
+.border-indigo-200 {
+  border-color: rgba(153, 226, 210, 0.8) !important;
+}
+
+.divide-indigo-100 > :not([hidden]) ~ :not([hidden]),
+.divide-indigo-100\/60 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(153, 226, 210, 0.65) !important;
+}
+
+.from-indigo-600 {
+  --tw-gradient-from: #0d9488 var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(13 148 136 / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+.to-blue-600 {
+  --tw-gradient-to: #059669 var(--tw-gradient-to-position) !important;
 }
 
 @media print {
