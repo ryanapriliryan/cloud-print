@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  /* Palet Gradasi Glacier Mist & Ruby + Bokeh Multi-Warna */
+  /* Palet Gradasi Glacier Mist & Velvet Ruby + Bokeh Multi-Warna */
   --clay-bg-start: #bfd4dc;
   --clay-bg-mid: #d3e3e9;
   --clay-bg-end: #e2eef2;
@@ -15,18 +15,18 @@
   --clay-input-deep: #d2e2e8;
   --clay-input-light: #e8f2f6;
 
-  /* Spektrum Aksen Multi-Warna */
-  --color-ruby-dark: #9f1239;
-  --color-ruby: #be123c;
-  --color-ruby-bright: #f43f5e;
-  --color-cobalt: #1d4ed8;
-  --color-amber: #b45309;
-  --color-jade: #047857;
+  /* Spektrum Aksen Selaras Background */
+  --color-ruby-dark: #941b39;
+  --color-ruby: #b52649;
+  --color-ruby-bright: #e65572;
+  --color-ocean: #1e5fa3;
+  --color-amber: #b05a14;
+  --color-jade: #0d7a5b;
 
-  /* Hierarki Warna Teks Kontras Tinggi */
-  --clay-text-main: #0f172a;
-  --clay-text-secondary: #334155;
-  --clay-text-muted: #475569;
+  /* Hierarki Warna Teks Ber-Undertone Sejuk (Glacial Slate) */
+  --clay-text-main: #122934;
+  --clay-text-secondary: #354f5c;
+  --clay-text-muted: #526d7a;
 }
 
 @layer base {
@@ -97,6 +97,14 @@
   h1, h2, h3, h4 {
     color: var(--clay-text-main);
   }
+
+  p, label, td {
+    color: var(--clay-text-secondary);
+  }
+
+  th {
+    color: var(--clay-text-muted);
+  }
 }
 
 @layer components {
@@ -115,9 +123,9 @@
     border-radius: 26px;
     border: 1px solid rgba(255, 255, 255, 0.88);
     box-shadow:
-      12px 16px 32px rgba(15, 45, 58, 0.2),
+      12px 16px 32px rgba(18, 41, 52, 0.17),
       inset 6px 6px 12px rgba(255, 255, 255, 0.94),
-      inset -6px -6px 12px rgba(140, 173, 186, 0.48);
+      inset -6px -6px 12px rgba(140, 173, 186, 0.46);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
@@ -130,11 +138,11 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.82);
     box-shadow:
-      6px 8px 16px rgba(15, 45, 58, 0.14),
+      6px 8px 16px rgba(18, 41, 52, 0.13),
       inset 4px 4px 8px rgba(255, 255, 255, 0.88),
-      inset -4px -4px 8px rgba(120, 155, 170, 0.38);
+      inset -4px -4px 8px rgba(120, 155, 170, 0.36);
   }
 
   /* =========================================================
@@ -149,7 +157,7 @@
     border-radius: 16px;
     border: 1px solid rgba(140, 173, 186, 0.88);
     box-shadow:
-      inset 5px 5px 10px rgba(15, 45, 58, 0.17),
+      inset 5px 5px 10px rgba(18, 41, 52, 0.15),
       inset -5px -5px 10px rgba(255, 255, 255, 0.88);
     color: var(--color-ruby) !important;
     font-weight: 700;
@@ -173,51 +181,51 @@
   }
 
   /* =========================================================
-     Tombol 3D Multi-Gradasi (Ruby Crimson, Pearl Pill & Danger)
+     Tombol 3D Multi-Gradasi (Velvet Ruby, Glacier Pearl & Soft Rose)
      ========================================================= */
   .clay-btn-primary {
     background: linear-gradient(
       135deg,
-      var(--color-ruby-dark) 0%,
-      var(--color-ruby) 48%,
-      var(--color-ruby-bright) 100%
+      #a61e40 0%,
+      #cc3155 52%,
+      #e65572 100%
     );
-    color: #ffffff !important;
+    color: #fff9fa !important;
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.42);
+    border: 1px solid rgba(255, 228, 235, 0.55);
     box-shadow:
-      8px 12px 24px rgba(190, 18, 60, 0.34),
-      inset 4px 4px 8px rgba(255, 255, 255, 0.42),
-      inset -4px -4px 8px rgba(110, 10, 36, 0.5);
+      8px 12px 24px rgba(148, 27, 57, 0.26),
+      inset 4px 4px 9px rgba(255, 228, 235, 0.48),
+      inset -4px -4px 9px rgba(115, 16, 42, 0.42);
     transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
   }
 
   .clay-btn-primary:hover:not(:disabled) {
-    filter: brightness(1.06);
+    filter: brightness(1.05);
     transform: translateY(-2px);
     box-shadow:
-      10px 16px 28px rgba(190, 18, 60, 0.42),
-      inset 4px 4px 8px rgba(255, 255, 255, 0.48),
-      inset -4px -4px 8px rgba(110, 10, 36, 0.5);
+      10px 16px 28px rgba(148, 27, 57, 0.32),
+      inset 4px 4px 9px rgba(255, 228, 235, 0.54),
+      inset -4px -4px 9px rgba(115, 16, 42, 0.42);
   }
 
   .clay-btn-primary:active:not(:disabled) {
     transform: translateY(1px);
     box-shadow:
-      inset 4px 4px 8px rgba(110, 10, 36, 0.5),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.3);
+      inset 4px 4px 8px rgba(115, 16, 42, 0.45),
+      inset -4px -4px 8px rgba(255, 228, 235, 0.32);
   }
 
-  /* Tombol Pil Gradasi Mutiara-Glacier */
+  /* Tombol Pil Gradasi Glacier Pearl */
   .clay-pill {
-    background: linear-gradient(145deg, #ffffff 0%, #ebf3f7 55%, #d6e6ed 100%);
+    background: linear-gradient(145deg, #ffffff 0%, #ebf4f7 55%, #d5e6ed 100%);
     color: var(--color-ruby) !important;
     border-radius: 9999px;
     border: 1px solid rgba(255, 255, 255, 0.95);
     box-shadow:
-      6px 8px 16px rgba(15, 45, 58, 0.22),
+      6px 8px 16px rgba(18, 41, 52, 0.18),
       inset 3px 3px 6px rgba(255, 255, 255, 0.98),
-      inset -3px -3px 6px rgba(140, 173, 186, 0.45);
+      inset -3px -3px 6px rgba(140, 173, 186, 0.42);
     transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
   }
 
@@ -225,32 +233,33 @@
     filter: brightness(1.03);
     transform: translateY(-2px);
     box-shadow:
-      8px 12px 20px rgba(15, 45, 58, 0.26),
+      8px 12px 20px rgba(18, 41, 52, 0.22),
       inset 3px 3px 6px rgba(255, 255, 255, 1),
-      inset -3px -3px 6px rgba(140, 173, 186, 0.48);
+      inset -3px -3px 6px rgba(140, 173, 186, 0.46);
   }
 
   .clay-pill:active:not(:disabled) {
     transform: translateY(1px);
     box-shadow:
-      inset 4px 4px 8px rgba(15, 45, 58, 0.16),
+      inset 4px 4px 8px rgba(18, 41, 52, 0.14),
       inset -4px -4px 8px rgba(255, 255, 255, 0.88);
   }
 
+  /* Tombol Keluar / Hapus Bernuansa Soft Blush Clay */
   .clay-btn-danger {
-    background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 50%, #fda4af 100%);
+    background: linear-gradient(135deg, #fff1f3 0%, #ffdbe2 52%, #fcb6c3 100%);
     color: var(--color-ruby-dark) !important;
     border-radius: 16px;
-    border: 1px solid rgba(244, 162, 176, 0.92);
+    border: 1px solid rgba(251, 182, 195, 0.92);
     box-shadow:
-      6px 8px 16px rgba(190, 18, 60, 0.18),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.85),
-      inset -3px -3px 6px rgba(244, 114, 136, 0.42);
+      6px 8px 16px rgba(148, 27, 57, 0.14),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.88),
+      inset -3px -3px 6px rgba(235, 128, 148, 0.36);
     transition: transform 0.18s ease, filter 0.18s ease;
   }
 
   .clay-btn-danger:hover:not(:disabled) {
-    filter: brightness(0.97);
+    filter: brightness(0.98);
     transform: translateY(-1px);
   }
 
@@ -267,13 +276,13 @@
     border-radius: 16px;
     border: 1px solid rgba(140, 173, 186, 0.9);
     box-shadow:
-      inset 4px 4px 8px rgba(15, 45, 58, 0.16),
+      inset 4px 4px 8px rgba(18, 41, 52, 0.14),
       inset -4px -4px 8px rgba(255, 255, 255, 0.86);
     transition: border-color 0.18s ease, box-shadow 0.18s ease;
   }
 
   .clay-input::placeholder {
-    color: #64748b;
+    color: #6b8592;
   }
 
   .clay-input:focus {
@@ -281,43 +290,43 @@
     background: linear-gradient(145deg, #dfecf1 0%, #f0f7fa 100%);
     border-color: var(--color-ruby);
     box-shadow:
-      0 0 0 3px rgba(190, 18, 60, 0.16),
-      inset 3px 3px 6px rgba(15, 45, 58, 0.12);
+      0 0 0 3px rgba(181, 38, 73, 0.15),
+      inset 3px 3px 6px rgba(18, 41, 52, 0.11);
   }
 
   /* =========================================================
-     Kotak Ikon 3-Stop Gradient (Ruby, Cobalt, Amber Gold, Jade)
+     Kotak Ikon 3-Stop Gradient (Ruby, Ocean, Amber, Jade)
      ========================================================= */
   .clay-icon-box {
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.86);
     box-shadow:
-      8px 10px 20px rgba(15, 45, 58, 0.18),
+      8px 10px 20px rgba(18, 41, 52, 0.16),
       inset 4px 4px 8px rgba(255, 255, 255, 0.88),
-      inset -4px -4px 8px rgba(120, 155, 170, 0.44);
+      inset -4px -4px 8px rgba(120, 155, 170, 0.42);
   }
 
   .icon-ruby,
   .icon-rose {
-    background: linear-gradient(135deg, #fff1f2 0%, #fecdd3 52%, #fb7185 100%);
+    background: linear-gradient(135deg, #fff1f3 0%, #ffd5de 52%, #fa8ca3 100%);
     color: var(--color-ruby-dark);
   }
 
   .icon-cobalt {
-    background: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 52%, #60a5fa 100%);
-    color: #1e40af;
+    background: linear-gradient(135deg, #eef6ff 0%, #c7e0fe 52%, #7bb4fa 100%);
+    color: #194b85;
   }
 
   .icon-amber,
   .icon-tangerine {
-    background: linear-gradient(135deg, #fffbeb 0%, #fde68a 52%, #fbbf24 100%);
-    color: #92400e;
+    background: linear-gradient(135deg, #fffbeb 0%, #fde99c 52%, #f8c646 100%);
+    color: #8c450c;
   }
 
   .icon-jade,
   .icon-emerald {
-    background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 52%, #34d399 100%);
-    color: #065f46;
+    background: linear-gradient(135deg, #ecfdf6 0%, #b5f3d8 52%, #52d6a3 100%);
+    color: #095c44;
   }
 
   /* =========================================================
@@ -326,37 +335,37 @@
   .clay-badge {
     border-radius: 9999px;
     box-shadow:
-      4px 4px 8px rgba(15, 45, 58, 0.13),
-      inset 2px 2px 4px rgba(255, 255, 255, 0.82);
+      4px 4px 8px rgba(18, 41, 52, 0.11),
+      inset 2px 2px 4px rgba(255, 255, 255, 0.84);
   }
 
   .clay-badge-waiting {
-    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fcd34d 100%);
-    color: #92400e !important;
-    border: 1px solid #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fcd765 100%);
+    color: #8c450c !important;
+    border: 1px solid #eab308;
   }
 
   .clay-badge-process {
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #93c5fd 100%);
-    color: #1e40af !important;
-    border: 1px solid #2563eb;
+    background: linear-gradient(135deg, #eef6ff 0%, #dbeafe 50%, #9dc6fc 100%);
+    color: #194b85 !important;
+    border: 1px solid #3b82f6;
   }
 
   .clay-badge-done {
-    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #6ee7b7 100%);
-    color: #065f46 !important;
+    background: linear-gradient(135deg, #ecfdf6 0%, #d1fae8 50%, #7ee3b9 100%);
+    color: #095c44 !important;
     border: 1px solid #10b981;
   }
 
   .clay-badge-rejected {
-    background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 50%, #fda4af 100%);
-    color: #9f1239 !important;
-    border: 1px solid #e11d48;
+    background: linear-gradient(135deg, #fff1f3 0%, #ffe0e6 50%, #fca6b7 100%);
+    color: var(--color-ruby-dark) !important;
+    border: 1px solid #e65572;
   }
 }
 
 /* =========================================================
-   Penyelarasan Warna Teks & Aksen Seluruh Halaman ke Ruby & Jade
+   Penyelarasan Warna Teks & Aksen Seluruh Halaman
    ========================================================= */
 .bg-clay-bg {
   background: linear-gradient(135deg, var(--clay-bg-start) 0%, var(--clay-bg-end) 100%);
@@ -379,10 +388,34 @@
 .bg-indigo-100,
 .bg-blue-50,
 .bg-blue-100 {
-  background: linear-gradient(145deg, #fff1f2 0%, #ffe4e6 100%) !important;
+  background: linear-gradient(145deg, #fff1f3 0%, #ffe0e6 100%) !important;
 }
 
-/* Tautan, Subjudul, Nominal Tagihan & Ikon Utama -> Ruby Crimson */
+/* Teks Utama Gelap (Deep Glacial Slate) */
+.text-slate-900,
+.text-slate-800,
+.text-gray-900,
+.text-gray-800 {
+  color: var(--clay-text-main) !important;
+}
+
+/* Teks Sekunder & Deskripsi */
+.text-slate-700,
+.text-slate-600,
+.text-gray-700,
+.text-gray-600 {
+  color: var(--clay-text-secondary) !important;
+}
+
+/* Teks Keterangan & Header Tabel */
+.text-slate-500,
+.text-slate-400,
+.text-gray-500,
+.text-gray-400 {
+  color: var(--clay-text-muted) !important;
+}
+
+/* Tautan, Subjudul, Nominal & Ikon Utama -> Velvet Ruby */
 .text-indigo-500,
 .text-indigo-600,
 .text-blue-500,
@@ -397,7 +430,7 @@
   color: var(--color-ruby-dark) !important;
 }
 
-/* Efek Hover pada Menu Sidebar & Tautan -> Ruby Crimson */
+/* Efek Hover pada Menu & Tautan -> Velvet Ruby */
 .hover\:text-indigo-600:hover,
 .hover\:text-indigo-700:hover,
 .hover\:text-blue-600:hover,
@@ -421,23 +454,12 @@
   color: var(--color-amber) !important;
 }
 
-/* Status Ditolak & Error -> Ruby Crimson */
+/* Status Ditolak & Error -> Velvet Ruby */
 .text-rose-600,
 .text-rose-700,
 .text-red-600,
 .text-red-700 {
   color: var(--color-ruby) !important;
-}
-
-/* Teks Sekunder & Keterangan agar Tetap Tajam di Atas Glacier Mist */
-.text-slate-500,
-.text-gray-500 {
-  color: var(--clay-text-muted) !important;
-}
-
-.text-slate-600,
-.text-gray-600 {
-  color: var(--clay-text-secondary) !important;
 }
 
 .text-ruby,
@@ -446,7 +468,7 @@
 }
 
 .text-cobalt {
-  color: var(--color-cobalt);
+  color: var(--color-ocean);
 }
 
 .text-amber,
@@ -472,7 +494,7 @@ header .clay-pill.text-teal-600 {
   color: var(--color-ruby) !important;
   border: 1px solid rgba(140, 173, 186, 0.88) !important;
   box-shadow:
-    inset 5px 5px 10px rgba(15, 45, 58, 0.17),
+    inset 5px 5px 10px rgba(18, 41, 52, 0.15),
     inset -5px -5px 10px rgba(255, 255, 255, 0.88) !important;
   transform: translateY(1px);
 }
@@ -497,7 +519,7 @@ nav a:active {
     var(--clay-input-light) 100%
   ) !important;
   box-shadow:
-    inset 4px 4px 8px rgba(15, 45, 58, 0.16),
+    inset 4px 4px 8px rgba(18, 41, 52, 0.14),
     inset -4px -4px 8px rgba(255, 255, 255, 0.86) !important;
   transform: translateY(1px);
 }
