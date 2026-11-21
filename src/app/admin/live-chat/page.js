@@ -202,25 +202,24 @@ function LiveChatAdminContent() {
         <h1 className="text-lg font-extrabold text-slate-900">
           Live Chat Pengunjung Beranda
         </h1>
-        <p className="text-sm text-slate-500 mt-0.5">
+        <p className="text-sm text-slate-600 mt-0.5">
           Balas pertanyaan calon pelanggan dari halaman beranda secara langsung tanpa berpindah aplikasi.
         </p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6 min-h-[520px]">
-        {/* Kolom Kiri: Daftar Percakapan Masuk */}
         <div
           className={`clay-card overflow-hidden flex flex-col ${
             selectedId ? "hidden lg:flex" : "flex"
           }`}
         >
-          <div className="px-5 py-4 bg-indigo-50/70 border-b border-indigo-100 flex items-center justify-between">
+          <div className="px-5 py-4 bg-teal-50/70 border-b border-teal-100 flex items-center justify-between">
             <span className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
               Kotak Masuk ({sessions.length})
             </span>
           </div>
 
-          <div className="flex-1 overflow-y-auto divide-y divide-indigo-100/60">
+          <div className="flex-1 overflow-y-auto divide-y divide-teal-100/60">
             {loadingList ? (
               <div className="p-8 text-center text-xs font-medium text-slate-500">
                 Memuat percakapan...
@@ -240,24 +239,24 @@ function LiveChatAdminContent() {
                     onClick={() => setSelectedId(s.id)}
                     className={`w-full text-left p-4 transition flex items-start justify-between gap-3 cursor-pointer ${
                       isSelected
-                        ? "bg-indigo-100/75"
-                        : "hover:bg-indigo-50/40"
+                        ? "bg-teal-100/75"
+                        : "hover:bg-teal-50/40"
                     }`}
                   >
                     <div className="flex items-start gap-3 min-w-0">
-                      <div className="clay-icon-box w-10 h-10 text-indigo-600 flex items-center justify-center shrink-0">
+                      <div className="clay-icon-box w-10 h-10 text-teal-600 flex items-center justify-center shrink-0">
                         <User className="w-5 h-5" />
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm font-extrabold text-slate-900 truncate">
                           {s.visitorName}
                         </p>
-                        <p className="text-xs text-slate-500 truncate mt-0.5">
+                        <p className="text-xs text-slate-600 truncate mt-0.5">
                           {lastMsg
                             ? `${lastMsg.sender === "ADMIN" ? "Anda: " : ""}${lastMsg.content}`
                             : "Memulai percakapan"}
                         </p>
-                        <p className="text-[10px] font-semibold text-indigo-500 mt-1">
+                        <p className="text-[10px] font-semibold text-teal-600 mt-1">
                           {formatDate(s.lastMessageAt)}
                         </p>
                       </div>
@@ -275,7 +274,6 @@ function LiveChatAdminContent() {
           </div>
         </div>
 
-        {/* Kolom Kanan: Ruang Obrolan Aktif */}
         <div
           className={`lg:col-span-2 clay-card overflow-hidden flex flex-col ${
             !selectedId ? "hidden lg:flex" : "flex"
@@ -283,7 +281,7 @@ function LiveChatAdminContent() {
         >
           {!activeSession ? (
             <div className="flex-1 flex flex-col items-center justify-center p-10 text-center space-y-3">
-              <div className="clay-icon-box w-14 h-14 text-indigo-600 flex items-center justify-center">
+              <div className="clay-icon-box w-14 h-14 text-teal-600 flex items-center justify-center">
                 <MessageSquare className="w-7 h-7" />
               </div>
               <p className="text-sm font-bold text-slate-700">
@@ -292,8 +290,7 @@ function LiveChatAdminContent() {
             </div>
           ) : (
             <>
-              {/* Header Ruang Chat */}
-              <div className="px-6 py-4 bg-indigo-50/70 border-b border-indigo-100 flex items-center justify-between gap-3">
+              <div className="px-6 py-4 bg-teal-50/70 border-b border-teal-100 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <button
                     type="button"
@@ -303,14 +300,14 @@ function LiveChatAdminContent() {
                   >
                     <ArrowLeft className="w-4 h-4" />
                   </button>
-                  <div className="clay-icon-box w-10 h-10 text-indigo-600 flex items-center justify-center shrink-0">
+                  <div className="clay-icon-box w-10 h-10 text-teal-600 flex items-center justify-center shrink-0">
                     <User className="w-5 h-5" />
                   </div>
                   <div className="truncate">
                     <h2 className="text-sm font-extrabold text-slate-900 truncate">
                       {activeSession.visitorName}
                     </h2>
-                    <p className="text-[11px] font-medium text-slate-500">
+                    <p className="text-[11px] font-medium text-slate-600">
                       Pengunjung Website • Mulai {formatDate(activeSession.createdAt)}
                     </p>
                   </div>
@@ -333,7 +330,6 @@ function LiveChatAdminContent() {
                 </button>
               </div>
 
-              {/* Isi Pesan */}
               <div
                 ref={chatContainerRef}
                 onScroll={handleScroll}
@@ -348,7 +344,7 @@ function LiveChatAdminContent() {
                         isAdmin ? "items-end" : "items-start"
                       }`}
                     >
-                      <span className="text-[10px] font-bold text-slate-400 mb-1 mx-1">
+                      <span className="text-[10px] font-bold text-slate-500 mb-1 mx-1">
                         {isAdmin ? "Anda (Admin)" : activeSession.visitorName} •{" "}
                         {formatDate(msg.createdAt)}
                       </span>
@@ -365,10 +361,9 @@ function LiveChatAdminContent() {
                   );
                 })}
 
-                {/* Gelembung Loading Sementara Saat Admin Membalas */}
                 {pendingReply && (
                   <div className="flex flex-col items-end animate-pulse">
-                    <span className="text-[10px] font-bold text-indigo-500 mb-1 mx-1 inline-flex items-center gap-1">
+                    <span className="text-[10px] font-bold text-teal-600 mb-1 mx-1 inline-flex items-center gap-1">
                       <Loader2 className="w-3 h-3 animate-spin" />
                       Mengirim balasan...
                     </span>
@@ -381,10 +376,9 @@ function LiveChatAdminContent() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Form Balas Pesan */}
               <form
                 onSubmit={handleSendReply}
-                className="p-4 border-t border-indigo-100/80 bg-white/50 flex items-center gap-3"
+                className="p-4 border-t border-teal-100/80 bg-white/50 flex items-center gap-3"
               >
                 <input
                   type="text"
@@ -417,7 +411,6 @@ function LiveChatAdminContent() {
         </div>
       </div>
 
-      {/* Modal Konfirmasi Hapus Percakapan Claymorphism */}
       {deleteTarget && (
         <div
           className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4"
@@ -486,7 +479,7 @@ export default function AdminLiveChatPage() {
   return (
     <Suspense
       fallback={
-        <div className="clay-card p-10 text-center text-sm font-medium text-slate-500">
+        <div className="clay-card p-10 text-center text-sm font-medium text-slate-600">
           Memuat ruang live chat...
         </div>
       }

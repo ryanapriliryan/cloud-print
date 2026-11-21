@@ -31,18 +31,15 @@ export default function AdminMasterDataPage() {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
 
-  // Ref untuk auto-scroll & fokus ke formulir saat tombol Edit diklik
   const printFormRef = useRef(null);
   const printNameInputRef = useRef(null);
   const finFormRef = useRef(null);
   const finNameInputRef = useRef(null);
 
-  // State modal konfirmasi hapus
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
-  // Print Option Form state
   const [editingPrintId, setEditingPrintId] = useState(null);
   const [printForm, setPrintForm] = useState({
     category: PRINT_CATEGORIES[0],
@@ -52,7 +49,6 @@ export default function AdminMasterDataPage() {
     description: "",
   });
 
-  // Finishing Form state
   const [editingFinId, setEditingFinId] = useState(null);
   const [finForm, setFinForm] = useState({
     category: "SEMUA",
@@ -268,12 +264,12 @@ export default function AdminMasterDataPage() {
       {/* Section 1: Jenis & Harga Cetak CRUD */}
       <div className="clay-card p-7 space-y-6">
         <div className="flex items-start gap-3.5">
-          <div className="clay-icon-box w-11 h-11 flex items-center justify-center text-indigo-600 shrink-0">
+          <div className="clay-icon-box w-11 h-11 flex items-center justify-center text-teal-600 shrink-0">
             <Tag className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-base font-extrabold text-slate-900">1. Master Jenis & Harga Cetak</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Tambahkan atau perbarui tarif cetak. Perubahan langsung tersinkronisasi ke halaman pemesanan pelanggan.
             </p>
           </div>
@@ -283,11 +279,11 @@ export default function AdminMasterDataPage() {
           ref={printFormRef}
           onSubmit={handleSavePrintOption}
           className={`clay-card-soft scroll-mt-28 grid sm:grid-cols-5 gap-3.5 p-5 transition-all ${
-            editingPrintId ? "ring-2 ring-indigo-500/70 bg-indigo-50/90" : ""
+            editingPrintId ? "ring-2 ring-teal-500/70 bg-teal-50/90" : ""
           }`}
         >
           {editingPrintId && (
-            <div className="sm:col-span-5 flex items-center justify-between text-xs font-extrabold text-indigo-700 pb-1">
+            <div className="sm:col-span-5 flex items-center justify-between text-xs font-extrabold text-teal-700 pb-1">
               <span>Mode Edit Jenis Cetak: {printForm.name}</span>
             </div>
           )}
@@ -355,9 +351,9 @@ export default function AdminMasterDataPage() {
           </div>
         </form>
 
-        <div className="overflow-x-auto rounded-2xl border border-indigo-100/70">
+        <div className="overflow-x-auto rounded-2xl border border-teal-100/80">
           <table className="w-full text-left text-sm">
-            <thead className="bg-indigo-50/70 text-slate-600 text-xs font-extrabold uppercase tracking-wider border-b border-indigo-100">
+            <thead className="bg-teal-50/70 text-slate-600 text-xs font-extrabold uppercase tracking-wider border-b border-teal-100">
               <tr>
                 <th className="px-4 py-3.5">Kategori</th>
                 <th className="px-4 py-3.5">Nama Layanan / Bahan</th>
@@ -366,7 +362,7 @@ export default function AdminMasterDataPage() {
                 <th className="px-4 py-3.5 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-indigo-100/60">
+            <tbody className="divide-y divide-teal-100/60">
               {printOptions.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-8 text-center text-xs font-medium text-slate-500">
@@ -379,11 +375,11 @@ export default function AdminMasterDataPage() {
                     key={item.id}
                     className={`transition-colors ${
                       editingPrintId === item.id
-                        ? "bg-indigo-100/70"
-                        : "hover:bg-indigo-50/40"
+                        ? "bg-teal-100/70"
+                        : "hover:bg-teal-50/40"
                     }`}
                   >
-                    <td className="px-4 py-3.5 text-xs font-extrabold text-indigo-600">
+                    <td className="px-4 py-3.5 text-xs font-extrabold text-teal-700">
                       {item.category}
                     </td>
                     <td className="px-4 py-3.5 font-bold text-slate-900">{item.name}</td>
@@ -395,7 +391,7 @@ export default function AdminMasterDataPage() {
                       <button
                         type="button"
                         onClick={() => handleStartEditPrintOption(item)}
-                        className="clay-pill p-2 text-indigo-600 inline-flex items-center justify-center cursor-pointer"
+                        className="clay-pill p-2 text-teal-600 inline-flex items-center justify-center cursor-pointer"
                         title="Edit"
                       >
                         <Pencil className="w-3.5 h-3.5" />
@@ -427,12 +423,12 @@ export default function AdminMasterDataPage() {
       {/* Section 2: Master Finishing CRUD */}
       <div className="clay-card p-7 space-y-6">
         <div className="flex items-start gap-3.5">
-          <div className="clay-icon-box w-11 h-11 flex items-center justify-center text-indigo-600 shrink-0">
+          <div className="clay-icon-box w-11 h-11 flex items-center justify-center text-teal-600 shrink-0">
             <Layers className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-base font-extrabold text-slate-900">2. Master Opsi Finishing</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Atur layanan tambahan seperti jilid lakban, spiral, laminating, mata ayam banner, atau potong stiker.
             </p>
           </div>
@@ -442,11 +438,11 @@ export default function AdminMasterDataPage() {
           ref={finFormRef}
           onSubmit={handleSaveFinishing}
           className={`clay-card-soft scroll-mt-28 grid sm:grid-cols-5 gap-3.5 p-5 transition-all ${
-            editingFinId ? "ring-2 ring-indigo-500/70 bg-indigo-50/90" : ""
+            editingFinId ? "ring-2 ring-teal-500/70 bg-teal-50/90" : ""
           }`}
         >
           {editingFinId && (
-            <div className="sm:col-span-5 flex items-center justify-between text-xs font-extrabold text-indigo-700 pb-1">
+            <div className="sm:col-span-5 flex items-center justify-between text-xs font-extrabold text-teal-700 pb-1">
               <span>Mode Edit Finishing: {finForm.name}</span>
             </div>
           )}
@@ -520,9 +516,9 @@ export default function AdminMasterDataPage() {
           </div>
         </form>
 
-        <div className="overflow-x-auto rounded-2xl border border-indigo-100/70">
+        <div className="overflow-x-auto rounded-2xl border border-teal-100/80">
           <table className="w-full text-left text-sm">
-            <thead className="bg-indigo-50/70 text-slate-600 text-xs font-extrabold uppercase tracking-wider border-b border-indigo-100">
+            <thead className="bg-teal-50/70 text-slate-600 text-xs font-extrabold uppercase tracking-wider border-b border-teal-100">
               <tr>
                 <th className="px-4 py-3.5">Kategori Berlaku</th>
                 <th className="px-4 py-3.5">Nama Finishing</th>
@@ -531,7 +527,7 @@ export default function AdminMasterDataPage() {
                 <th className="px-4 py-3.5 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-indigo-100/60">
+            <tbody className="divide-y divide-teal-100/60">
               {finishings.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-8 text-center text-xs font-medium text-slate-500">
@@ -544,11 +540,11 @@ export default function AdminMasterDataPage() {
                     key={fin.id}
                     className={`transition-colors ${
                       editingFinId === fin.id
-                        ? "bg-indigo-100/70"
-                        : "hover:bg-indigo-50/40"
+                        ? "bg-teal-100/70"
+                        : "hover:bg-teal-50/40"
                     }`}
                   >
-                    <td className="px-4 py-3.5 text-xs font-extrabold text-indigo-600">
+                    <td className="px-4 py-3.5 text-xs font-extrabold text-teal-700">
                       {fin.category}
                     </td>
                     <td className="px-4 py-3.5 font-bold text-slate-900">{fin.name}</td>
@@ -560,7 +556,7 @@ export default function AdminMasterDataPage() {
                       <button
                         type="button"
                         onClick={() => handleStartEditFinishing(fin)}
-                        className="clay-pill p-2 text-indigo-600 inline-flex items-center justify-center cursor-pointer"
+                        className="clay-pill p-2 text-teal-600 inline-flex items-center justify-center cursor-pointer"
                         title="Edit"
                       >
                         <Pencil className="w-3.5 h-3.5" />
@@ -592,14 +588,14 @@ export default function AdminMasterDataPage() {
       {/* Section 3: Pengaturan Toko & Rekening Pembayaran */}
       <div className="clay-card p-7 space-y-6">
         <div className="flex items-start gap-3.5">
-          <div className="clay-icon-box w-11 h-11 flex items-center justify-center text-indigo-600 shrink-0">
+          <div className="clay-icon-box w-11 h-11 flex items-center justify-center text-teal-600 shrink-0">
             <Store className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-base font-extrabold text-slate-900">
               3. Pengaturan Toko & Rekening Transfer Pembayaran
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Informasi rekening ini akan ditampilkan kepada pelanggan saat mengunggah bukti pembayaran.
             </p>
           </div>

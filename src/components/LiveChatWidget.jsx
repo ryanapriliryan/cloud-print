@@ -157,10 +157,8 @@ export default function LiveChatWidget() {
 
   return (
     <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
-      {/* Jendela Pop-Up Live Chat Claymorphism */}
       {open && (
         <div className="clay-card w-[calc(100vw-2.5rem)] sm:w-96 mb-4 overflow-hidden flex flex-col max-h-[82vh]">
-          {/* Header Chat */}
           <div className="clay-btn-primary rounded-none rounded-t-[26px] px-5 py-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center shadow-inner">
@@ -171,8 +169,8 @@ export default function LiveChatWidget() {
                   Live Chat Cloud Print
                 </h3>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
-                  <span className="text-[11px] font-medium text-indigo-100">
+                  <span className="w-2 h-2 rounded-full bg-emerald-200 animate-pulse" />
+                  <span className="text-[11px] font-medium text-teal-100">
                     Admin Online • Balas di Sini
                   </span>
                 </div>
@@ -189,15 +187,13 @@ export default function LiveChatWidget() {
             </button>
           </div>
 
-          {/* Area Riwayat Pesan */}
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
             className="flex-1 p-4 overflow-y-auto space-y-3 min-h-[240px] max-h-[340px]"
           >
-            {/* Sapaan Pembuka Otomatis */}
             <div className="flex flex-col items-start">
-              <span className="text-[10px] font-extrabold text-indigo-600 mb-1 ml-1">
+              <span className="text-[10px] font-extrabold text-teal-700 mb-1 ml-1">
                 Admin Cloud Print
               </span>
               <div className="clay-card-soft px-4 py-3 text-xs text-slate-700 leading-relaxed max-w-[85%]">
@@ -214,7 +210,7 @@ export default function LiveChatWidget() {
                     isVisitor ? "items-end" : "items-start"
                   }`}
                 >
-                  <span className="text-[10px] font-bold text-slate-400 mb-1 mx-1">
+                  <span className="text-[10px] font-bold text-slate-500 mb-1 mx-1">
                     {isVisitor ? "Anda" : "Admin Cloud Print"} •{" "}
                     {formatTime(msg.createdAt)}
                   </span>
@@ -231,10 +227,9 @@ export default function LiveChatWidget() {
               );
             })}
 
-            {/* Gelembung Loading Sementara Saat Pesan Sedang Dikirim */}
             {pendingMessage && (
               <div className="flex flex-col items-end animate-pulse">
-                <span className="text-[10px] font-bold text-indigo-500 mb-1 mx-1 inline-flex items-center gap-1">
+                <span className="text-[10px] font-bold text-teal-600 mb-1 mx-1 inline-flex items-center gap-1">
                   <Loader2 className="w-3 h-3 animate-spin" />
                   Mengirim pesan...
                 </span>
@@ -247,10 +242,9 @@ export default function LiveChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Form Input & Topik Cepat */}
           <form
             onSubmit={handleSendMessage}
-            className="p-4 border-t border-indigo-100/80 bg-white/50 space-y-2.5 shrink-0"
+            className="p-4 border-t border-teal-100/80 bg-white/50 space-y-2.5 shrink-0"
           >
             {sendError && (
               <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1.5">
@@ -269,7 +263,7 @@ export default function LiveChatWidget() {
                     onClick={() =>
                       setInput(`Halo Admin, saya ingin ${topic.toLowerCase()}.`)
                     }
-                    className="clay-pill px-2.5 py-1 text-[10px] font-bold text-indigo-600 hover:text-indigo-800 cursor-pointer disabled:opacity-50"
+                    className="clay-pill px-2.5 py-1 text-[10px] font-bold text-teal-700 hover:text-teal-900 cursor-pointer disabled:opacity-50"
                   >
                     + {topic}
                   </button>
@@ -306,7 +300,6 @@ export default function LiveChatWidget() {
         </div>
       )}
 
-      {/* Tombol Mengambang Claymorphism di Pojok Kanan Bawah */}
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
@@ -321,7 +314,7 @@ export default function LiveChatWidget() {
               {hasNewReply ? (
                 <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-rose-500 ring-2 ring-white animate-bounce" />
               ) : (
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-300 ring-2 ring-indigo-600" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-200 ring-2 ring-teal-600" />
               )}
             </>
           )}

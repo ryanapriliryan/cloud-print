@@ -15,11 +15,11 @@ export default async function HomePage() {
       {/* Dekorasi Elemen 3D Clay Lembut di Latar Belakang */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed -top-24 -left-24 w-80 h-80 rounded-full bg-indigo-200/45 blur-3xl"
+        className="pointer-events-none fixed -top-24 -left-24 w-80 h-80 rounded-full bg-teal-200/45 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed top-1/3 -right-24 w-96 h-96 rounded-full bg-sky-200/45 blur-3xl"
+        className="pointer-events-none fixed top-1/3 -right-24 w-96 h-96 rounded-full bg-emerald-200/45 blur-3xl"
       />
 
       {/* Navbar Mengembang Claymorphism */}
@@ -37,7 +37,7 @@ export default async function HomePage() {
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="clay-pill px-4 py-2 text-sm font-bold text-slate-700 hover:text-indigo-600"
+              className="clay-pill px-4 py-2 text-sm font-bold text-slate-700 hover:text-teal-700"
             >
               Masuk
             </Link>
@@ -55,14 +55,14 @@ export default async function HomePage() {
       <main className="flex-1 flex items-center relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <div className="clay-pill inline-flex items-center gap-2 px-4 py-1.5 text-indigo-600 text-xs font-extrabold">
+            <div className="clay-pill inline-flex items-center gap-2 px-4 py-1.5 text-teal-700 text-xs font-extrabold">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Sistem Layanan Percetakan Online</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
               Cetak Dokumen & Media Promosi{" "}
-              <span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
                 Tanpa Antre & Bebas Virus
               </span>
             </h1>
@@ -81,7 +81,7 @@ export default async function HomePage() {
               </Link>
               <Link
                 href="/login"
-                className="clay-pill inline-flex items-center gap-2 px-7 py-4 text-sm sm:text-base font-extrabold text-slate-800 hover:text-indigo-600"
+                className="clay-pill inline-flex items-center gap-2 px-7 py-4 text-sm sm:text-base font-extrabold text-slate-800 hover:text-teal-700"
               >
                 Masuk ke Portal
               </Link>
@@ -91,7 +91,7 @@ export default async function HomePage() {
           {/* 3 Kartu Fitur Claymorphism */}
           <div className="grid sm:grid-cols-2 gap-5">
             <div className="clay-card p-6 sm:p-7 space-y-3.5 hover:-translate-y-1">
-              <div className="clay-icon-box w-12 h-12 text-indigo-600 flex items-center justify-center">
+              <div className="clay-icon-box w-12 h-12 text-teal-600 flex items-center justify-center">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <h3 className="font-extrabold text-slate-900 text-base">
@@ -103,7 +103,7 @@ export default async function HomePage() {
             </div>
 
             <div className="clay-card p-6 sm:p-7 space-y-3.5 hover:-translate-y-1">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600 flex items-center justify-center shadow-[5px_5px_12px_rgba(16,185,129,0.18),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-100 to-cyan-100 text-sky-600 flex items-center justify-center shadow-[5px_5px_12px_rgba(14,165,233,0.18),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
                 <Calculator className="w-6 h-6" />
               </div>
               <h3 className="font-extrabold text-slate-900 text-base">
@@ -131,7 +131,7 @@ export default async function HomePage() {
 
       {/* Footer Claymorphism */}
       <footer className="pb-5 px-4 sm:px-6 relative z-10">
-        <div className="clay-card-soft max-w-6xl mx-auto py-4 px-6 text-center text-xs font-bold text-slate-500">
+        <div className="clay-card-soft max-w-6xl mx-auto py-4 px-6 text-center text-xs font-bold text-slate-600">
           &copy; {new Date().getFullYear()} Cloud Print — Sistem Layanan Percetakan Online.
         </div>
       </footer>
