@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Plus,
   Pencil,
@@ -31,8 +31,14 @@ export default function AdminMasterDataPage() {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
 
+  // Ref untuk auto-scroll & fokus ke formulir saat tombol Edit diklik
+  const printFormRef = useRef(null);
+  const printNameInputRef = useRef(null);
+  const finFormRef = useRef(null);
+  const finNameInputRef = useRef(null);
+
   // State modal konfirmasi hapus
-  const [deleteTarget, setDeleteTarget] = useState(null); // { type: "print" | "finishing", id, name }
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
@@ -85,6 +91,41 @@ export default function AdminMasterDataPage() {
   useEffect(() => {
     loadMasterData();
   }, []);
+
+  function handleStartEditPrintOption(item) {
+    setEditingPrintId(item.id);
+    setPrintForm({
+      category: item.category,
+      name: item.name,
+      unit: item.unit,
+      price: String(item.price),
+      description: item.description || "",
+    });
+
+    requestAnimationFrame(() => {
+      printFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        printNameInputRef.current?.focus({ preventScroll: true });
+      }, 300);
+    });
+  }
+
+  function handleStartEditFinishing(fin) {
+    setEditingFinId(fin.id);
+    setFinForm({
+      category: fin.category,
+      name: fin.name,
+      unit: fin.unit,
+      price: String(fin.price),
+    });
+
+    requestAnimationFrame(() => {
+      finFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        finNameInputRef.current?.focus({ preventScroll: true });
+      }, 300);
+    });
+  }
 
   async function handleSavePrintOption(e) {
     e.preventDefault();
@@ -238,7 +279,19 @@ export default function AdminMasterDataPage() {
           </div>
         </div>
 
-        <form onSubmit={handleSavePrintOption} className="clay-card-soft grid sm:grid-cols-5 gap-3.5 p-5">
+        <form
+          ref={printFormRef}
+          onSubmit={handleSavePrintOption}
+          className={`clay-card-soft scroll-mt-28 grid sm:grid-cols-5 gap-3.5 p-5 transition-all ${
+            editingPrintId ? "ring-2 ring-indigo-500/70 bg-indigo-50/90" : ""
+          }`}
+        >
+          {editingPrintId && (
+            <div className="sm:col-span-5 flex items-center justify-between text-xs font-extrabold text-indigo-700 pb-1">
+              <span>Mode Edit Jenis Cetak: {printForm.name}</span>
+            </div>
+          )}
+
           <ClaySelect
             value={printForm.category}
             onChange={(val) => setPrintForm({ ...printForm, category: val })}
@@ -247,6 +300,7 @@ export default function AdminMasterDataPage() {
           />
 
           <input
+            ref={printNameInputRef}
             type="text"
             required
             placeholder="Nama bahan (misal: HVS A4 80gr)"
@@ -321,7 +375,14 @@ export default function AdminMasterDataPage() {
                 </tr>
               ) : (
                 printOptions.map((item) => (
-                  <tr key={item.id} className="hover:bg-indigo-50/40 transition-colors">
+                  <tr
+                    key={item.id}
+                    className={`transition-colors ${
+                      editingPrintId === item.id
+                        ? "bg-indigo-100/70"
+                        : "hover:bg-indigo-50/40"
+                    }`}
+                  >
                     <td className="px-4 py-3.5 text-xs font-extrabold text-indigo-600">
                       {item.category}
                     </td>
@@ -333,16 +394,7 @@ export default function AdminMasterDataPage() {
                     <td className="px-4 py-3.5 text-right space-x-2">
                       <button
                         type="button"
-                        onClick={() => {
-                          setEditingPrintId(item.id);
-                          setPrintForm({
-                            category: item.category,
-                            name: item.name,
-                            unit: item.unit,
-                            price: String(item.price),
-                            description: item.description || "",
-                          });
-                        }}
+                        onClick={() => handleStartEditPrintOption(item)}
                         className="clay-pill p-2 text-indigo-600 inline-flex items-center justify-center cursor-pointer"
                         title="Edit"
                       >
@@ -386,7 +438,19 @@ export default function AdminMasterDataPage() {
           </div>
         </div>
 
-        <form onSubmit={handleSaveFinishing} className="clay-card-soft grid sm:grid-cols-5 gap-3.5 p-5">
+        <form
+          ref={finFormRef}
+          onSubmit={handleSaveFinishing}
+          className={`clay-card-soft scroll-mt-28 grid sm:grid-cols-5 gap-3.5 p-5 transition-all ${
+            editingFinId ? "ring-2 ring-indigo-500/70 bg-indigo-50/90" : ""
+          }`}
+        >
+          {editingFinId && (
+            <div className="sm:col-span-5 flex items-center justify-between text-xs font-extrabold text-indigo-700 pb-1">
+              <span>Mode Edit Finishing: {finForm.name}</span>
+            </div>
+          )}
+
           <ClaySelect
             value={finForm.category}
             onChange={(val) => setFinForm({ ...finForm, category: val })}
@@ -398,6 +462,7 @@ export default function AdminMasterDataPage() {
           />
 
           <input
+            ref={finNameInputRef}
             type="text"
             required
             placeholder="Nama finishing (misal: Jilid Spiral)"
@@ -475,7 +540,14 @@ export default function AdminMasterDataPage() {
                 </tr>
               ) : (
                 finishings.map((fin) => (
-                  <tr key={fin.id} className="hover:bg-indigo-50/40 transition-colors">
+                  <tr
+                    key={fin.id}
+                    className={`transition-colors ${
+                      editingFinId === fin.id
+                        ? "bg-indigo-100/70"
+                        : "hover:bg-indigo-50/40"
+                    }`}
+                  >
                     <td className="px-4 py-3.5 text-xs font-extrabold text-indigo-600">
                       {fin.category}
                     </td>
@@ -487,15 +559,7 @@ export default function AdminMasterDataPage() {
                     <td className="px-4 py-3.5 text-right space-x-2">
                       <button
                         type="button"
-                        onClick={() => {
-                          setEditingFinId(fin.id);
-                          setFinForm({
-                            category: fin.category,
-                            name: fin.name,
-                            unit: fin.unit,
-                            price: String(fin.price),
-                          });
-                        }}
+                        onClick={() => handleStartEditFinishing(fin)}
                         className="clay-pill p-2 text-indigo-600 inline-flex items-center justify-center cursor-pointer"
                         title="Edit"
                       >
