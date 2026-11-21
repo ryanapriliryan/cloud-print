@@ -3,15 +3,20 @@
 @tailwind utilities;
 
 :root {
-  /* Palet Steel Slate & Ocean (Profesional, Teduh & Bebas Silau) */
-  --clay-bg-start: #bccad6;
-  --clay-bg-end: #ccd8e2;
-  --clay-surface: rgba(228, 236, 242, 0.95);
-  --clay-surface-nested: #d2dfe9;
-  --clay-input-bg: #dae5ee;
+  /* Palet Tropical Citrus & Cobalt (Teduh & Ramai) */
+  --clay-bg-start: #c8d6e5; /* Latar Cool Blue-Gray */
+  --clay-bg-end: #dbe6f0;
+  --clay-surface: rgba(229, 236, 244, 0.96); /* Kartu Ice-Blue Pucat */
+  --clay-surface-nested: #dae5ef;
+  --clay-input-bg: #e2ebf3;
 
-  --clay-primary-start: #0369a1;
-  --clay-primary-end: #1d4ed8;
+  /* Warna Aksen Ramai */
+  --color-cobalt: #1d4ed8;
+  --color-cobalt-dark: #1e40af;
+  --color-tangerine: #f59e0b;
+  --color-emerald: #10b981;
+  --color-rose: #f43f5e;
+
   --clay-text-main: #0f172a;
   --clay-text-muted: #334155;
 }
@@ -30,65 +35,112 @@
 }
 
 @layer components {
-  /* Kartu Utama Ice-Slate Redup */
+  /* =========================================================
+     Gaya Claymorphism MENONJOL (Lebih Kuat) - Untuk Kartu
+     ========================================================= */
   .clay-card {
     background: var(--clay-surface);
     border-radius: 26px;
-    border: 1px solid rgba(255, 255, 255, 0.62);
+    /* Border putih lebih tegas untuk limit cahaya */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    /* Bayangan luar & dalam dibuat lebih kuat untuk efek timbul ekstra */
     box-shadow:
-      10px 14px 28px rgba(15, 41, 66, 0.16),
-      inset 4px 4px 10px rgba(255, 255, 255, 0.72),
-      inset -4px -4px 10px rgba(148, 175, 198, 0.48);
+      12px 16px 32px rgba(15, 41, 66, 0.2),       /* Bayangan jatuh luar */
+      inset 6px 6px 12px rgba(255, 255, 255, 0.9),  /* Limit cahaya dalam atas */
+      inset -6px -6px 12px rgba(148, 175, 198, 0.5); /* Bayangan dalam bawah */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  /* Kartu Bersarang / Gelembung Chat Masuk */
   .clay-card-soft {
     background: var(--clay-surface-nested);
     border-radius: 20px;
-    border: 1px solid rgba(148, 175, 198, 0.85);
+    border: 1px solid rgba(148, 175, 198, 0.7);
     box-shadow:
-      4px 6px 14px rgba(15, 41, 66, 0.13),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.65),
-      inset -2px -2px 6px rgba(120, 151, 178, 0.42);
+      6px 8px 16px rgba(15, 41, 66, 0.15),
+      inset 4px 4px 8px rgba(255, 255, 255, 0.8),
+      inset -4px -4px 8px rgba(120, 151, 178, 0.4);
   }
 
-  /* Tombol Utama Ocean Blue */
+  /* =========================================================
+     Gaya Claymorphism CEKUNG (Pressed/Inset) - Untuk Menu Aktif
+     ========================================================= */
+  /* Gunakan kelas ini untuk elemen menu yang sedang ditekan/aktif */
+  .clay-pressed {
+    background: var(--clay-input-bg);
+    border-radius: 16px;
+    border: 1px solid rgba(148, 175, 198, 0.8);
+    /* Efek bayangan dalam (cekung) dibuat menonjol */
+    box-shadow:
+      inset 5px 5px 10px rgba(15, 41, 66, 0.15),  /* Bayangan dalam atas */
+      inset -5px -5px 10px rgba(255, 255, 255, 0.8); /* Cahaya dalam bawah */
+    color: var(--color-cobalt) !important;
+    font-weight: 700;
+  }
+
+  /* Hover effect untuk menu agar terasa bisa ditekan */
+  .clay-nav-link {
+    transition: all 0.2s ease;
+    border-radius: 16px;
+    padding: 10px 16px;
+  }
+
+  .clay-nav-link:hover:not(.clay-pressed) {
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .clay-nav-link:active {
+    background: var(--clay-input-bg);
+    border: 1px solid rgba(148, 175, 198, 0.8);
+    box-shadow:
+      inset 4px 4px 8px rgba(15, 41, 66, 0.12),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.7);
+    transform: translateY(1px);
+  }
+
+  /* =========================================================
+     Tombol & Elemen Multi-Warna (Vibrant)
+     ========================================================= */
+
+  /* Tombol Utama Cobalt Blue (Lebih Menonjol) */
   .clay-btn-primary {
-    background: linear-gradient(135deg, var(--clay-primary-start) 0%, var(--clay-primary-end) 100%);
+    background: linear-gradient(135deg, var(--color-cobalt) 0%, #3b82f6 100%);
     color: #ffffff;
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow:
-      6px 10px 20px rgba(3, 105, 161, 0.3),
-      inset 3px 3px 7px rgba(255, 255, 255, 0.32),
-      inset -3px -3px 7px rgba(12, 45, 90, 0.42);
+      8px 12px 24px rgba(29, 78, 216, 0.35),
+      inset 4px 4px 8px rgba(255, 255, 255, 0.4),
+      inset -4px -4px 8px rgba(12, 45, 90, 0.5);
     transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
   }
 
   .clay-btn-primary:hover:not(:disabled) {
-    filter: brightness(1.06);
-    transform: translateY(-1px);
+    filter: brightness(1.08);
+    transform: translateY(-2px); /* Lompatan lebih tinggi */
     box-shadow:
-      8px 12px 24px rgba(3, 105, 161, 0.36),
-      inset 3px 3px 7px rgba(255, 255, 255, 0.36),
-      inset -3px -3px 7px rgba(12, 45, 90, 0.42);
+      10px 16px 28px rgba(29, 78, 216, 0.4),
+      inset 4px 4px 8px rgba(255, 255, 255, 0.45),
+      inset -4px -4px 8px rgba(12, 45, 90, 0.5);
   }
 
   .clay-btn-primary:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(1px);
+    box-shadow:
+      inset 4px 4px 8px rgba(12, 45, 90, 0.5),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.3);
   }
 
-  /* Tombol Hapus / Keluar */
+  /* Tombol Hapus / Danger */
   .clay-btn-danger {
-    background: linear-gradient(145deg, #fbdde2 0%, #f7c7cf 100%);
+    background: linear-gradient(145deg, #fecdd3 0%, #fda4af 100%);
     color: #9f1239;
     border-radius: 16px;
     border: 1px solid rgba(244, 162, 176, 0.9);
     box-shadow:
-      4px 6px 14px rgba(190, 18, 60, 0.15),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.72),
-      inset -2px -2px 6px rgba(244, 114, 136, 0.38);
+      6px 8px 16px rgba(190, 18, 60, 0.18),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.8),
+      inset -3px -3px 6px rgba(244, 114, 136, 0.4);
     transition: transform 0.18s ease, filter 0.18s ease;
   }
 
@@ -97,181 +149,156 @@
     transform: translateY(-1px);
   }
 
-  /* Tombol Pil / Tag Navigasi */
-  .clay-pill {
-    background: #dbe6ef;
-    border-radius: 9999px;
-    border: 1px solid rgba(158, 182, 203, 0.9);
-    box-shadow:
-      4px 6px 12px rgba(15, 41, 66, 0.12),
-      inset 2px 2px 5px rgba(255, 255, 255, 0.72),
-      inset -2px -2px 5px rgba(148, 175, 198, 0.42);
-    transition: transform 0.15s ease, background-color 0.15s ease;
-  }
-
-  .clay-pill:hover:not(:disabled) {
-    background: #e7eff6;
-    transform: translateY(-1px);
-  }
-
-  /* Kolom Input Cekung */
+  /* Kolom Input Cekung ( pressed ) */
   .clay-input {
     background: var(--clay-input-bg);
     border-radius: 16px;
-    border: 1px solid rgba(148, 175, 198, 0.95);
+    border: 1px solid rgba(148, 175, 198, 0.9);
     box-shadow:
-      inset 3px 3px 7px rgba(15, 41, 66, 0.15),
-      inset -3px -3px 7px rgba(255, 255, 255, 0.72);
-    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+      inset 4px 4px 8px rgba(15, 41, 66, 0.15),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
   }
 
   .clay-input:focus {
     outline: none;
     background: #e9f0f6;
-    border-color: #0369a1;
+    border-color: var(--color-cobalt);
     box-shadow:
-      0 0 0 3px rgba(3, 105, 161, 0.22),
-      inset 2px 2px 5px rgba(15, 41, 66, 0.12);
+      0 0 0 3px rgba(29, 78, 216, 0.15),
+      inset 3px 3px 6px rgba(15, 41, 66, 0.12);
   }
 
-  /* Kotak Ikon 3D Lembut */
+  /* Kotak Ikon Multi-Warna (Timbul Kuat) */
   .clay-icon-box {
-    background: linear-gradient(145deg, #d3e1ec 0%, #bfd3e3 100%);
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
     box-shadow:
-      5px 6px 14px rgba(15, 41, 66, 0.16),
-      inset 3px 3px 6px rgba(255, 255, 255, 0.75),
-      inset -2px -2px 6px rgba(120, 151, 178, 0.45);
+      8px 10px 20px rgba(15, 41, 66, 0.18),
+      inset 4px 4px 8px rgba(255, 255, 255, 0.8),
+      inset -4px -4px 8px rgba(120, 151, 178, 0.45);
   }
 
-  /* 4 Standar Lencana Status */
+  /* Warna Khusus Ikon */
+  .icon-cobalt {
+    background: linear-gradient(145deg, #dbeafe 0%, #bfdbfe 100%);
+    color: var(--color-cobalt);
+  }
+  .icon-tangerine {
+    background: linear-gradient(145deg, #fef3c7 0%, #fde68a 100%);
+    color: #b45309;
+  }
+  .icon-emerald {
+    background: linear-gradient(145deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+  }
+  .icon-rose {
+    background: linear-gradient(145deg, #ffe4e6 0%, #fecdd3 100%);
+    color: #9f1239;
+  }
+
+  /* =========================================================
+     Lencana Status (Multi-Warna)
+     ========================================================= */
+  .clay-badge {
+    border-radius: 9999px;
+    box-shadow:
+      4px 4px 8px rgba(15, 41, 66, 0.1),
+      inset 2px 2px 4px rgba(255, 255, 255, 0.7);
+  }
+
   .clay-badge-waiting {
-    background: linear-gradient(145deg, #faecc2 0%, #f7de94 100%);
-    color: #78350f;
-    border: 1px solid #f59e0b;
+    background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
+    color: #92400e;
+    border: 1px solid #fcd34d;
   }
 
   .clay-badge-process {
-    background: linear-gradient(145deg, #cce4f6 0%, #add3f0 100%);
+    background: linear-gradient(145deg, #e0f2fe 0%, #bae6fd 100%);
     color: #0c4a6e;
     border: 1px solid #38bdf8;
   }
 
   .clay-badge-done {
-    background: linear-gradient(145deg, #c7f0d4 0%, #a5e5ba 100%);
-    color: #14532d;
-    border: 1px solid #4ade80;
+    background: linear-gradient(145deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border: 1px solid #34d399;
   }
 
   .clay-badge-rejected {
-    background: linear-gradient(145deg, #fbdde2 0%, #f7c7cf 100%);
+    background: linear-gradient(145deg, #ffe4e6 0%, #fecdd3 100%);
     color: #9f1239;
     border: 1px solid #fb7185;
   }
 }
 
-/* Redupkan elemen bg-white bawaan agar bebas silau */
-.bg-white,
-.bg-white\/95 {
-  background-color: rgba(228, 236, 242, 0.95) !important;
+/* =========================================================
+   Penyelarasan Warna Utilitas Tailwind
+   ========================================================= */
+
+/* Latar belakang kustom */
+.bg-clay-bg {
+  background-color: var(--clay-bg-start);
+}
+.bg-clay-surface {
+  background-color: var(--clay-surface);
 }
 
-.bg-white\/50 {
-  background-color: rgba(218, 229, 238, 0.72) !important;
+/* Redupkan bg-white bawaan agar bebas silau */
+.bg-white {
+  background-color: rgba(229, 236, 244, 0.7) !important;
 }
 
-.bg-slate-50 {
-  background-color: rgba(210, 223, 233, 0.75) !important;
-}
-
-/* Penyelarasan Otomatis Semua Aksen Indigo, Teal & Blue Menjadi Ocean Blue */
-.text-indigo-500,
+/* Sinkronisasi warna teks Indigo/Blue bawaan ke Cobalt */
 .text-indigo-600,
 .text-indigo-700,
-.text-indigo-800,
-.text-indigo-900,
 .text-blue-600,
-.text-blue-700,
-.text-teal-600,
-.text-teal-700 {
-  color: #0369a1 !important;
+.text-blue-700 {
+  color: var(--color-cobalt) !important;
 }
 
-.text-indigo-100,
-.text-indigo-200,
-.text-teal-100 {
-  color: #e0f2fe !important;
+/* Warna primer ramai untuk teks utilitas */
+.text-cobalt {
+  color: var(--color-cobalt);
+}
+.text-tangerine {
+  color: #b45309;
+}
+.text-emerald {
+  color: #065f46;
+}
+.text-rose {
+  color: #9f1239;
 }
 
-.hover\:text-indigo-600:hover,
-.hover\:text-indigo-700:hover,
-.hover\:text-indigo-800:hover,
-.hover\:text-blue-600:hover,
-.hover\:text-teal-700:hover,
-.hover\:text-teal-900:hover {
-  color: #0c4a6e !important;
+/* Otomatis ubah tombol menu aktif di Sidebar & Header menjadi cekung (Pressed) */
+aside .clay-btn-primary,
+nav .clay-btn-primary,
+header .clay-pill.text-indigo-600,
+header .clay-pill.text-teal-600 {
+  background: var(--clay-input-bg) !important;
+  color: var(--color-cobalt) !important;
+  border: 1px solid rgba(148, 175, 198, 0.85) !important;
+  box-shadow:
+    inset 5px 5px 10px rgba(15, 41, 66, 0.16),
+    inset -5px -5px 10px rgba(255, 255, 255, 0.85) !important;
+  transform: translateY(1px);
 }
 
-.bg-indigo-50,
-.bg-indigo-50\/40,
-.bg-indigo-50\/70,
-.bg-teal-50,
-.bg-teal-50\/40,
-.bg-teal-50\/70 {
-  background-color: rgba(196, 214, 229, 0.65) !important;
+aside a,
+aside button,
+nav a {
+  transition: all 0.18s ease;
 }
 
-.bg-indigo-100,
-.bg-indigo-100\/70,
-.bg-indigo-100\/75,
-.bg-teal-100\/70,
-.bg-teal-100\/75 {
-  background-color: rgba(173, 198, 219, 0.72) !important;
-}
-
-.bg-indigo-600,
-.bg-teal-600 {
-  background-color: #0369a1 !important;
-}
-
-.hover\:bg-indigo-50:hover,
-.hover\:bg-indigo-50\/40:hover,
-.hover\:bg-teal-50\/40:hover {
-  background-color: rgba(196, 214, 229, 0.5) !important;
-}
-
-.border-indigo-100,
-.border-indigo-100\/60,
-.border-indigo-100\/70,
-.border-indigo-100\/80,
-.border-indigo-200,
-.border-teal-100,
-.border-teal-100\/80 {
-  border-color: rgba(148, 175, 198, 0.85) !important;
-}
-
-.divide-indigo-100 > :not([hidden]) ~ :not([hidden]),
-.divide-indigo-100\/60 > :not([hidden]) ~ :not([hidden]),
-.divide-teal-100\/60 > :not([hidden]) ~ :not([hidden]) {
-  border-color: rgba(148, 175, 198, 0.7) !important;
-}
-
-.from-indigo-600,
-.from-teal-600 {
-  --tw-gradient-from: #0369a1 var(--tw-gradient-from-position) !important;
-  --tw-gradient-to: rgb(3 105 161 / 0) var(--tw-gradient-to-position) !important;
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
-}
-
-.to-blue-600,
-.to-emerald-600 {
-  --tw-gradient-to: #1d4ed8 var(--tw-gradient-to-position) !important;
-}
-
-.ring-teal-600,
-.ring-indigo-600 {
-  --tw-ring-color: #0369a1 !important;
+aside a:active,
+aside button:active,
+nav a:active {
+  background: var(--clay-input-bg) !important;
+  box-shadow:
+    inset 4px 4px 8px rgba(15, 41, 66, 0.15),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(1px);
 }
 
 /* Aturan Cetak Laporan Resmi Tetap Bersih & Hemat Tinta */
@@ -287,10 +314,8 @@
 
   .clay-card,
   .clay-card-soft,
-  .clay-pill,
   .clay-icon-box,
-  .bg-white,
-  .bg-teal-50\/70 {
+  .bg-white {
     background: #ffffff !important;
     box-shadow: none !important;
     border: 1px solid #cbd5e1 !important;
