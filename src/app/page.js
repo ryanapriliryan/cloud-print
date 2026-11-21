@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
-import { Printer, ShieldCheck, Calculator, FileCheck2, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import LiveChatWidget from "@/components/LiveChatWidget";
 
 export default async function HomePage() {
@@ -15,11 +15,11 @@ export default async function HomePage() {
       {/* Dekorasi Elemen 3D Clay Lembut di Latar Belakang */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed -top-24 -left-24 w-80 h-80 rounded-full bg-teal-200/45 blur-3xl"
+        className="pointer-events-none fixed -top-24 -left-24 w-80 h-80 rounded-full bg-blue-300/35 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed top-1/3 -right-24 w-96 h-96 rounded-full bg-emerald-200/45 blur-3xl"
+        className="pointer-events-none fixed top-1/3 -right-24 w-96 h-96 rounded-full bg-amber-200/40 blur-3xl"
       />
 
       {/* Navbar Mengembang Claymorphism */}
@@ -27,7 +27,13 @@ export default async function HomePage() {
         <div className="clay-card max-w-6xl mx-auto px-5 sm:px-7 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="clay-btn-primary w-10 h-10 flex items-center justify-center shrink-0">
-              <Printer className="w-5 h-5" />
+              <span
+                role="img"
+                aria-label="Printer"
+                className="text-xl leading-none drop-shadow-[0_3px_4px_rgba(15,23,42,0.3)] select-none"
+              >
+                🖨️
+              </span>
             </div>
             <span className="font-extrabold text-lg text-slate-900 tracking-tight">
               Cloud Print
@@ -37,7 +43,7 @@ export default async function HomePage() {
           <div className="flex items-center gap-3">
             <Link
               href="/login"
-              className="clay-pill px-4 py-2 text-sm font-bold text-slate-700 hover:text-teal-700"
+              className="clay-card-soft rounded-full px-4 py-2 text-sm font-bold text-slate-700 hover:text-cobalt transition"
             >
               Masuk
             </Link>
@@ -55,14 +61,20 @@ export default async function HomePage() {
       <main className="flex-1 flex items-center relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <div className="clay-pill inline-flex items-center gap-2 px-4 py-1.5 text-teal-700 text-xs font-extrabold">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="clay-card-soft rounded-full inline-flex items-center gap-2 px-4 py-1.5 text-cobalt text-xs font-extrabold">
+              <span
+                role="img"
+                aria-label="Sparkles"
+                className="text-sm leading-none drop-shadow-[0_2px_2px_rgba(15,23,42,0.18)] select-none"
+              >
+                ✨
+              </span>
               <span>Sistem Layanan Percetakan Online</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
               Cetak Dokumen & Media Promosi{" "}
-              <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-700 via-sky-600 to-amber-500 bg-clip-text text-transparent">
                 Tanpa Antre & Bebas Virus
               </span>
             </h1>
@@ -81,18 +93,24 @@ export default async function HomePage() {
               </Link>
               <Link
                 href="/login"
-                className="clay-pill inline-flex items-center gap-2 px-7 py-4 text-sm sm:text-base font-extrabold text-slate-800 hover:text-teal-700"
+                className="clay-card-soft rounded-full inline-flex items-center gap-2 px-7 py-4 text-sm sm:text-base font-extrabold text-slate-800 hover:text-cobalt transition"
               >
                 Masuk ke Portal
               </Link>
             </div>
           </div>
 
-          {/* 3 Kartu Fitur Claymorphism */}
+          {/* 3 Kartu Fitur Claymorphism dengan Ikon 3D Emoji */}
           <div className="grid sm:grid-cols-2 gap-5">
             <div className="clay-card p-6 sm:p-7 space-y-3.5 hover:-translate-y-1">
-              <div className="clay-icon-box w-12 h-12 text-teal-600 flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6" />
+              <div className="clay-icon-box icon-emerald w-13 h-13 w-12 h-12 flex items-center justify-center">
+                <span
+                  role="img"
+                  aria-label="Perisai Keamanan"
+                  className="text-2xl leading-none drop-shadow-[0_4px_5px_rgba(6,95,70,0.28)] select-none"
+                >
+                  🛡️
+                </span>
               </div>
               <h3 className="font-extrabold text-slate-900 text-base">
                 Bebas Flashdisk & Malware
@@ -103,8 +121,14 @@ export default async function HomePage() {
             </div>
 
             <div className="clay-card p-6 sm:p-7 space-y-3.5 hover:-translate-y-1">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-100 to-cyan-100 text-sky-600 flex items-center justify-center shadow-[5px_5px_12px_rgba(14,165,233,0.18),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
-                <Calculator className="w-6 h-6" />
+              <div className="clay-icon-box icon-tangerine w-12 h-12 flex items-center justify-center">
+                <span
+                  role="img"
+                  aria-label="Kalkulator Harga"
+                  className="text-2xl leading-none drop-shadow-[0_4px_5px_rgba(180,83,9,0.28)] select-none"
+                >
+                  🧮
+                </span>
               </div>
               <h3 className="font-extrabold text-slate-900 text-base">
                 Kalkulasi Harga Otomatis
@@ -115,8 +139,14 @@ export default async function HomePage() {
             </div>
 
             <div className="clay-card p-6 sm:p-7 space-y-3.5 sm:col-span-2 hover:-translate-y-1">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 text-amber-600 flex items-center justify-center shadow-[5px_5px_12px_rgba(245,158,11,0.18),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
-                <FileCheck2 className="w-6 h-6" />
+              <div className="clay-icon-box icon-cobalt w-12 h-12 flex items-center justify-center">
+                <span
+                  role="img"
+                  aria-label="Struk dan Notifikasi"
+                  className="text-2xl leading-none drop-shadow-[0_4px_5px_rgba(29,78,216,0.28)] select-none"
+                >
+                  🧾
+                </span>
               </div>
               <h3 className="font-extrabold text-slate-900 text-base">
                 Verifikasi Pembayaran & Notifikasi Real-Time
