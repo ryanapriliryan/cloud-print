@@ -135,15 +135,34 @@ function LiveChatAdminContent() {
     setPendingReply(text);
     setReplyText("");
     isNearBottomRef.current = true;
+
     try {
       const res = await fetch(`/api/admin/chat/${selectedId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: text }),
       });
+
       if (res.ok) {
-        await Promise.all([loadConversation(), loadSessions()]);
+        const data = await res.json().catch(() => ({}));
+        const createdMsg = data.message || {
+          id: `local_${Date.now()}`,
+          sender: "ADMIN",
+          content: text,
+          createdAt: new Date().toISOString(),
+        };
+
+        // Langsung gantikan gelembung loading dengan pesan resmi agar tidak ganda
         setPendingReply(null);
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === createdMsg.id)) return prev;
+          const updated = [...prev, createdMsg];
+          prevMsgCountRef.current = updated.length;
+          return updated;
+        });
+
+        requestAnimationFrame(() => scrollToBottom("smooth"));
+        loadSessions();
       } else {
         setPendingReply(null);
         setReplyText(text);
@@ -189,6 +208,15 @@ function LiveChatAdminContent() {
     }
   }
 
+  // Sembunyikan pendingReply otomatis jika pesan identik sudah masuk lewat polling
+  const showPendingBubble =
+    pendingReply &&
+    !(
+      messages.length > 0 &&
+      messages[messages.length - 1]?.sender === "ADMIN" &&
+      messages[messages.length - 1]?.content === pendingReply
+    );
+
   return (
     <div className="space-y-6">
       {toast && (
@@ -213,13 +241,13 @@ function LiveChatAdminContent() {
             selectedId ? "hidden lg:flex" : "flex"
           }`}
         >
-          <div className="px-5 py-4 bg-teal-50/70 border-b border-teal-100 flex items-center justify-between">
+          <div className="px-5 py-4 bg-blue-50/70 border-b border-blue-100 flex items-center justify-between">
             <span className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
               Kotak Masuk ({sessions.length})
             </span>
           </div>
 
-          <div className="flex-1 overflow-y-auto divide-y divide-teal-100/60">
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-200/70">
             {loadingList ? (
               <div className="p-8 text-center text-xs font-medium text-slate-500">
                 Memuat percakapan...
@@ -238,13 +266,11 @@ function LiveChatAdminContent() {
                     type="button"
                     onClick={() => setSelectedId(s.id)}
                     className={`w-full text-left p-4 transition flex items-start justify-between gap-3 cursor-pointer ${
-                      isSelected
-                        ? "bg-teal-100/75"
-                        : "hover:bg-teal-50/40"
+                      isSelected ? "clay-pressed rounded-none" : "hover:bg-white/40"
                     }`}
                   >
                     <div className="flex items-start gap-3 min-w-0">
-                      <div className="clay-icon-box w-10 h-10 text-teal-600 flex items-center justify-center shrink-0">
+                      <div className="clay-icon-box icon-emerald w-10 h-10 flex items-center justify-center shrink-0">
                         <User className="w-5 h-5" />
                       </div>
                       <div className="min-w-0">
@@ -256,7 +282,7 @@ function LiveChatAdminContent() {
                             ? `${lastMsg.sender === "ADMIN" ? "Anda: " : ""}${lastMsg.content}`
                             : "Memulai percakapan"}
                         </p>
-                        <p className="text-[10px] font-semibold text-teal-600 mt-1">
+                        <p className="text-[10px] font-semibold text-cobalt mt-1">
                           {formatDate(s.lastMessageAt)}
                         </p>
                       </div>
@@ -281,7 +307,7 @@ function LiveChatAdminContent() {
         >
           {!activeSession ? (
             <div className="flex-1 flex flex-col items-center justify-center p-10 text-center space-y-3">
-              <div className="clay-icon-box w-14 h-14 text-teal-600 flex items-center justify-center">
+              <div className="clay-icon-box icon-cobalt w-14 h-14 flex items-center justify-center">
                 <MessageSquare className="w-7 h-7" />
               </div>
               <p className="text-sm font-bold text-slate-700">
@@ -290,17 +316,17 @@ function LiveChatAdminContent() {
             </div>
           ) : (
             <>
-              <div className="px-6 py-4 bg-teal-50/70 border-b border-teal-100 flex items-center justify-between gap-3">
+              <div className="px-6 py-4 bg-blue-50/60 border-b border-slate-200/70 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <button
                     type="button"
                     onClick={() => setSelectedId("")}
-                    className="clay-pill lg:hidden p-2 text-slate-700"
+                    className="clay-card-soft lg:hidden p-2 text-slate-700"
                     aria-label="Kembali"
                   >
                     <ArrowLeft className="w-4 h-4" />
                   </button>
-                  <div className="clay-icon-box w-10 h-10 text-teal-600 flex items-center justify-center shrink-0">
+                  <div className="clay-icon-box icon-emerald w-10 h-10 flex items-center justify-center shrink-0">
                     <User className="w-5 h-5" />
                   </div>
                   <div className="truncate">
@@ -361,9 +387,9 @@ function LiveChatAdminContent() {
                   );
                 })}
 
-                {pendingReply && (
+                {showPendingBubble && (
                   <div className="flex flex-col items-end animate-pulse">
-                    <span className="text-[10px] font-bold text-teal-600 mb-1 mx-1 inline-flex items-center gap-1">
+                    <span className="text-[10px] font-bold text-cobalt mb-1 mx-1 inline-flex items-center gap-1">
                       <Loader2 className="w-3 h-3 animate-spin" />
                       Mengirim balasan...
                     </span>
@@ -378,7 +404,7 @@ function LiveChatAdminContent() {
 
               <form
                 onSubmit={handleSendReply}
-                className="p-4 border-t border-teal-100/80 bg-white/50 flex items-center gap-3"
+                className="p-4 border-t border-slate-200/70 bg-white/40 flex items-center gap-3"
               >
                 <input
                   type="text"
@@ -420,7 +446,7 @@ function LiveChatAdminContent() {
             className="clay-card max-w-sm w-full p-7 text-center space-y-5"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-red-100 text-rose-600 flex items-center justify-center mx-auto shadow-[5px_5px_12px_rgba(244,63,94,0.2),inset_3px_3px_6px_rgba(255,255,255,0.95)]">
+            <div className="clay-icon-box icon-rose w-14 h-14 flex items-center justify-center mx-auto">
               <Trash2 className="w-7 h-7" />
             </div>
 
@@ -449,7 +475,7 @@ function LiveChatAdminContent() {
                 type="button"
                 disabled={deleting}
                 onClick={() => setDeleteTarget(null)}
-                className="clay-pill flex-1 py-3 px-4 text-xs font-bold text-slate-700 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
+                className="clay-card-soft flex-1 py-3 px-4 text-xs font-bold text-slate-700 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <X className="w-4 h-4" />
                 Batal
