@@ -144,6 +144,35 @@
     transition: transform 0.18s ease, filter 0.18s ease;
   }
 
+  /* Tombol Pil / Aksi Kontras 3D */
+  .clay-pill {
+    background: linear-gradient(145deg, #f8fafc 0%, #e2ebf3 100%);
+    color: var(--color-cobalt);
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow:
+      6px 8px 16px rgba(15, 41, 66, 0.22),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.9),
+      inset -3px -3px 6px rgba(148, 175, 198, 0.45);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  }
+
+  .clay-pill:hover:not(:disabled) {
+    filter: brightness(1.03);
+    transform: translateY(-2px);
+    box-shadow:
+      8px 12px 20px rgba(15, 41, 66, 0.26),
+      inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+      inset -3px -3px 6px rgba(148, 175, 198, 0.45);
+  }
+
+  .clay-pill:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow:
+      inset 4px 4px 8px rgba(15, 41, 66, 0.16),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.85);
+  }
+
   .clay-btn-danger:hover:not(:disabled) {
     filter: brightness(0.97);
     transform: translateY(-1px);
