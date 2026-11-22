@@ -188,7 +188,7 @@ export default function LiveChatWidget() {
                 <MessageCircle className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-extrabold leading-tight">
+                <h3 className="text-sm font-extrabold !text-white leading-tight">
                   Live Chat Cloud Print
                 </h3>
                 <div className="flex items-center gap-1.5 mt-0.5">
