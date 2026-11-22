@@ -3,30 +3,30 @@
 @tailwind utilities;
 
 :root {
-  /* Palet Gradasi Glacier Mist & Velvet Ruby + Bokeh Multi-Warna */
+  /* Palet Gradasi Glacier Mist + Bokeh Multi-Warna */
   --clay-bg-start: #bfd4dc;
   --clay-bg-mid: #d3e3e9;
   --clay-bg-end: #e2eef2;
 
-  --clay-surface-light: rgba(245, 250, 252, 0.88);
-  --clay-surface-mid: rgba(231, 241, 245, 0.85);
-  --clay-surface-deep: rgba(217, 231, 237, 0.88);
+  --clay-surface-light: rgba(245, 250, 253, 0.89);
+  --clay-surface-mid: rgba(231, 241, 247, 0.86);
+  --clay-surface-deep: rgba(217, 231, 240, 0.89);
 
-  --clay-input-deep: #d2e2e8;
-  --clay-input-light: #e8f2f6;
+  --clay-input-deep: #d1e2ec;
+  --clay-input-light: #e8f2f8;
 
-  /* Spektrum Aksen Selaras Background */
-  --color-ruby-dark: #941b39;
-  --color-ruby: #b52649;
-  --color-ruby-bright: #e65572;
-  --color-ocean: #1e5fa3;
-  --color-amber: #b05a14;
-  --color-jade: #0d7a5b;
+  /* Spektrum Aksen Deep Sapphire & Cerulean + Multi-Aksen */
+  --color-sapphire-dark: #1e3a8a;
+  --color-sapphire: #1d4ed8;
+  --color-cerulean: #38bdf8;
+  --color-amber: #b45309;
+  --color-jade: #047857;
+  --color-ruby: #be123c;
 
-  /* Hierarki Warna Teks Ber-Undertone Sejuk (Glacial Slate) */
-  --clay-text-main: #122934;
-  --clay-text-secondary: #354f5c;
-  --clay-text-muted: #526d7a;
+  /* Hierarki Warna Teks Midnight Navy (Ber-Undertone Sejuk) */
+  --clay-text-main: #0f2537;
+  --clay-text-secondary: #314c63;
+  --clay-text-muted: #4f6b82;
 }
 
 @layer base {
@@ -123,7 +123,7 @@
     border-radius: 26px;
     border: 1px solid rgba(255, 255, 255, 0.88);
     box-shadow:
-      12px 16px 32px rgba(18, 41, 52, 0.17),
+      12px 16px 32px rgba(15, 37, 55, 0.17),
       inset 6px 6px 12px rgba(255, 255, 255, 0.94),
       inset -6px -6px 12px rgba(140, 173, 186, 0.46);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -140,7 +140,7 @@
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.82);
     box-shadow:
-      6px 8px 16px rgba(18, 41, 52, 0.13),
+      6px 8px 16px rgba(15, 37, 55, 0.13),
       inset 4px 4px 8px rgba(255, 255, 255, 0.88),
       inset -4px -4px 8px rgba(120, 155, 170, 0.36);
   }
@@ -157,9 +157,9 @@
     border-radius: 16px;
     border: 1px solid rgba(140, 173, 186, 0.88);
     box-shadow:
-      inset 5px 5px 10px rgba(18, 41, 52, 0.15),
+      inset 5px 5px 10px rgba(15, 37, 55, 0.15),
       inset -5px -5px 10px rgba(255, 255, 255, 0.88);
-    color: var(--color-ruby) !important;
+    color: var(--color-sapphire) !important;
     font-weight: 700;
   }
 
@@ -171,32 +171,32 @@
   }
 
   .clay-nav-link:hover:not(.clay-pressed) {
-    color: var(--color-ruby) !important;
+    color: var(--color-sapphire) !important;
     background: linear-gradient(
       145deg,
       rgba(255, 255, 255, 0.72) 0%,
-      rgba(255, 241, 242, 0.55) 100%
+      rgba(239, 246, 255, 0.62) 100%
     );
     transform: translateY(-1px);
   }
 
   /* =========================================================
-     Tombol 3D Multi-Gradasi (Velvet Ruby, Glacier Pearl & Soft Rose)
+     Tombol 3D Multi-Gradasi (Deep Sapphire -> Bright Cerulean)
      ========================================================= */
   .clay-btn-primary {
     background: linear-gradient(
       135deg,
-      #a61e40 0%,
-      #cc3155 52%,
-      #e65572 100%
+      #1e40af 0%,
+      #2563eb 52%,
+      #38bdf8 100%
     );
-    color: #fff9fa !important;
+    color: #f8fafc !important;
     border-radius: 18px;
-    border: 1px solid rgba(255, 228, 235, 0.55);
+    border: 1px solid rgba(224, 242, 254, 0.58);
     box-shadow:
-      8px 12px 24px rgba(148, 27, 57, 0.26),
-      inset 4px 4px 9px rgba(255, 228, 235, 0.48),
-      inset -4px -4px 9px rgba(115, 16, 42, 0.42);
+      8px 12px 24px rgba(29, 78, 216, 0.28),
+      inset 4px 4px 9px rgba(224, 242, 254, 0.48),
+      inset -4px -4px 9px rgba(23, 37, 84, 0.42);
     transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
   }
 
@@ -204,26 +204,26 @@
     filter: brightness(1.05);
     transform: translateY(-2px);
     box-shadow:
-      10px 16px 28px rgba(148, 27, 57, 0.32),
-      inset 4px 4px 9px rgba(255, 228, 235, 0.54),
-      inset -4px -4px 9px rgba(115, 16, 42, 0.42);
+      10px 16px 28px rgba(29, 78, 216, 0.34),
+      inset 4px 4px 9px rgba(224, 242, 254, 0.54),
+      inset -4px -4px 9px rgba(23, 37, 84, 0.42);
   }
 
   .clay-btn-primary:active:not(:disabled) {
     transform: translateY(1px);
     box-shadow:
-      inset 4px 4px 8px rgba(115, 16, 42, 0.45),
-      inset -4px -4px 8px rgba(255, 228, 235, 0.32);
+      inset 4px 4px 8px rgba(23, 37, 84, 0.45),
+      inset -4px -4px 8px rgba(224, 242, 254, 0.32);
   }
 
   /* Tombol Pil Gradasi Glacier Pearl */
   .clay-pill {
     background: linear-gradient(145deg, #ffffff 0%, #ebf4f7 55%, #d5e6ed 100%);
-    color: var(--color-ruby) !important;
+    color: var(--color-sapphire) !important;
     border-radius: 9999px;
     border: 1px solid rgba(255, 255, 255, 0.95);
     box-shadow:
-      6px 8px 16px rgba(18, 41, 52, 0.18),
+      6px 8px 16px rgba(15, 37, 55, 0.18),
       inset 3px 3px 6px rgba(255, 255, 255, 0.98),
       inset -3px -3px 6px rgba(140, 173, 186, 0.42);
     transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
@@ -233,7 +233,7 @@
     filter: brightness(1.03);
     transform: translateY(-2px);
     box-shadow:
-      8px 12px 20px rgba(18, 41, 52, 0.22),
+      8px 12px 20px rgba(15, 37, 55, 0.22),
       inset 3px 3px 6px rgba(255, 255, 255, 1),
       inset -3px -3px 6px rgba(140, 173, 186, 0.46);
   }
@@ -241,14 +241,14 @@
   .clay-pill:active:not(:disabled) {
     transform: translateY(1px);
     box-shadow:
-      inset 4px 4px 8px rgba(18, 41, 52, 0.14),
+      inset 4px 4px 8px rgba(15, 37, 55, 0.14),
       inset -4px -4px 8px rgba(255, 255, 255, 0.88);
   }
 
   /* Tombol Keluar / Hapus Bernuansa Soft Blush Clay */
   .clay-btn-danger {
     background: linear-gradient(135deg, #fff1f3 0%, #ffdbe2 52%, #fcb6c3 100%);
-    color: var(--color-ruby-dark) !important;
+    color: #9f1239 !important;
     border-radius: 16px;
     border: 1px solid rgba(251, 182, 195, 0.92);
     box-shadow:
@@ -276,7 +276,7 @@
     border-radius: 16px;
     border: 1px solid rgba(140, 173, 186, 0.9);
     box-shadow:
-      inset 4px 4px 8px rgba(18, 41, 52, 0.14),
+      inset 4px 4px 8px rgba(15, 37, 55, 0.14),
       inset -4px -4px 8px rgba(255, 255, 255, 0.86);
     transition: border-color 0.18s ease, box-shadow 0.18s ease;
   }
@@ -288,33 +288,28 @@
   .clay-input:focus {
     outline: none;
     background: linear-gradient(145deg, #dfecf1 0%, #f0f7fa 100%);
-    border-color: var(--color-ruby);
+    border-color: var(--color-sapphire);
     box-shadow:
-      0 0 0 3px rgba(181, 38, 73, 0.15),
-      inset 3px 3px 6px rgba(18, 41, 52, 0.11);
+      0 0 0 3px rgba(29, 78, 216, 0.15),
+      inset 3px 3px 6px rgba(15, 37, 55, 0.11);
   }
 
   /* =========================================================
-     Kotak Ikon 3-Stop Gradient (Ruby, Ocean, Amber, Jade)
+     Kotak Ikon 3-Stop Gradient (Sapphire, Amber, Jade, Ruby)
      ========================================================= */
   .clay-icon-box {
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.86);
     box-shadow:
-      8px 10px 20px rgba(18, 41, 52, 0.16),
+      8px 10px 20px rgba(15, 37, 55, 0.16),
       inset 4px 4px 8px rgba(255, 255, 255, 0.88),
       inset -4px -4px 8px rgba(120, 155, 170, 0.42);
   }
 
-  .icon-ruby,
-  .icon-rose {
-    background: linear-gradient(135deg, #fff1f3 0%, #ffd5de 52%, #fa8ca3 100%);
-    color: var(--color-ruby-dark);
-  }
-
-  .icon-cobalt {
+  .icon-cobalt,
+  .icon-sapphire {
     background: linear-gradient(135deg, #eef6ff 0%, #c7e0fe 52%, #7bb4fa 100%);
-    color: #194b85;
+    color: var(--color-sapphire-dark);
   }
 
   .icon-amber,
@@ -329,13 +324,19 @@
     color: #095c44;
   }
 
+  .icon-ruby,
+  .icon-rose {
+    background: linear-gradient(135deg, #fff1f3 0%, #ffd5de 52%, #fa8ca3 100%);
+    color: #9f1239;
+  }
+
   /* =========================================================
      Lencana Status dengan Gradasi Lembut
      ========================================================= */
   .clay-badge {
     border-radius: 9999px;
     box-shadow:
-      4px 4px 8px rgba(18, 41, 52, 0.11),
+      4px 4px 8px rgba(15, 37, 55, 0.11),
       inset 2px 2px 4px rgba(255, 255, 255, 0.84);
   }
 
@@ -347,7 +348,7 @@
 
   .clay-badge-process {
     background: linear-gradient(135deg, #eef6ff 0%, #dbeafe 50%, #9dc6fc 100%);
-    color: #194b85 !important;
+    color: var(--color-sapphire-dark) !important;
     border: 1px solid #3b82f6;
   }
 
@@ -359,7 +360,7 @@
 
   .clay-badge-rejected {
     background: linear-gradient(135deg, #fff1f3 0%, #ffe0e6 50%, #fca6b7 100%);
-    color: var(--color-ruby-dark) !important;
+    color: #9f1239 !important;
     border: 1px solid #e65572;
   }
 }
@@ -388,10 +389,10 @@
 .bg-indigo-100,
 .bg-blue-50,
 .bg-blue-100 {
-  background: linear-gradient(145deg, #fff1f3 0%, #ffe0e6 100%) !important;
+  background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%) !important;
 }
 
-/* Teks Utama Gelap (Deep Glacial Slate) */
+/* Teks Utama Gelap (Midnight Navy) */
 .text-slate-900,
 .text-slate-800,
 .text-gray-900,
@@ -415,27 +416,27 @@
   color: var(--clay-text-muted) !important;
 }
 
-/* Tautan, Subjudul, Nominal & Ikon Utama -> Velvet Ruby */
+/* Tautan, Subjudul, Nominal & Ikon Utama -> Deep Sapphire */
 .text-indigo-500,
 .text-indigo-600,
 .text-blue-500,
 .text-blue-600 {
-  color: var(--color-ruby) !important;
+  color: var(--color-sapphire) !important;
 }
 
 .text-indigo-700,
 .text-indigo-800,
 .text-blue-700,
 .text-blue-800 {
-  color: var(--color-ruby-dark) !important;
+  color: var(--color-sapphire-dark) !important;
 }
 
-/* Efek Hover pada Menu & Tautan -> Velvet Ruby */
+/* Efek Hover pada Menu & Tautan -> Deep Sapphire */
 .hover\:text-indigo-600:hover,
 .hover\:text-indigo-700:hover,
 .hover\:text-blue-600:hover,
 .hover\:text-blue-700:hover {
-  color: var(--color-ruby) !important;
+  color: var(--color-sapphire) !important;
 }
 
 /* Status Selesai & Pendapatan -> Jade Emerald */
@@ -454,7 +455,7 @@
   color: var(--color-amber) !important;
 }
 
-/* Status Ditolak & Error -> Velvet Ruby */
+/* Status Ditolak & Error -> Ruby Crimson */
 .text-rose-600,
 .text-rose-700,
 .text-red-600,
@@ -462,13 +463,14 @@
   color: var(--color-ruby) !important;
 }
 
+.text-cobalt,
+.text-sapphire {
+  color: var(--color-sapphire);
+}
+
 .text-ruby,
 .text-rose {
   color: var(--color-ruby);
-}
-
-.text-cobalt {
-  color: var(--color-ocean);
 }
 
 .text-amber,
@@ -491,10 +493,10 @@ header .clay-pill.text-teal-600 {
     var(--clay-input-deep) 0%,
     var(--clay-input-light) 100%
   ) !important;
-  color: var(--color-ruby) !important;
+  color: var(--color-sapphire) !important;
   border: 1px solid rgba(140, 173, 186, 0.88) !important;
   box-shadow:
-    inset 5px 5px 10px rgba(18, 41, 52, 0.15),
+    inset 5px 5px 10px rgba(15, 37, 55, 0.15),
     inset -5px -5px 10px rgba(255, 255, 255, 0.88) !important;
   transform: translateY(1px);
 }
@@ -507,7 +509,7 @@ nav a {
 
 aside a:hover,
 nav a:hover {
-  color: var(--color-ruby) !important;
+  color: var(--color-sapphire) !important;
 }
 
 aside a:active,
@@ -519,7 +521,7 @@ nav a:active {
     var(--clay-input-light) 100%
   ) !important;
   box-shadow:
-    inset 4px 4px 8px rgba(18, 41, 52, 0.14),
+    inset 4px 4px 8px rgba(15, 37, 55, 0.14),
     inset -4px -4px 8px rgba(255, 255, 255, 0.86) !important;
   transform: translateY(1px);
 }
