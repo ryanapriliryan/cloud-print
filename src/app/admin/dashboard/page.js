@@ -164,7 +164,15 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-bold shadow-xs ${meta.badge}`}
+                          className={`inline-block px-3 py-1 rounded-full text-xs font-bold shadow-xs ${
+                            order.status === "SELESAI"
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              : order.status === "DITOLAK"
+                              ? "bg-rose-100 text-rose-800 border border-rose-300"
+                              : order.status === "DIPROSES" || order.status === "SIAP_DIAMBIL"
+                              ? "bg-blue-100 text-blue-800 border border-blue-300"
+                              : "bg-amber-100 text-amber-800 border border-amber-300"
+                          }`}
                         >
                           {meta.label}
                         </span>
