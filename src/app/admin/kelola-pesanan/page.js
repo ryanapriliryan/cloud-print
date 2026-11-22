@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Search,
   Eye,
@@ -26,19 +26,49 @@ export default function AdminKelolaPesananPage() {
   const [rejectionReason, setRejectionReason] = useState("");
   const [updatingId, setUpdatingId] = useState("");
 
-  async function loadOrders() {
+  const loadOrders = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
-      const res = await fetch("/api/admin/orders");
-      const data = await res.json();
-      setOrders(data.orders || []);
+      const res = await fetch("/api/admin/orders", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setOrders(data.orders || []);
+      }
+    } catch (error) {
+      console.error("Gagal menyinkronkan antrean pesanan:", error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
-    loadOrders();
-  }, []);
+    loadOrders(false);
+
+    // Sinkronisasi otomatis di latar belakang setiap 4 detik tanpa berkedip
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        loadOrders(true);
+      }
+    }, 4000);
+
+    // Segera perbarui saat tab difokuskan kembali atau saat notifikasi masuk
+    const handleSync = () => {
+      if (document.visibilityState === "visible") {
+        loadOrders(true);
+      }
+    };
+
+    window.addEventListener("focus", handleSync);
+    document.addEventListener("visibilitychange", handleSync);
+    window.addEventListener("cloudprint:sync-orders", handleSync);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", handleSync);
+      document.removeEventListener("visibilitychange", handleSync);
+      window.removeEventListener("cloudprint:sync-orders", handleSync);
+    };
+  }, [loadOrders]);
 
   async function handleStatusChange(orderId, newStatus) {
     setUpdatingId(orderId);
@@ -49,7 +79,7 @@ export default function AdminKelolaPesananPage() {
         body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
-        await loadOrders();
+        await loadOrders(true);
       }
     } finally {
       setUpdatingId("");
@@ -72,7 +102,7 @@ export default function AdminKelolaPesananPage() {
       if (res.ok) {
         setRejectOrder(null);
         setRejectionReason("");
-        await loadOrders();
+        await loadOrders(true);
       }
     } finally {
       setUpdatingId("");
