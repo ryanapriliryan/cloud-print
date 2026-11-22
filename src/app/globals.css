@@ -181,7 +181,7 @@
   }
 
   /* =========================================================
-     Tombol 3D Multi-Gradasi (Deep Sapphire -> Bright Cerulean)
+     Tombol & Spanduk 3D Multi-Gradasi (Deep Sapphire -> Cerulean)
      ========================================================= */
   .clay-btn-primary {
     background: linear-gradient(
@@ -190,7 +190,7 @@
       #2563eb 52%,
       #38bdf8 100%
     );
-    color: #f8fafc !important;
+    color: #ffffff !important;
     border-radius: 18px;
     border: 1px solid rgba(224, 242, 254, 0.58);
     box-shadow:
@@ -198,6 +198,11 @@
       inset 4px 4px 9px rgba(224, 242, 254, 0.48),
       inset -4px -4px 9px rgba(23, 37, 84, 0.42);
     transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  /* Pastikan Judul & Teks di dalam Spanduk Biru Selalu Putih Kontras */
+  .clay-btn-primary :is(h1, h2, h3, h4, p, span, div):not(.clay-pill):not(.clay-pill *) {
+    color: #ffffff !important;
   }
 
   .clay-btn-primary:hover:not(:disabled) {
@@ -227,6 +232,10 @@
       inset 3px 3px 6px rgba(255, 255, 255, 0.98),
       inset -3px -3px 6px rgba(140, 173, 186, 0.42);
     transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  }
+
+  .clay-pill :is(span, svg, p) {
+    color: var(--color-sapphire) !important;
   }
 
   .clay-pill:hover:not(:disabled) {
@@ -264,7 +273,7 @@
   }
 
   /* =========================================================
-     Kolom Input Cekung dengan Gradasi Dalam
+     Kolom Input Cekung & Kotak Dropzone Unggah Dokumen
      ========================================================= */
   .clay-input {
     color: var(--clay-text-main);
@@ -292,6 +301,36 @@
     box-shadow:
       0 0 0 3px rgba(29, 78, 216, 0.15),
       inset 3px 3px 6px rgba(15, 37, 55, 0.11);
+  }
+
+  /* Kotak Dropzone Upload File agar Terlihat Jelas */
+  [class*="border-dashed"],
+  label:has(input[type="file"]) {
+    background: linear-gradient(
+      145deg,
+      rgba(213, 230, 241, 0.78) 0%,
+      rgba(236, 245, 250, 0.9) 100%
+    ) !important;
+    border: 2px dashed rgba(29, 78, 216, 0.45) !important;
+    border-radius: 20px !important;
+    box-shadow:
+      inset 4px 4px 9px rgba(15, 37, 55, 0.11),
+      inset -4px -4px 9px rgba(255, 255, 255, 0.88);
+    transition: all 0.2s ease;
+  }
+
+  [class*="border-dashed"]:hover,
+  label:has(input[type="file"]):hover {
+    background: linear-gradient(
+      145deg,
+      rgba(219, 234, 254, 0.88) 0%,
+      rgba(240, 248, 255, 0.96) 100%
+    ) !important;
+    border-color: var(--color-sapphire) !important;
+    box-shadow:
+      0 6px 16px rgba(29, 78, 216, 0.12),
+      inset 3px 3px 7px rgba(15, 37, 55, 0.08),
+      inset -3px -3px 7px rgba(255, 255, 255, 0.92);
   }
 
   /* =========================================================
@@ -366,7 +405,7 @@
 }
 
 /* =========================================================
-   Penyelarasan Warna Teks & Aksen Seluruh Halaman
+   Penyelarasan Warna Teks, Garis Stepper & Aksen Seluruh Halaman
    ========================================================= */
 .bg-clay-bg {
   background: linear-gradient(135deg, var(--clay-bg-start) 0%, var(--clay-bg-end) 100%);
@@ -384,12 +423,30 @@
   ) !important;
 }
 
+/* Tegaskan Garis Penghubung Langkah 1 -> Langkah 2 & Pemisah Tabel */
+.bg-slate-200,
+.bg-gray-200 {
+  background-color: #b6cddc !important;
+}
+
+.border-slate-200,
+.border-slate-300,
+.border-gray-200,
+.border-gray-300 {
+  border-color: rgba(148, 179, 201, 0.82) !important;
+}
+
 /* Latar Avatar & Lencana Lembut */
 .bg-indigo-50,
 .bg-indigo-100,
 .bg-blue-50,
 .bg-blue-100 {
   background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%) !important;
+}
+
+/* Teks Putih Murni */
+.text-white {
+  color: #ffffff !important;
 }
 
 /* Teks Utama Gelap (Midnight Navy) */
