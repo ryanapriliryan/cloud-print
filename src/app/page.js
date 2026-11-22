@@ -118,11 +118,11 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-clip">
+    <div id="top" className="min-h-screen flex flex-col relative overflow-x-clip">
       {/* Navbar Mengembang Mengikuti Saat Di-Scroll */}
       <header className="fixed top-0 inset-x-0 z-30 pt-3.5 px-4 sm:px-6">
         <div className="clay-card max-w-6xl mx-auto px-5 sm:px-7 h-16 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3 shrink-0">
+          <a href="#top" className="flex items-center gap-3 shrink-0 cursor-pointer">
             <div className="clay-btn-primary w-10 h-10 flex items-center justify-center shrink-0">
               <Printer className="w-5 h-5" />
             </div>
@@ -134,7 +134,7 @@ export default async function HomePage() {
                 Layanan Percetakan Online
               </span>
             </div>
-          </Link>
+          </a>
 
           <nav className="hidden md:flex items-center gap-1.5 text-sm font-bold">
             <a href="#layanan" className="clay-nav-link">

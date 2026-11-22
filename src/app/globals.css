@@ -666,3 +666,7 @@ main [class*="border-b-2"] {
 .animate-clay-marquee:hover {
   animation-play-state: paused;
 }
+
+html {
+  scroll-behavior: smooth;
+}
