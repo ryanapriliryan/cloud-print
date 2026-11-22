@@ -263,13 +263,17 @@ export default function AdminKelolaPesananPage() {
                       </td>
 
                       <td className="px-5 py-5 min-w-[200px]">
-                        {order.status === "SELESAI" ? (
+                        {order.status === "MENUNGGU_PEMBAYARAN" ? (
+                          <span className="inline-block px-4 py-2 rounded-2xl text-xs font-extrabold bg-gradient-to-br from-amber-100 to-orange-200 text-amber-800 border border-amber-300 shadow-[4px_4px_10px_rgba(245,158,11,0.18),inset_2px_2px_4px_rgba(255,255,255,0.9)]">
+                            ⏳ Menunggu Pembayaran
+                          </span>
+                        ) : order.status === "SELESAI" ? (
                           <span className="inline-block px-4 py-2 rounded-2xl text-xs font-extrabold bg-gradient-to-br from-emerald-100 to-teal-200 text-emerald-800 border border-emerald-300 shadow-[4px_4px_10px_rgba(16,185,129,0.18),inset_2px_2px_4px_rgba(255,255,255,0.9)]">
-                            Selesai
+                            ✓ Selesai
                           </span>
                         ) : order.status === "DITOLAK" ? (
                           <span className="inline-block px-4 py-2 rounded-2xl text-xs font-extrabold bg-gradient-to-br from-rose-100 to-red-200 text-rose-800 border border-rose-300 shadow-[4px_4px_10px_rgba(244,63,94,0.18),inset_2px_2px_4px_rgba(255,255,255,0.9)]">
-                            Pembayaran Ditolak
+                            ✕ Pembayaran Ditolak
                           </span>
                         ) : (
                           <ClaySelect
@@ -277,7 +281,6 @@ export default function AdminKelolaPesananPage() {
                             value={order.status}
                             onChange={(val) => handleStatusChange(order.id, val)}
                             options={[
-                              { value: "MENUNGGU_PEMBAYARAN", label: "Menunggu Pembayaran" },
                               { value: "MENUNGGU_VERIFIKASI", label: "Menunggu Verifikasi" },
                               { value: "DIPROSES", label: "Sedang Dicetak" },
                               { value: "SIAP_DIAMBIL", label: "Siap Diambil" },
