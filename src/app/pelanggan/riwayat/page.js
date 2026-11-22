@@ -29,31 +29,73 @@ function RiwayatContent() {
   const [savingPayment, setSavingPayment] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const loadData = useCallback(async () => {
-    try {
-      const [ordersRes, masterRes] = await Promise.all([
-        fetch("/api/orders"),
-        fetch("/api/master-data"),
-      ]);
-      const ordersData = await ordersRes.json();
-      const masterData = await masterRes.json();
-      const list = ordersData.orders || [];
-      setOrders(list);
-      setStoreSetting(masterData.storeSetting || null);
+  const loadData = useCallback(
+    async (silent = false) => {
+      try {
+        const [ordersRes, masterRes] = await Promise.all([
+          fetch("/api/orders", { cache: "no-store" }),
+          fetch("/api/master-data", { cache: "no-store" }),
+        ]);
 
-      if (payOrderIdParam) {
-        const target = list.find((o) => o.id === payOrderIdParam);
-        if (target && (target.status === "MENUNGGU_PEMBAYARAN" || target.status === "DITOLAK")) {
-          setActivePayOrder(target);
+        if (ordersRes.ok) {
+          const ordersData = await ordersRes.json();
+          const list = ordersData.orders || [];
+          setOrders(list);
+
+          // Hanya buka modal otomatis saat pemuatan awal agar tidak muncul lagi jika sudah ditutup pengguna
+          if (!silent && payOrderIdParam) {
+            const target = list.find((o) => o.id === payOrderIdParam);
+            if (
+              target &&
+              (target.status === "MENUNGGU_PEMBAYARAN" || target.status === "DITOLAK")
+            ) {
+              setActivePayOrder(target);
+            }
+          }
+        }
+
+        if (masterRes.ok) {
+          const masterData = await masterRes.json();
+          setStoreSetting(masterData.storeSetting || null);
+        }
+      } catch (error) {
+        console.error("Gagal menyinkronkan data riwayat:", error);
+      } finally {
+        if (!silent) {
+          setLoading(false);
         }
       }
-    } finally {
-      setLoading(false);
-    }
-  }, [payOrderIdParam]);
+    },
+    [payOrderIdParam]
+  );
 
   useEffect(() => {
-    loadData();
+    loadData(false);
+
+    // Sinkronisasi otomatis di latar belakang setiap 4 detik tanpa berkedip
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        loadData(true);
+      }
+    }, 4000);
+
+    // Segera perbarui status saat tab difokuskan kembali atau saat notifikasi masuk
+    const handleSync = () => {
+      if (document.visibilityState === "visible") {
+        loadData(true);
+      }
+    };
+
+    window.addEventListener("focus", handleSync);
+    document.addEventListener("visibilitychange", handleSync);
+    window.addEventListener("cloudprint:sync-orders", handleSync);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", handleSync);
+      document.removeEventListener("visibilitychange", handleSync);
+      window.removeEventListener("cloudprint:sync-orders", handleSync);
+    };
   }, [loadData]);
 
   async function handleProofFileChange(e) {
@@ -109,7 +151,7 @@ function RiwayatContent() {
       } else {
         setActivePayOrder(null);
         setProofUrl("");
-        await loadData();
+        await loadData(true);
       }
     } catch {
       setPayError("Terjadi kesalahan saat menyimpan bukti pembayaran.");
@@ -122,7 +164,7 @@ function RiwayatContent() {
     if (!confirm("Batalkan dan hapus pesanan yang belum dibayar ini?")) return;
     const res = await fetch(`/api/orders/${orderId}/cancel`, { method: "PATCH" });
     if (res.ok) {
-      await loadData();
+      await loadData(true);
     }
   }
 
