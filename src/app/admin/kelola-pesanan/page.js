@@ -255,7 +255,7 @@ export default function AdminKelolaPesananPage() {
                         )}
                         {isVerified && (
                           <span className="block text-xs font-extrabold text-emerald-700">
-                            ✓ Pembayaran Terverifikasi
+                            Pembayaran Terverifikasi
                           </span>
                         )}
                       </td>
