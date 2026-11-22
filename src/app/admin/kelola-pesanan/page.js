@@ -192,8 +192,8 @@ export default function AdminKelolaPesananPage() {
                     order.status === "SELESAI" || order.status === "DITOLAK";
 
                   return (
-                    <tr key={order.id} className="hover:bg-indigo-50/40 transition-colors align-top">
-                      <td className="px-5 py-4">
+                    <tr key={order.id} className="hover:bg-indigo-50/40 transition-colors align-middle">
+                      <td className="px-5 py-5">
                         <p className="font-extrabold text-slate-900">{order.orderCode}</p>
                         <p className="text-xs font-bold text-slate-700 mt-0.5">
                           {order.user?.name}
@@ -203,7 +203,7 @@ export default function AdminKelolaPesananPage() {
                         </p>
                       </td>
 
-                      <td className="px-5 py-4 space-y-1.5">
+                      <td className="px-5 py-5 space-y-1.5">
                         <p className="font-bold text-slate-900">{item?.itemTitle}</p>
                         <p className="text-xs text-slate-500">
                           {item?.unitLabel === "meter"
@@ -231,7 +231,7 @@ export default function AdminKelolaPesananPage() {
                         )}
                       </td>
 
-                      <td className="px-5 py-4 space-y-2.5">
+                      <td className="px-5 py-5 space-y-2.5">
                         <p className="font-extrabold text-indigo-600">
                           {formatRupiah(order.totalAmount)}
                         </p>
@@ -262,12 +262,14 @@ export default function AdminKelolaPesananPage() {
                         )}
                       </td>
 
-                      <td className="px-5 py-4 min-w-[200px]">
-                        {isLocked ? (
-                          <span
-                            className={`inline-block px-3.5 py-1.5 rounded-full text-xs font-bold shadow-xs ${meta.badge}`}
-                          >
-                            {meta.label}
+                      <td className="px-5 py-5 min-w-[200px]">
+                        {order.status === "SELESAI" ? (
+                          <span className="inline-block px-4 py-2 rounded-2xl text-xs font-extrabold bg-gradient-to-br from-emerald-100 to-teal-200 text-emerald-800 border border-emerald-300 shadow-[4px_4px_10px_rgba(16,185,129,0.18),inset_2px_2px_4px_rgba(255,255,255,0.9)]">
+                            ✓ Selesai
+                          </span>
+                        ) : order.status === "DITOLAK" ? (
+                          <span className="inline-block px-4 py-2 rounded-2xl text-xs font-extrabold bg-gradient-to-br from-rose-100 to-red-200 text-rose-800 border border-rose-300 shadow-[4px_4px_10px_rgba(244,63,94,0.18),inset_2px_2px_4px_rgba(255,255,255,0.9)]">
+                            ✕ Pembayaran Ditolak
                           </span>
                         ) : (
                           <ClaySelect
@@ -286,7 +288,7 @@ export default function AdminKelolaPesananPage() {
                         )}
                       </td>
 
-                      <td className="px-6 py-4 text-center whitespace-nowrap">
+                      <td className="px-6 py-5 text-center whitespace-nowrap">
                         {order.status === "MENUNGGU_PEMBAYARAN" ||
                         order.status === "MENUNGGU_VERIFIKASI" ? (
                           <button
