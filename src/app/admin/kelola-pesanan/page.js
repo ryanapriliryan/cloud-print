@@ -174,7 +174,7 @@ export default function AdminKelolaPesananPage() {
                   <th className="px-5 py-4">Detail Cetak & File</th>
                   <th className="px-5 py-4">Tagihan & Bukti</th>
                   <th className="px-5 py-4">Status Operasional</th>
-                  <th className="px-5 py-4 text-right">Aksi Penolakan</th>
+                  <th className="px-5 py-4 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-indigo-100/60">
@@ -184,6 +184,10 @@ export default function AdminKelolaPesananPage() {
                     label: order.status,
                     badge: "bg-slate-100 text-slate-700",
                   };
+                  const isVerified =
+                    order.status === "DIPROSES" ||
+                    order.status === "SIAP_DIAMBIL" ||
+                    order.status === "SELESAI";
 
                   return (
                     <tr key={order.id} className="hover:bg-indigo-50/40 transition-colors align-top">
@@ -249,6 +253,11 @@ export default function AdminKelolaPesananPage() {
                             Belum ada bukti transfer
                           </span>
                         )}
+                        {isVerified && (
+                          <span className="block text-xs font-extrabold text-emerald-700">
+                            ✓ Pembayaran Terverifikasi
+                          </span>
+                        )}
                       </td>
 
                       <td className="px-5 py-4 space-y-2.5 min-w-[210px]">
@@ -290,11 +299,11 @@ export default function AdminKelolaPesananPage() {
                             <XCircle className="w-3.5 h-3.5" />
                             Tolak Pesanan
                           </button>
-                        ) : order.status !== "DITOLAK" ? (
-                          <span className="text-xs font-bold text-emerald-700">
-                            Pembayaran Terverifikasi
+                        ) : (
+                          <span className="text-xs font-semibold text-slate-400">
+                            —
                           </span>
-                        ) : null}
+                        )}
                       </td>
                     </tr>
                   );
