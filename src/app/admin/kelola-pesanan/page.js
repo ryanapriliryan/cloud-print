@@ -277,7 +277,8 @@ export default function AdminKelolaPesananPage() {
                       </td>
 
                       <td className="px-5 py-4 text-right">
-                        {order.status !== "SELESAI" && order.status !== "DITOLAK" && (
+                        {order.status === "MENUNGGU_PEMBAYARAN" ||
+                        order.status === "MENUNGGU_VERIFIKASI" ? (
                           <button
                             type="button"
                             onClick={() => {
@@ -289,7 +290,11 @@ export default function AdminKelolaPesananPage() {
                             <XCircle className="w-3.5 h-3.5" />
                             Tolak Pesanan
                           </button>
-                        )}
+                        ) : order.status !== "DITOLAK" ? (
+                          <span className="text-xs font-bold text-emerald-700">
+                            Pembayaran Terverifikasi
+                          </span>
+                        ) : null}
                       </td>
                     </tr>
                   );

@@ -28,6 +28,10 @@ export default function AdminMasterDataPage() {
     accountHolder: "",
     paymentNote: "",
   });
+  const [paymentAccounts, setPaymentAccounts] = useState([
+    { bankName: "", accountNumber: "", accountHolder: "" },
+  ]);
+
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
 
@@ -64,20 +68,45 @@ export default function AdminMasterDataPage() {
 
   async function loadMasterData() {
     try {
-      const res = await fetch("/api/master-data");
+      const res = await fetch("/api/master-data", { cache: "no-store" });
       const data = await res.json();
       setPrintOptions(data.printOptions || []);
       setFinishings(data.finishings || []);
       if (data.storeSetting) {
+        const s = data.storeSetting;
         setStoreForm({
-          storeName: data.storeSetting.storeName || "Cloud Print",
-          storeAddress: data.storeSetting.storeAddress || "",
-          storePhone: data.storeSetting.storePhone || "",
-          bankName: data.storeSetting.bankName || "",
-          accountNumber: data.storeSetting.accountNumber || "",
-          accountHolder: data.storeSetting.accountHolder || "",
-          paymentNote: data.storeSetting.paymentNote || "",
+          storeName: s.storeName || "Cloud Print",
+          storeAddress: s.storeAddress || "",
+          storePhone: s.storePhone || "",
+          bankName: s.bankName || "",
+          accountNumber: s.accountNumber || "",
+          accountHolder: s.accountHolder || "",
+          paymentNote: s.paymentNote || "",
         });
+
+        let parsedAccounts = [];
+        if (typeof s.bankName === "string" && s.bankName.trim().startsWith("[")) {
+          try {
+            const arr = JSON.parse(s.bankName);
+            if (Array.isArray(arr)) parsedAccounts = arr;
+          } catch {
+            parsedAccounts = [];
+          }
+        } else if (s.bankName || s.accountNumber || s.accountHolder) {
+          parsedAccounts = [
+            {
+              bankName: s.bankName || "",
+              accountNumber: s.accountNumber || "",
+              accountHolder: s.accountHolder || "",
+            },
+          ];
+        }
+
+        setPaymentAccounts(
+          parsedAccounts.length > 0
+            ? parsedAccounts
+            : [{ bankName: "", accountNumber: "", accountHolder: "" }]
+        );
       }
     } finally {
       setLoading(false);
@@ -232,15 +261,56 @@ export default function AdminMasterDataPage() {
     }
   }
 
+  function handleAddAccountRow() {
+    setPaymentAccounts((prev) => [
+      ...prev,
+      { bankName: "", accountNumber: "", accountHolder: "" },
+    ]);
+  }
+
+  function handleAccountChange(index, field, value) {
+    setPaymentAccounts((prev) =>
+      prev.map((acc, idx) => (idx === index ? { ...acc, [field]: value } : acc))
+    );
+  }
+
+  function handleRemoveAccountRow(index) {
+    setPaymentAccounts((prev) => {
+      if (prev.length <= 1) {
+        return [{ bankName: "", accountNumber: "", accountHolder: "" }];
+      }
+      return prev.filter((_, idx) => idx !== index);
+    });
+  }
+
   async function handleSaveStoreSetting(e) {
     e.preventDefault();
+    const cleanedAccounts = paymentAccounts
+      .map((acc) => ({
+        bankName: acc.bankName.trim(),
+        accountNumber: acc.accountNumber.trim(),
+        accountHolder: acc.accountHolder.trim(),
+      }))
+      .filter((acc) => acc.bankName || acc.accountNumber || acc.accountHolder);
+
+    const payload = {
+      ...storeForm,
+      bankName:
+        cleanedAccounts.length > 1
+          ? JSON.stringify(cleanedAccounts)
+          : cleanedAccounts[0]?.bankName || "",
+      accountNumber: cleanedAccounts[0]?.accountNumber || "",
+      accountHolder: cleanedAccounts[0]?.accountHolder || "",
+    };
+
     const res = await fetch("/api/admin/store-setting", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(storeForm),
+      body: JSON.stringify(payload),
     });
     if (res.ok) {
-      showToast("Pengaturan toko dan rekening pembayaran disimpan.");
+      await loadMasterData();
+      showToast("Pengaturan toko dan daftar rekening pembayaran disimpan.");
     }
   }
 
@@ -585,7 +655,7 @@ export default function AdminMasterDataPage() {
         </div>
       </div>
 
-      {/* Section 3: Pengaturan Toko & Rekening Pembayaran */}
+      {/* Section 3: Pengaturan Toko & Multi-Rekening Pembayaran */}
       <div className="clay-card p-7 space-y-6">
         <div className="flex items-start gap-3.5">
           <div className="clay-icon-box w-11 h-11 flex items-center justify-center text-teal-600 shrink-0">
@@ -596,70 +666,115 @@ export default function AdminMasterDataPage() {
               3. Pengaturan Toko & Rekening Transfer Pembayaran
             </h2>
             <p className="text-xs text-slate-600 mt-0.5">
-              Informasi rekening ini akan ditampilkan kepada pelanggan saat mengunggah bukti pembayaran.
+              Anda dapat menambahkan lebih dari satu rekening bank atau e-wallet untuk dipilih pelanggan saat pembayaran.
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSaveStoreSetting} className="grid sm:grid-cols-3 gap-5">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Nama Percetakan</label>
-            <input
-              type="text"
-              value={storeForm.storeName}
-              onChange={(e) => setStoreForm({ ...storeForm, storeName: e.target.value })}
-              className="clay-input w-full px-4 py-2.5 text-sm font-medium text-slate-800"
-            />
+        <form onSubmit={handleSaveStoreSetting} className="space-y-6">
+          <div className="grid sm:grid-cols-3 gap-5">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">Nama Percetakan</label>
+              <input
+                type="text"
+                value={storeForm.storeName}
+                onChange={(e) => setStoreForm({ ...storeForm, storeName: e.target.value })}
+                className="clay-input w-full px-4 py-2.5 text-sm font-medium text-slate-800"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">Nomor Telepon / WA</label>
+              <input
+                type="text"
+                value={storeForm.storePhone}
+                onChange={(e) => setStoreForm({ ...storeForm, storePhone: e.target.value })}
+                className="clay-input w-full px-4 py-2.5 text-sm font-medium text-slate-800"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">Alamat Percetakan</label>
+              <input
+                type="text"
+                value={storeForm.storeAddress}
+                onChange={(e) => setStoreForm({ ...storeForm, storeAddress: e.target.value })}
+                className="clay-input w-full px-4 py-2.5 text-sm font-medium text-slate-800"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Nomor Telepon / WA</label>
-            <input
-              type="text"
-              value={storeForm.storePhone}
-              onChange={(e) => setStoreForm({ ...storeForm, storePhone: e.target.value })}
-              className="clay-input w-full px-4 py-2.5 text-sm font-medium text-slate-800"
-            />
+
+          <div className="space-y-3.5 pt-2 border-t border-slate-200/80">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-xs font-extrabold text-slate-800">
+                Daftar Rekening Bank / E-Wallet Tujuan Transfer ({paymentAccounts.length})
+              </span>
+              <button
+                type="button"
+                onClick={handleAddAccountRow}
+                className="clay-pill px-3.5 py-2 text-xs font-extrabold inline-flex items-center gap-1.5 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Tambah Rekening / E-Wallet
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {paymentAccounts.map((acc, idx) => (
+                <div
+                  key={idx}
+                  className="clay-card-soft p-4 grid sm:grid-cols-12 gap-3.5 items-end"
+                >
+                  <div className="sm:col-span-4">
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Bank / E-Wallet #{idx + 1}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Contoh: DANA / Bank BRI / BCA"
+                      value={acc.bankName}
+                      onChange={(e) => handleAccountChange(idx, "bankName", e.target.value)}
+                      className="clay-input w-full px-3.5 py-2.5 text-sm font-medium text-slate-800"
+                    />
+                  </div>
+                  <div className="sm:col-span-4">
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Nomor Rekening / No. HP
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Masukkan nomor tujuan"
+                      value={acc.accountNumber}
+                      onChange={(e) => handleAccountChange(idx, "accountNumber", e.target.value)}
+                      className="clay-input w-full px-3.5 py-2.5 text-sm font-mono font-bold text-slate-900"
+                    />
+                  </div>
+                  <div className="sm:col-span-3">
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Atas Nama
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Nama pemilik"
+                      value={acc.accountHolder}
+                      onChange={(e) => handleAccountChange(idx, "accountHolder", e.target.value)}
+                      className="clay-input w-full px-3.5 py-2.5 text-sm font-medium text-slate-800"
+                    />
+                  </div>
+                  <div className="sm:col-span-1 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveAccountRow(idx)}
+                      className="clay-btn-danger p-2.5 inline-flex items-center justify-center cursor-pointer"
+                      title="Hapus metode pembayaran ini"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Alamat Percetakan</label>
-            <input
-              type="text"
-              value={storeForm.storeAddress}
-              onChange={(e) => setStoreForm({ ...storeForm, storeAddress: e.target.value })}
-              className="clay-input w-full px-4 py-2.5 text-sm font-medium text-slate-800"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Nama Bank / E-Wallet</label>
-            <input
-              type="text"
-              placeholder="Contoh: Bank BRI / BCA / DANA"
-              value={storeForm.bankName}
-              onChange={(e) => setStoreForm({ ...storeForm, bankName: e.target.value })}
-              className="clay-input w-full px-4 py-2.5 text-sm font-medium text-slate-800"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Nomor Rekening</label>
-            <input
-              type="text"
-              placeholder="Masukkan nomor rekening"
-              value={storeForm.accountNumber}
-              onChange={(e) => setStoreForm({ ...storeForm, accountNumber: e.target.value })}
-              className="clay-input w-full px-4 py-2.5 text-sm font-mono font-bold text-slate-900"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Atas Nama Pemilik Rekening</label>
-            <input
-              type="text"
-              placeholder="Nama pemilik rekening"
-              value={storeForm.accountHolder}
-              onChange={(e) => setStoreForm({ ...storeForm, accountHolder: e.target.value })}
-              className="clay-input w-full px-4 py-2.5 text-sm font-medium text-slate-800"
-            />
-          </div>
-          <div className="sm:col-span-3 flex justify-end pt-1">
+
+          <div className="flex justify-end pt-1">
             <button
               type="submit"
               className="clay-btn-primary px-6 py-3 text-xs font-bold cursor-pointer"

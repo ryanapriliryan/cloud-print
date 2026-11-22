@@ -14,6 +14,30 @@ import {
 } from "lucide-react";
 import { formatRupiah, formatDate, ORDER_STATUS_META } from "@/lib/format";
 
+function parsePaymentAccounts(setting) {
+  if (!setting) return [];
+  if (typeof setting.bankName === "string" && setting.bankName.trim().startsWith("[")) {
+    try {
+      const parsed = JSON.parse(setting.bankName);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((item) => item.bankName && item.accountNumber);
+      }
+    } catch {
+      // Gunakan fallback rekening tunggal
+    }
+  }
+  if (setting.accountNumber) {
+    return [
+      {
+        bankName: setting.bankName || "Transfer Bank / E-Wallet",
+        accountNumber: setting.accountNumber,
+        accountHolder: setting.accountHolder || "-",
+      },
+    ];
+  }
+  return [];
+}
+
 function RiwayatContent() {
   const searchParams = useSearchParams();
   const payOrderIdParam = searchParams.get("pay");
@@ -23,11 +47,15 @@ function RiwayatContent() {
   const [loading, setLoading] = useState(true);
 
   const [activePayOrder, setActivePayOrder] = useState(null);
+  const [selectedAccountIdx, setSelectedAccountIdx] = useState(0);
   const [uploadingProof, setUploadingProof] = useState(false);
   const [proofUrl, setProofUrl] = useState("");
   const [payError, setPayError] = useState("");
   const [savingPayment, setSavingPayment] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const paymentAccounts = parsePaymentAccounts(storeSetting);
+  const activeAccount = paymentAccounts[selectedAccountIdx] || paymentAccounts[0] || null;
 
   const loadData = useCallback(
     async (silent = false) => {
@@ -42,7 +70,6 @@ function RiwayatContent() {
           const list = ordersData.orders || [];
           setOrders(list);
 
-          // Hanya buka modal otomatis saat pemuatan awal agar tidak muncul lagi jika sudah ditutup pengguna
           if (!silent && payOrderIdParam) {
             const target = list.find((o) => o.id === payOrderIdParam);
             if (
@@ -50,6 +77,7 @@ function RiwayatContent() {
               (target.status === "MENUNGGU_PEMBAYARAN" || target.status === "DITOLAK")
             ) {
               setActivePayOrder(target);
+              setSelectedAccountIdx(0);
             }
           }
         }
@@ -72,14 +100,12 @@ function RiwayatContent() {
   useEffect(() => {
     loadData(false);
 
-    // Sinkronisasi otomatis di latar belakang setiap 4 detik tanpa berkedip
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         loadData(true);
       }
     }, 4000);
 
-    // Segera perbarui status saat tab difokuskan kembali atau saat notifikasi masuk
     const handleSync = () => {
       if (document.visibilityState === "visible") {
         loadData(true);
@@ -169,8 +195,8 @@ function RiwayatContent() {
   }
 
   function handleCopyAccount() {
-    if (!storeSetting?.accountNumber) return;
-    navigator.clipboard.writeText(storeSetting.accountNumber);
+    if (!activeAccount?.accountNumber) return;
+    navigator.clipboard.writeText(activeAccount.accountNumber);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -274,6 +300,7 @@ function RiwayatContent() {
                           type="button"
                           onClick={() => {
                             setActivePayOrder(order);
+                            setSelectedAccountIdx(0);
                             setProofUrl("");
                             setPayError("");
                           }}
@@ -297,7 +324,7 @@ function RiwayatContent() {
       {/* Clay Payment & Transfer Proof Modal */}
       {activePayOrder && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="clay-card max-w-md w-full p-7 space-y-5">
+          <div className="clay-card max-w-md w-full p-7 space-y-5 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-indigo-100 pb-3">
               <div>
                 <h3 className="text-base font-extrabold text-slate-900">Pembayaran Pesanan</h3>
@@ -311,7 +338,7 @@ function RiwayatContent() {
               </button>
             </div>
 
-            <div className="clay-card-soft p-4 space-y-2.5">
+            <div className="clay-card-soft p-4 space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-xs font-bold text-slate-600">Total Transfer</span>
                 <span className="text-xl font-black text-indigo-600">
@@ -319,23 +346,56 @@ function RiwayatContent() {
                 </span>
               </div>
 
-              {storeSetting?.accountNumber ? (
-                <div className="pt-2.5 border-t border-indigo-100 text-xs text-slate-700 space-y-1">
-                  <p className="font-extrabold text-slate-900">{storeSetting.bankName}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-sm font-black text-slate-900">
-                      {storeSetting.accountNumber}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleCopyAccount}
-                      className="clay-pill px-2.5 py-1 inline-flex items-center gap-1 text-indigo-600 font-bold"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                      {copied ? "Tersalin!" : "Salin"}
-                    </button>
-                  </div>
-                  <p className="text-slate-600 font-medium">a.n. {storeSetting.accountHolder}</p>
+              {paymentAccounts.length > 0 ? (
+                <div className="pt-2.5 border-t border-indigo-100 text-xs text-slate-700 space-y-2.5">
+                  {paymentAccounts.length > 1 && (
+                    <div className="space-y-1.5">
+                      <span className="text-[11px] font-bold text-slate-500 block">
+                        Pilih Tujuan Transfer:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {paymentAccounts.map((acc, idx) => (
+                          <button
+                            key={`${acc.bankName}-${idx}`}
+                            type="button"
+                            onClick={() => {
+                              setSelectedAccountIdx(idx);
+                              setCopied(false);
+                            }}
+                            className={`px-3 py-1.5 text-xs font-extrabold transition ${
+                              selectedAccountIdx === idx
+                                ? "clay-btn-primary text-white"
+                                : "clay-pill"
+                            }`}
+                          >
+                            {acc.bankName}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeAccount && (
+                    <div className="space-y-1">
+                      <p className="font-extrabold text-slate-900">{activeAccount.bankName}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-sm font-black text-slate-900">
+                          {activeAccount.accountNumber}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleCopyAccount}
+                          className="clay-pill px-2.5 py-1 inline-flex items-center gap-1 text-indigo-600 font-bold"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                          {copied ? "Tersalin!" : "Salin"}
+                        </button>
+                      </div>
+                      <p className="text-slate-600 font-medium">
+                        a.n. {activeAccount.accountHolder}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p className="text-xs text-amber-800 pt-1">
