@@ -642,3 +642,27 @@ main [class*="border-t-2"],
 main [class*="border-b-2"] {
   border-color: #7fa6c9 !important;
 }
+
+/* =========================================================
+   Animasi Teks Berjalan (Marquee) untuk Pilihan Bahan / Kertas
+   ========================================================= */
+@keyframes clay-marquee-pan {
+  0%, 18% {
+    transform: translateX(0);
+  }
+  82%, 100% {
+    transform: translateX(var(--marquee-distance, 0px));
+  }
+}
+
+.animate-clay-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+  animation: clay-marquee-pan var(--marquee-duration, 5s) ease-in-out infinite alternate;
+}
+
+.group:hover .animate-clay-marquee,
+.animate-clay-marquee:hover {
+  animation-play-state: paused;
+}

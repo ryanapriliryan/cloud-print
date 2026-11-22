@@ -4,6 +4,65 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Check } from "lucide-react";
 
+function MarqueeText({ text, className = "" }) {
+  const containerRef = useRef(null);
+  const textRef = useRef(null);
+  const [overflow, setOverflow] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      if (!containerRef.current || !textRef.current) return;
+      const diff = textRef.current.scrollWidth - containerRef.current.clientWidth;
+      setOverflow(diff > 2 ? diff + 12 : 0);
+    };
+
+    measure();
+    const rafId = requestAnimationFrame(measure);
+    const timer = setTimeout(measure, 80);
+
+    const observer =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    if (observer && containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    window.addEventListener("resize", measure);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(timer);
+      observer?.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [text]);
+
+  const duration = `${Math.max(4.5, Math.min(9, overflow / 28 + 3.5)).toFixed(1)}s`;
+
+  return (
+    <span
+      ref={containerRef}
+      title={text}
+      className={`block overflow-hidden whitespace-nowrap ${className}`}
+    >
+      <span
+        ref={textRef}
+        style={
+          overflow > 0
+            ? {
+                "--marquee-distance": `-${overflow}px`,
+                "--marquee-duration": duration,
+              }
+            : undefined
+        }
+        className={
+          overflow > 0 ? "animate-clay-marquee" : "inline-block whitespace-nowrap"
+        }
+      >
+        {text}
+      </span>
+    </span>
+  );
+}
+
 export default function ClaySelect({
   value,
   onChange,
@@ -83,13 +142,15 @@ export default function ClaySelect({
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setOpen((prev) => !prev)}
-        className={`clay-input w-full px-3.5 py-2.5 text-left text-slate-800 flex items-center justify-between gap-2.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
+        className={`clay-input group w-full px-3.5 py-2.5 text-left text-slate-800 flex items-center justify-between gap-2.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
           open ? "bg-white ring-4 ring-indigo-500/15 border-indigo-400" : ""
         } ${className}`}
       >
-        <span className="truncate">
-          {selectedOption ? selectedOption.label : placeholder}
-        </span>
+        <div className="flex-1 min-w-0">
+          <MarqueeText
+            text={selectedOption ? selectedOption.label : placeholder}
+          />
+        </div>
         <span className="w-6 h-6 rounded-xl bg-indigo-100/80 text-indigo-600 flex items-center justify-center shrink-0 shadow-xs">
           <ChevronDown
             className={`w-3.5 h-3.5 transition-transform duration-200 ${
@@ -129,13 +190,18 @@ export default function ClaySelect({
                       onChange(opt.value);
                       setOpen(false);
                     }}
-                    className={`w-full text-left px-3.5 py-2.5 rounded-[15px] text-xs font-bold flex items-center justify-between gap-2 transition cursor-pointer ${
+                    className={`group w-full text-left px-3.5 py-2.5 rounded-[15px] text-xs font-bold flex items-center justify-between gap-2 transition cursor-pointer ${
                       isSelected
                         ? "clay-btn-primary text-white"
                         : "text-slate-700 hover:bg-indigo-50/90 hover:text-indigo-700"
                     }`}
                   >
-                    <span className="truncate">{opt.label}</span>
+                    <div className="flex-1 min-w-0">
+                      <MarqueeText
+                        text={opt.label}
+                        className={isSelected ? "text-white" : ""}
+                      />
+                    </div>
                     {isSelected && <Check className="w-3.5 h-3.5 shrink-0" />}
                   </button>
                 );
