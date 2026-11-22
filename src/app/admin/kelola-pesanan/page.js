@@ -266,23 +266,30 @@ export default function AdminKelolaPesananPage() {
                         >
                           {meta.label}
                         </span>
-                        <ClaySelect
-                          disabled={updatingId === order.id}
-                          value={
-                            order.status === "DITOLAK"
-                              ? "MENUNGGU_VERIFIKASI"
-                              : order.status
-                          }
-                          onChange={(val) => handleStatusChange(order.id, val)}
-                          options={[
-                            { value: "MENUNGGU_PEMBAYARAN", label: "Menunggu Pembayaran" },
-                            { value: "MENUNGGU_VERIFIKASI", label: "Menunggu Verifikasi" },
-                            { value: "DIPROSES", label: "Sedang Dicetak" },
-                            { value: "SIAP_DIAMBIL", label: "Siap Diambil" },
-                            { value: "SELESAI", label: "Selesai" },
-                          ]}
-                          className="text-xs font-semibold"
-                        />
+
+                        {order.status === "SELESAI" ? (
+                          <p className="text-[11px] font-semibold text-emerald-700">
+                            Transaksi telah selesai & terkunci
+                          </p>
+                        ) : order.status === "DITOLAK" ? (
+                          <p className="text-[11px] font-semibold text-rose-700">
+                            Menunggu pelanggan unggah ulang bukti bayar
+                          </p>
+                        ) : (
+                          <ClaySelect
+                            disabled={updatingId === order.id}
+                            value={order.status}
+                            onChange={(val) => handleStatusChange(order.id, val)}
+                            options={[
+                              { value: "MENUNGGU_PEMBAYARAN", label: "Menunggu Pembayaran" },
+                              { value: "MENUNGGU_VERIFIKASI", label: "Menunggu Verifikasi" },
+                              { value: "DIPROSES", label: "Sedang Dicetak" },
+                              { value: "SIAP_DIAMBIL", label: "Siap Diambil" },
+                              { value: "SELESAI", label: "Selesai" },
+                            ]}
+                            className="text-xs font-semibold"
+                          />
+                        )}
                       </td>
 
                       <td className="px-5 py-4 text-right">
