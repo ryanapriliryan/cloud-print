@@ -174,7 +174,7 @@ export default function AdminKelolaPesananPage() {
                   <th className="px-5 py-4">Detail Cetak & File</th>
                   <th className="px-5 py-4">Tagihan & Bukti</th>
                   <th className="px-5 py-4">Status Operasional</th>
-                  <th className="px-5 py-4 text-right">Aksi</th>
+                  <th className="px-6 py-4 text-center whitespace-nowrap">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-indigo-100/60">
@@ -188,6 +188,8 @@ export default function AdminKelolaPesananPage() {
                     order.status === "DIPROSES" ||
                     order.status === "SIAP_DIAMBIL" ||
                     order.status === "SELESAI";
+                  const isLocked =
+                    order.status === "SELESAI" || order.status === "DITOLAK";
 
                   return (
                     <tr key={order.id} className="hover:bg-indigo-50/40 transition-colors align-top">
@@ -255,26 +257,18 @@ export default function AdminKelolaPesananPage() {
                         )}
                         {isVerified && (
                           <span className="block text-xs font-extrabold text-emerald-700">
-                            Pembayaran Terverifikasi
+                            ✓ Pembayaran Terverifikasi
                           </span>
                         )}
                       </td>
 
-                      <td className="px-5 py-4 space-y-2.5 min-w-[210px]">
-                        <span
-                          className={`inline-block px-3 py-1 rounded-full text-xs font-bold shadow-xs ${meta.badge}`}
-                        >
-                          {meta.label}
-                        </span>
-
-                        {order.status === "SELESAI" ? (
-                          <p className="text-[11px] font-semibold text-emerald-700">
-                            Transaksi telah selesai & terkunci
-                          </p>
-                        ) : order.status === "DITOLAK" ? (
-                          <p className="text-[11px] font-semibold text-rose-700">
-                            Menunggu pelanggan unggah ulang bukti bayar
-                          </p>
+                      <td className="px-5 py-4 min-w-[200px]">
+                        {isLocked ? (
+                          <span
+                            className={`inline-block px-3.5 py-1.5 rounded-full text-xs font-bold shadow-xs ${meta.badge}`}
+                          >
+                            {meta.label}
+                          </span>
                         ) : (
                           <ClaySelect
                             disabled={updatingId === order.id}
@@ -292,7 +286,7 @@ export default function AdminKelolaPesananPage() {
                         )}
                       </td>
 
-                      <td className="px-5 py-4 text-right">
+                      <td className="px-6 py-4 text-center whitespace-nowrap">
                         {order.status === "MENUNGGU_PEMBAYARAN" ||
                         order.status === "MENUNGGU_VERIFIKASI" ? (
                           <button
