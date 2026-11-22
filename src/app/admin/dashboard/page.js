@@ -12,6 +12,20 @@ import {
 } from "lucide-react";
 import { formatRupiah, formatDate, ORDER_STATUS_META } from "@/lib/format";
 
+function getClayStatusStyle(status) {
+  switch (status) {
+    case "SELESAI":
+      return "bg-gradient-to-br from-emerald-100 to-teal-200 text-emerald-800 border border-emerald-300/90 shadow-[3px_4px_10px_rgba(16,185,129,0.22),inset_2px_2px_4px_rgba(255,255,255,0.9)]";
+    case "DITOLAK":
+      return "bg-gradient-to-br from-rose-100 to-red-200 text-rose-800 border border-rose-300/90 shadow-[3px_4px_10px_rgba(244,63,94,0.22),inset_2px_2px_4px_rgba(255,255,255,0.9)]";
+    case "DIPROSES":
+    case "SIAP_DIAMBIL":
+      return "bg-gradient-to-br from-sky-100 to-indigo-200 text-indigo-800 border border-indigo-300/90 shadow-[3px_4px_10px_rgba(99,102,241,0.22),inset_2px_2px_4px_rgba(255,255,255,0.9)]";
+    default:
+      return "bg-gradient-to-br from-amber-100 to-orange-200 text-amber-800 border border-amber-300/90 shadow-[3px_4px_10px_rgba(245,158,11,0.22),inset_2px_2px_4px_rgba(255,255,255,0.9)]";
+  }
+}
+
 export default function AdminDashboardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -146,7 +160,6 @@ export default function AdminDashboardPage() {
                 {data.recentOrders.map((order) => {
                   const meta = ORDER_STATUS_META[order.status] || {
                     label: order.status,
-                    badge: "bg-slate-100 text-slate-700",
                   };
                   return (
                     <tr
@@ -164,15 +177,9 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`inline-block px-3 py-1 rounded-full text-xs font-bold shadow-xs ${
-                            order.status === "SELESAI"
-                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                              : order.status === "DITOLAK"
-                              ? "bg-rose-100 text-rose-800 border border-rose-300"
-                              : order.status === "DIPROSES" || order.status === "SIAP_DIAMBIL"
-                              ? "bg-blue-100 text-blue-800 border border-blue-300"
-                              : "bg-amber-100 text-amber-800 border border-amber-300"
-                          }`}
+                          className={`inline-block px-3.5 py-1.5 rounded-2xl text-xs font-extrabold ${getClayStatusStyle(
+                            order.status
+                          )}`}
                         >
                           {meta.label}
                         </span>
