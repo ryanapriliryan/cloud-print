@@ -18,6 +18,10 @@ export default function AdminKelolaPesananPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
 
+  // Paginasi
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   // Lightbox state
   const [lightboxImage, setLightboxImage] = useState(null);
 
@@ -117,6 +121,13 @@ export default function AdminKelolaPesananPage() {
     return matchSearch && matchStatus;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filteredOrders.length / itemsPerPage));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedOrders = filteredOrders.slice(
+    (safePage - 1) * itemsPerPage,
+    safePage * itemsPerPage
+  );
+
   return (
     <div className="space-y-7">
       <div className="clay-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -133,7 +144,10 @@ export default function AdminKelolaPesananPage() {
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
               placeholder="Cari kode / pelanggan..."
               className="clay-input pl-10 pr-4 py-2.5 text-sm font-medium text-slate-800"
             />
@@ -142,7 +156,10 @@ export default function AdminKelolaPesananPage() {
           <div className="w-52">
             <ClaySelect
               value={statusFilter}
-              onChange={(val) => setStatusFilter(val)}
+              onChange={(val) => {
+                setStatusFilter(val);
+                setCurrentPage(1);
+              }}
               options={[
                 { value: "ALL", label: "Semua Status" },
                 ...Object.entries(ORDER_STATUS_META).map(([key, val]) => ({
@@ -178,18 +195,12 @@ export default function AdminKelolaPesananPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-indigo-100/60">
-                {filteredOrders.map((order) => {
+                {paginatedOrders.map((order) => {
                   const item = order.items?.[0];
-                  const meta = ORDER_STATUS_META[order.status] || {
-                    label: order.status,
-                    badge: "bg-slate-100 text-slate-700",
-                  };
                   const isVerified =
                     order.status === "DIPROSES" ||
                     order.status === "SIAP_DIAMBIL" ||
                     order.status === "SELESAI";
-                  const isLocked =
-                    order.status === "SELESAI" || order.status === "DITOLAK";
 
                   return (
                     <tr key={order.id} className="hover:bg-indigo-50/40 transition-colors align-middle">
@@ -317,6 +328,37 @@ export default function AdminKelolaPesananPage() {
               </tbody>
             </table>
           </div>
+
+          {filteredOrders.length > itemsPerPage && (
+            <div className="px-6 py-4 border-t border-indigo-100/80 flex flex-wrap items-center justify-between gap-3 bg-indigo-50/30">
+              <p className="text-xs font-semibold text-slate-500">
+                Menampilkan {(safePage - 1) * itemsPerPage + 1}–
+                {Math.min(safePage * itemsPerPage, filteredOrders.length)} dari{" "}
+                <span className="font-bold text-slate-800">{filteredOrders.length}</span> pesanan
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={safePage <= 1}
+                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  className="clay-pill px-3.5 py-1.5 text-xs font-bold text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  ← Sebelumnya
+                </button>
+                <span className="text-xs font-extrabold text-indigo-600 px-2">
+                  Hal. {safePage} / {totalPages}
+                </span>
+                <button
+                  type="button"
+                  disabled={safePage >= totalPages}
+                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  className="clay-pill px-3.5 py-1.5 text-xs font-bold text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Berikutnya →
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -97,8 +97,8 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
 
   return (
     <div className="min-h-screen flex">
-      {/* Sidebar Desktop Mengembang (Claymorphism) */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-72 p-4 pr-0 no-print">
+      {/* Sidebar Desktop Sticky (Claymorphism) */}
+      <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:sticky lg:top-0 lg:h-screen shrink-0 p-4 pr-0 no-print">
         <div className="clay-card flex-1 flex flex-col overflow-hidden">
           <div className="px-6 py-5 flex items-center gap-3 border-b border-indigo-100/80">
             <div className="clay-btn-primary w-10 h-10 flex items-center justify-center shrink-0">
@@ -114,7 +114,7 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
             </div>
           </div>
 
-          <nav className="flex-1 p-4 space-y-2">
+          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = pathname === item.href;
@@ -183,7 +183,7 @@ export default function AppShell({ children, role = "PELANGGAN" }) {
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <nav className="flex-1 p-4 space-y-2">
+            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = pathname === item.href;
